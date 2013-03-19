@@ -3,11 +3,34 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class DeckTest {
 
+	ArrayList<Card> notPlayedOrigional;
+	ArrayList<Card> handOrigional;
+	ArrayList<Card> discardOrigional;
+	Deck d;
+	
+	@Before
+	public void makeDeck() {
+		ArrayList<Card> notPlayed = randomCardList();
+		notPlayedOrigional = new ArrayList<Card>();
+		notPlayedOrigional.addAll(notPlayed);
+		
+		ArrayList<Card> hand = randomCardList();
+		handOrigional = new ArrayList<Card>();
+		handOrigional.addAll(hand);
+		
+		ArrayList<Card> discard = randomCardList();
+		discardOrigional = new ArrayList<Card>();
+		discardOrigional.addAll(discard);
+		
+		d = new Deck(notPlayed, hand, discard);
+	}
+	
 	@Test
 	public void testInitialization() {
 		Deck d = new Deck();
@@ -50,38 +73,47 @@ public class DeckTest {
 	
 	@Test
 	public void testDrawCardWNormal() {
-		ArrayList<Card> notPlayed = randomCardList();
-		ArrayList<Card> notPlayedOrigional = new ArrayList<Card>();
-		notPlayedOrigional.addAll(notPlayed);
-		
-		ArrayList<Card> hand = randomCardList();
-		ArrayList<Card> handOrigional = new ArrayList<Card>();
-		handOrigional.addAll(hand);
-		
-		ArrayList<Card> discard = randomCardList();
-		ArrayList<Card> discardOrigional = new ArrayList<Card>();
-		discardOrigional.addAll(discard);
-		
-		Deck d = new Deck(notPlayed, hand, discard);
 		assertTrue(d.DrawCard());
 		
-		//make sure sizes changed appropriately
-		assertEquals(notPlayedOrigional.size() - 1, notPlayed.size());
-		assertEquals(handOrigional.size() + 1, hand.size());
-		assertEquals(discardOrigional.size(), discard.size());
+		assertTrue(notPlayedOrigional.containsAll(d._notPlayed));
+		assertFalse(d._notPlayed.containsAll(notPlayedOrigional));
 		
-		//use set logic to make sure all sets are correct
-		assertFalse(notPlayed.containsAll(notPlayedOrigional));
-		assertTrue(notPlayedOrigional.containsAll(notPlayed));
+		assertTrue(d._hand.containsAll(handOrigional));
+		assertFalse(handOrigional.containsAll(d._hand));
 		
-		assertFalse(handOrigional.containsAll(hand));
-		assertTrue(hand.containsAll(handOrigional));
+		assertEquals(notPlayedOrigional.size() - 1, d._notPlayed.size());
+		assertEquals(handOrigional.size() + 1, d._hand.size());
 		
-		assertTrue(discard.containsAll(discardOrigional));
-		assertTrue(discardOrigional.containsAll(discard));
+		notPlayedOrigional.removeAll(d._notPlayed);
+		d._hand.removeAll(handOrigional);
+		assertEquals(d._hand.get(0), notPlayedOrigional.get(0));
 	}
 	
-	private static ArrayList<Card> randomCardList() {
+	@Test
+	public void testShuffle() {
+		
+		d.Shuffle();
+		assertTrue(notPlayedOrigional.containsAll(d._notPlayed));
+		assertTrue(d._notPlayed.containsAll(notPlayedOrigional));
+		boolean pass = false;
+		for(int i = 0; i < d._notPlayed.size(); i++) {
+			pass |= (d._notPlayed.get(i) != notPlayedOrigional.get(i));
+		}
+		assertTrue(pass);
+	}
+	
+	@Test
+	public void testAddNewCardToDiscard() {
+		
+		Card c = new Card();
+		d.AddNewCardToDiscard(c);
+		assertTrue(d._discard.containsAll(discardOrigional));
+		assertFalse(discardOrigional.containsAll(d._discard));
+		d._discard.removeAll(discardOrigional);
+		assertEquals(c, d._discard.get(0));
+	}
+	
+	public static ArrayList<Card> randomCardList() {
 		ArrayList<Card> ret = new ArrayList<Card>();
 		Random generator = new Random();
 		int c = generator.nextInt(10) + 1;

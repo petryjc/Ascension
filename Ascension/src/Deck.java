@@ -30,17 +30,26 @@ public class Deck {
 			}
 			_notPlayed.addAll(_discard);
 			_discard.clear();
+			Shuffle();
 		}
-		//generate a random index and draw that card.  replaces shuffling
-		Random generator = new Random();
-		int i = generator.nextInt(_notPlayed.size());
 		//remove from not played and add to hand
-		Card c = _notPlayed.remove(i);
+		Card c = _notPlayed.remove(0);
 		_hand.add(c);
 		return true;
 	}
 	
-	public void AddCardToDiscard(Card c) {
+	public void Shuffle() {
+		//generate a random index and draw that card.  replaces shuffling
+		Random generator = new Random();
+		ArrayList<Card> temp = new ArrayList<Card>();
+		while(_notPlayed.size() > 0) {
+			int i = generator.nextInt(_notPlayed.size());
+			temp.add(_notPlayed.remove(i));
+		}
+		_notPlayed.addAll(temp);
+	}
+	
+	public void AddNewCardToDiscard(Card c) {
 		_discard.add(c);
 	}
 	
