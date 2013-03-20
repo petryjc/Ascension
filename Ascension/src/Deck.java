@@ -6,6 +6,7 @@ public class Deck {
 	ArrayList<Card> _notPlayed;
 	ArrayList<Card> _hand;
 	ArrayList<Card> _discard;
+	Random generator = new Random();
 
 	public Deck() {
 		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>());
@@ -40,7 +41,6 @@ public class Deck {
 	
 	public void Shuffle() {
 		//generate a random index and draw that card.  replaces shuffling
-		Random generator = new Random();
 		ArrayList<Card> temp = new ArrayList<Card>();
 		while(_notPlayed.size() > 0) {
 			int i = generator.nextInt(_notPlayed.size());
@@ -53,4 +53,11 @@ public class Deck {
 		_discard.add(c);
 	}
 	
+	public boolean DrawNCards(int n) {
+		for(int i = 0; i < n; i++) {
+			if(!DrawCard())
+				return false;
+		}
+		return true;
+	}
 }

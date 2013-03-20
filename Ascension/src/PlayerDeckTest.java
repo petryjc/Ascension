@@ -12,12 +12,6 @@ public class PlayerDeckTest extends DeckTest{
 	ArrayList<Card> constructOrigional;
 	PlayerDeck d;
 	
-	@Test
-	public void testInitialization() {
-		PlayerDeck pd = new PlayerDeck();
-		assertNotNull(pd);
-	}
-	
 	@Before
 	public void makeDeck() {
 		ArrayList<Card> notPlayed = randomCardList();
@@ -34,17 +28,22 @@ public class PlayerDeckTest extends DeckTest{
 		
 		ArrayList<Card> played = randomCardList();
 		playedOrigional = new ArrayList<Card>();
-		playedOrigional.addAll(discard);
+		playedOrigional.addAll(played);
 		
 		ArrayList<Card> construct = randomCardList();
 		constructOrigional = new ArrayList<Card>();
-		constructOrigional.addAll(discard);
+		constructOrigional.addAll(construct);
 		
 		d = new PlayerDeck(notPlayed, hand, discard, played, construct);
 		super.d = d;
 	}
 	
-
+	@Test
+	public void testInitialization() {
+		PlayerDeck pd = new PlayerDeck();
+		assertNotNull(pd);
+	}
+	
 	@Test
 	public void testDeaultConstructor() {
 		PlayerDeck d = new PlayerDeck();
@@ -88,5 +87,26 @@ public class PlayerDeckTest extends DeckTest{
 		assertEquals(constructs, d._constructs);
 	}
 	
-
+	@Test
+	public void testPlayCardFirst() {
+		d.PlayCard(d._hand.get(0));
+		
+		assertTrue(d._played.containsAll(playedOrigional));
+		assertFalse(playedOrigional.containsAll(d._played));
+		
+		assertFalse(d._hand.containsAll(handOrigional));
+		assertTrue(handOrigional.containsAll(d._hand));
+		
+		assertEquals(playedOrigional.size() + 1, d._played.size());
+		assertEquals(handOrigional.size() - 1, d._hand.size());
+		
+//		notPlayedOrigional.removeAll(d._notPlayed);
+//		d._hand.removeAll(handOrigional);
+//		assertEquals(d._hand.get(0), notPlayedOrigional.get(0));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testPlayCardFailures() {
+		d.PlayCard(new Card());
+	}
 }

@@ -24,4 +24,11 @@ public class PlayerDeck extends Deck {
 		_constructs = constructs;
 	}
 
+	public void PlayCard(Card c) {
+		if(!super._hand.remove(c)) {
+			throw new IllegalArgumentException();
+		}
+		//TODO add to played or construct depending upon card type
+		_played.add(c);
+	}
 }

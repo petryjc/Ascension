@@ -91,7 +91,13 @@ public class DeckTest {
 	
 	@Test
 	public void testShuffle() {
-		
+		d._notPlayed = new ArrayList<Card>();
+		d._notPlayed.add(new Card());d._notPlayed.add(new Card());
+		d._notPlayed.add(new Card());d._notPlayed.add(new Card());
+		d._notPlayed.add(new Card());d._notPlayed.add(new Card());
+		notPlayedOrigional = new ArrayList<Card>();
+		notPlayedOrigional.addAll(d._notPlayed);
+		d.generator = new Random(12345432);
 		d.Shuffle();
 		assertTrue(notPlayedOrigional.containsAll(d._notPlayed));
 		assertTrue(d._notPlayed.containsAll(notPlayedOrigional));
@@ -116,7 +122,7 @@ public class DeckTest {
 	public static ArrayList<Card> randomCardList() {
 		ArrayList<Card> ret = new ArrayList<Card>();
 		Random generator = new Random();
-		int c = generator.nextInt(10) + 1;
+		int c = generator.nextInt(2) + 1;
 		for(int i = 0; i < c; i++) {
 			ret.add(new Card());
 		}
