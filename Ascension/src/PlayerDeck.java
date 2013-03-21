@@ -1,34 +1,59 @@
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 
 public class PlayerDeck extends Deck {
 
-	ArrayList<Card> _played;
-	ArrayList<Card> _constructs;
+	ArrayList<Card> played;
+	Rectangle playedLocation;
+	
+	ArrayList<Card> constructs;
+	Rectangle constructLocation;
 	
 	public PlayerDeck() {
-		super();
+		this(new ArrayList<Card>(),new ArrayList<Card>(),new ArrayList<Card>(),new ArrayList<Card>(), 
+				new ArrayList<Card>(), null, null, null);
 	}
 
-	public PlayerDeck(ArrayList<Card> notPlayed) {
-		super(notPlayed, null);
+	public PlayerDeck(ArrayList<Card> notPlayed, Rectangle handLocation, Rectangle playedLocation, Rectangle constructLocation) {
+		this(notPlayed,new ArrayList<Card>(),new ArrayList<Card>(),new ArrayList<Card>(), 
+				new ArrayList<Card>(), handLocation, playedLocation, constructLocation);
 	}
 	
-	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard) {
-		super(notPlayed, hand, discard, null);
+	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, 
+			Rectangle handLocation, Rectangle playedLocation, Rectangle constructLocation) {
+		this(notPlayed,hand,discard,new ArrayList<Card>(), new ArrayList<Card>(), 
+				handLocation, playedLocation, constructLocation);
 	}
 	
-	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, ArrayList<Card> played, ArrayList<Card> constructs) {
-		super(notPlayed, hand, discard, null);
-		_played = played;
-		_constructs = constructs;
+	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, ArrayList<Card> played, 
+			ArrayList<Card> constructs,Rectangle handLocation, Rectangle playedLocation, Rectangle constructLocation) {
+		super(notPlayed, hand, discard, handLocation);
+		this.played = played;
+		this.playedLocation = playedLocation;
+		this.constructs = constructs;
+		this.constructLocation = constructLocation;
+		resetHandLocation();
 	}
 
-	public void playCard(Card c) {
-		if(!super._hand.remove(c)) {
-			throw new IllegalArgumentException();
+	public Card playCard(Card c) {
+		if(!super.hand.remove(c)) {
+			throw new IllegalArgumentException("Cannot play a card that is not in your hand");
 		}
-		//TODO add to played or construct depending upon card type
-		_played.add(c);
+		if(c.getType() == Card.Type.Construct) {
+			constructs.add(c);
+		} else if(c.getType() == Card.Type.Hero) {
+			played.add(c);
+		} else {
+			throw new IllegalArgumentException("Cannot have a card that is not of type hero or construct");
+		}
+		
+		return c;
+	}
+	
+	public void resetHandLocation() {
+		super.resetHandLocation();
+		setCardListWithinLocation(played, playedLocation);
+		setCardListWithinLocation(constructs, constructLocation);
 	}
 }
