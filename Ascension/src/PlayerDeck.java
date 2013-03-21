@@ -24,7 +24,7 @@ public class PlayerDeck extends Deck {
 		_constructs = constructs;
 	}
 
-	public void PlayCard(Card c) {
+	public void playCard(Card c) {
 		if(!super._hand.remove(c)) {
 			throw new IllegalArgumentException();
 		}

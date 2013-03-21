@@ -20,7 +20,7 @@ public class Player {
 	
 	public void startingHand(){
 		for(int i = 0; i < 5; i++){
-			this.playerDeck.DrawCard();
+			this.playerDeck.drawCard();
 		}
 	}
 	

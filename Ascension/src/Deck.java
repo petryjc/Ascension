@@ -1,3 +1,5 @@
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,6 +9,7 @@ public class Deck {
 	ArrayList<Card> _hand;
 	ArrayList<Card> _discard;
 	Random generator = new Random();
+	Rectangle location;
 
 	public Deck() {
 		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>());
@@ -22,7 +25,7 @@ public class Deck {
 		_discard = discard;
 	}
 
-	public boolean DrawCard() {
+	public boolean drawCard() {
 		//if the not played deck is gone, replace with discard deck
 		if(_notPlayed.size() == 0) {
 			//if discard deck is also gone, you cannot draw anymore
@@ -31,7 +34,7 @@ public class Deck {
 			}
 			_notPlayed.addAll(_discard);
 			_discard.clear();
-			Shuffle();
+			shuffle();
 		}
 		//remove from not played and add to hand
 		Card c = _notPlayed.remove(0);
@@ -39,7 +42,7 @@ public class Deck {
 		return true;
 	}
 	
-	public void Shuffle() {
+	public void shuffle() {
 		//generate a random index and draw that card.  replaces shuffling
 		ArrayList<Card> temp = new ArrayList<Card>();
 		while(_notPlayed.size() > 0) {
@@ -49,15 +52,23 @@ public class Deck {
 		_notPlayed.addAll(temp);
 	}
 	
-	public void AddNewCardToDiscard(Card c) {
+	public void addNewCardToDiscard(Card c) {
 		_discard.add(c);
 	}
 	
-	public boolean DrawNCards(int n) {
+	public boolean drawNCards(int n) {
 		for(int i = 0; i < n; i++) {
-			if(!DrawCard())
+			if(!drawCard())
 				return false;
 		}
 		return true;
+	}
+
+	public void handleClick(Point p) {
+		if(location.contains(p)) {
+			for(Card c : _hand) {
+				//c.hand
+			}
+		}
 	}
 }

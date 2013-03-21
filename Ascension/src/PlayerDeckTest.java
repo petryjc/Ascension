@@ -89,7 +89,7 @@ public class PlayerDeckTest extends DeckTest{
 	
 	@Test
 	public void testPlayCardFirst() {
-		d.PlayCard(d._hand.get(0));
+		d.playCard(d._hand.get(0));
 		
 		assertTrue(d._played.containsAll(playedOrigional));
 		assertFalse(playedOrigional.containsAll(d._played));
@@ -99,14 +99,38 @@ public class PlayerDeckTest extends DeckTest{
 		
 		assertEquals(playedOrigional.size() + 1, d._played.size());
 		assertEquals(handOrigional.size() - 1, d._hand.size());
+	}
+	
+	@Test
+	public void testPlayCardLast() {
+		d.playCard(d._hand.get(d._hand.size() - 1));
 		
-//		notPlayedOrigional.removeAll(d._notPlayed);
-//		d._hand.removeAll(handOrigional);
-//		assertEquals(d._hand.get(0), notPlayedOrigional.get(0));
+		assertTrue(d._played.containsAll(playedOrigional));
+		assertFalse(playedOrigional.containsAll(d._played));
+		
+		assertFalse(d._hand.containsAll(handOrigional));
+		assertTrue(handOrigional.containsAll(d._hand));
+		
+		assertEquals(playedOrigional.size() + 1, d._played.size());
+		assertEquals(handOrigional.size() - 1, d._hand.size());
+	}
+	
+	@Test
+	public void testPlayCardMiddle() {
+		d.playCard(d._hand.get((d._hand.size() - 1)/2));
+		
+		assertTrue(d._played.containsAll(playedOrigional));
+		assertFalse(playedOrigional.containsAll(d._played));
+		
+		assertFalse(d._hand.containsAll(handOrigional));
+		assertTrue(handOrigional.containsAll(d._hand));
+		
+		assertEquals(playedOrigional.size() + 1, d._played.size());
+		assertEquals(handOrigional.size() - 1, d._hand.size());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testPlayCardFailures() {
-		d.PlayCard(new Card());
+	public void testPlayCardFailure() {
+		d.playCard(new Card());
 	}
 }

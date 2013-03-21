@@ -41,6 +41,7 @@ public class Game extends JFrame {
 	
 	public static void main(String[] args) {
 		JFrame frame  = new JFrame();
+		frame.setSize(1000, 1000);
 		
 		ArrayList<Player> pList = new ArrayList<Player>();
 		pList.add(new Player());

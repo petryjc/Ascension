@@ -68,12 +68,12 @@ public class DeckTest {
 	@Test
 	public void testDrawCardWEmpty() {
 		Deck d = new Deck();
-		assertFalse(d.DrawCard());
+		assertFalse(d.drawCard());
 	}
 	
 	@Test
 	public void testDrawCardWNormal() {
-		assertTrue(d.DrawCard());
+		assertTrue(d.drawCard());
 		
 		assertTrue(notPlayedOrigional.containsAll(d._notPlayed));
 		assertFalse(d._notPlayed.containsAll(notPlayedOrigional));
@@ -98,7 +98,7 @@ public class DeckTest {
 		notPlayedOrigional = new ArrayList<Card>();
 		notPlayedOrigional.addAll(d._notPlayed);
 		d.generator = new Random(12345432);
-		d.Shuffle();
+		d.shuffle();
 		assertTrue(notPlayedOrigional.containsAll(d._notPlayed));
 		assertTrue(d._notPlayed.containsAll(notPlayedOrigional));
 		boolean pass = false;
@@ -112,7 +112,7 @@ public class DeckTest {
 	public void testAddNewCardToDiscard() {
 		
 		Card c = new Card();
-		d.AddNewCardToDiscard(c);
+		d.addNewCardToDiscard(c);
 		assertTrue(d._discard.containsAll(discardOrigional));
 		assertFalse(discardOrigional.containsAll(d._discard));
 		d._discard.removeAll(discardOrigional);
