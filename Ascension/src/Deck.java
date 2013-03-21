@@ -1,7 +1,12 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.swing.JComponent;
 
 
 public class Deck {
@@ -10,19 +15,25 @@ public class Deck {
 	ArrayList<Card> _discard;
 	Random generator = new Random();
 	Rectangle location;
+	Image i;
 
 	public Deck() {
-		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>());
-	}
-
-	public Deck(ArrayList<Card> notPlayed) {
-		this(notPlayed, new ArrayList<Card>(), new ArrayList<Card>());
+		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), null);
 	}
 	
-	public Deck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard) {
+	public Deck(Rectangle location) {
+		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), location);
+	}
+
+	public Deck(ArrayList<Card> notPlayed, Rectangle location) {
+		this(notPlayed, new ArrayList<Card>(), new ArrayList<Card>(), location);
+	}
+	
+	public Deck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, Rectangle location) {
 		_notPlayed = notPlayed;
 		_hand = hand;
 		_discard = discard;
+		this.location = location;
 	}
 
 	public boolean drawCard() {

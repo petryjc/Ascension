@@ -1,7 +1,11 @@
 import static org.junit.Assert.*;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +32,7 @@ public class DeckTest {
 		discardOrigional = new ArrayList<Card>();
 		discardOrigional.addAll(discard);
 		
-		d = new Deck(notPlayed, hand, discard);
+		d = new Deck(notPlayed, hand, discard, new Rectangle());
 	}
 	
 	@Test
@@ -48,7 +52,7 @@ public class DeckTest {
 	@Test
 	public void testConstructorWNotPlayed() {
 		ArrayList<Card> notPlayed = randomCardList();
-		Deck d = new Deck(notPlayed);
+		Deck d = new Deck(notPlayed, new Rectangle());
 		assertEquals(notPlayed, d._notPlayed);
 		assertEquals(new ArrayList<Card>(), d._hand);
 		assertEquals(new ArrayList<Card>(), d._discard);
@@ -59,7 +63,7 @@ public class DeckTest {
 		ArrayList<Card> notPlayed = randomCardList();
 		ArrayList<Card> hand = randomCardList();
 		ArrayList<Card> discard = randomCardList();
-		Deck d = new Deck(notPlayed, hand, discard);
+		Deck d = new Deck(notPlayed, hand, discard, new Rectangle());
 		assertEquals(notPlayed, d._notPlayed);
 		assertEquals(hand, d._hand);
 		assertEquals(discard, d._discard);

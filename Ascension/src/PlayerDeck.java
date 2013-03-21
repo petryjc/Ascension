@@ -11,15 +11,15 @@ public class PlayerDeck extends Deck {
 	}
 
 	public PlayerDeck(ArrayList<Card> notPlayed) {
-		super(notPlayed);
+		super(notPlayed, null);
 	}
 	
 	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard) {
-		super(notPlayed, hand, discard);
+		super(notPlayed, hand, discard, null);
 	}
 	
 	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, ArrayList<Card> played, ArrayList<Card> constructs) {
-		super(notPlayed, hand, discard);
+		super(notPlayed, hand, discard, null);
 		_played = played;
 		_constructs = constructs;
 	}
