@@ -7,8 +7,11 @@ public class TurnTest {
 
 	@Test
 	public void testInitialization() {
-		Turn t = new Turn();
-		assertNotNull(t);
+		
+		Player player1 = new Player(null);
+		
+		
+		
 	}
 
 }
