@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Deck {
 	///////////////Used to draw cards within Deck Location////////////
-	public static final float cardDimensionRatio = 2; //height divided by width
+	public static final float cardDimensionRatio = 4; //height divided by width
 	int yBorder = 4;  // Space between cards and top/bottom
 	int xBorder = 4;  // Space between cards and edges
 	/////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ public class Deck {
 			return;
 		
 		int size = cardList.size();
-		int sf1 = (int) Math.round(location.height/cardDimensionRatio-2*yBorder);
+		int sf1 = (int) Math.round((location.height-2*yBorder)/cardDimensionRatio);
 		int sf2 = (int) Math.round((location.width - (size + 1) * xBorder)/(size + 0.0));
 		int sf = Math.min(sf1, sf2);
 		int x = xBorder + location.x;
