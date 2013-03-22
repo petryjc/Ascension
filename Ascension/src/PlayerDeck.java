@@ -48,6 +48,9 @@ public class PlayerDeck extends Deck {
 			throw new IllegalArgumentException("Cannot have a card that is not of type hero or construct");
 		}
 		
+		played.add(c);
+		nullOutCardLocation(played);
+		setCardListWithinLocation(played, playedLocation);
 		return c;
 	}
 	
@@ -55,5 +58,18 @@ public class PlayerDeck extends Deck {
 		super.resetHandLocation();
 		setCardListWithinLocation(played, playedLocation);
 		setCardListWithinLocation(constructs, constructLocation);
+	}
+	public void endTurn(){
+		for(Card c:this.hand){
+			this.discard.add(c);
+		}
+		for(Card d:this.played){
+			this.discard.add(d);
+		}
+		this.hand = new ArrayList<Card>();
+		this.played = new ArrayList<Card>();
+		resetHandLocation();
+		nullOutCardLocation(played);
+		setCardListWithinLocation(played, playedLocation);
 	}
 }

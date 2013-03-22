@@ -187,7 +187,7 @@ public class DeckTest {
 	public static ArrayList<Card> randomCardList() {
 		ArrayList<Card> ret = new ArrayList<Card>();
 		Random generator = new Random();
-		int c = 10;
+		int c = 5;
 		for (int i = 0; i < c; i++) {
 			int t = generator.nextInt(1);
 			if (t == 0)

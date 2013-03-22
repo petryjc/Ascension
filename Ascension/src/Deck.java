@@ -127,6 +127,5 @@ public class Deck {
 			c.setLocation(null);
 		}
 	}
-	
 
 }
