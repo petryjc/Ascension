@@ -3,6 +3,7 @@ public class Player {
 	
 	public PlayerDeck playerDeck;
 	public int honorTotal;
+	public boolean yourTurn;
 	
 	public Player(){
 		
@@ -17,11 +18,8 @@ public class Player {
 		this.honorTotal += incre;
 	}
 	
-	
 	public void startingHand(){
-		for(int i = 0; i < 5; i++){
-			this.playerDeck.drawCard();
-		}
+		this.playerDeck.drawNCards(5);
 	}
 	
 }
