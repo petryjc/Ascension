@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Deck {
 	///////////////Used to draw cards within Deck Location////////////
-	public static final float cardDimensionRatio = 4; //height divided by width
+	public static final float cardDimensionRatio = 2; //height divided by width
 	int yBorder = 4;  // Space between cards and top/bottom
 	int xBorder = 4;  // Space between cards and edges
 	/////////////////////////////////////////////////////////////////
@@ -73,8 +73,10 @@ public class Deck {
 	
 	public boolean drawNCards(int n) {
 		for(int i = 0; i < n; i++) {
-			if(!drawCard())
+			if(!drawCard()) {
+				System.out.println("Here");
 				return false;
+			}
 		}
 		return true;
 	}

@@ -41,16 +41,16 @@ public class PlayerDeck extends Deck {
 			throw new IllegalArgumentException("Cannot play a card that is not in your hand");
 		}
 		if(c.getType() == Card.Type.Construct) {
+			System.out.println("1");
 			constructs.add(c);
 		} else if(c.getType() == Card.Type.Hero) {
+			System.out.println("2");
 			played.add(c);
 		} else {
 			throw new IllegalArgumentException("Cannot have a card that is not of type hero or construct");
 		}
 		
-		played.add(c);
-		nullOutCardLocation(played);
-		setCardListWithinLocation(played, playedLocation);
+		resetHandLocation();
 		return c;
 	}
 	
@@ -69,7 +69,7 @@ public class PlayerDeck extends Deck {
 		this.hand = new ArrayList<Card>();
 		this.played = new ArrayList<Card>();
 		resetHandLocation();
-		nullOutCardLocation(played);
-		setCardListWithinLocation(played, playedLocation);
+		//nullOutCardLocation(played);
+		//setCardListWithinLocation(played, playedLocation);
 	}
 }

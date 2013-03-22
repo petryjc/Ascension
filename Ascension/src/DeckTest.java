@@ -187,9 +187,9 @@ public class DeckTest {
 	public static ArrayList<Card> randomCardList() {
 		ArrayList<Card> ret = new ArrayList<Card>();
 		Random generator = new Random();
-		int c = 5;
+		int c = 15;
 		for (int i = 0; i < c; i++) {
-			int t = generator.nextInt(1);
+			int t = generator.nextInt(2);
 			if (t == 0)
 				ret.add(new Card(Card.Type.Construct, Card.Faction.Enlightened));
 			else

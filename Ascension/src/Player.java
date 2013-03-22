@@ -3,7 +3,6 @@ public class Player {
 	
 	public PlayerDeck playerDeck;
 	public int honorTotal;
-	public boolean yourTurn;
 	
 	public Player(){
 		
@@ -21,5 +20,4 @@ public class Player {
 	public void startingHand(){
 		this.playerDeck.drawNCards(5);
 	}
-	
 }

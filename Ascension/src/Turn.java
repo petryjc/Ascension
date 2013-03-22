@@ -4,14 +4,13 @@
 public class Turn {
 
 	Player player;
-	Deck gameDeck;
 	int rune;
 	int power;
 	
-	public Turn(Player player, Deck gameDeck){
+	public Turn(Player player){
 		this.player = player;
-		this.player.startingHand();
-		this.gameDeck = gameDeck;
+		this.rune = 0;
+		this.power = 0;
 	}
 	
 	

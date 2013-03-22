@@ -16,11 +16,13 @@ public class Game extends JComponent {
 	public ArrayList<Player> players;
 	public Deck gameDeck;
 	public MouseListen theListener;
+	public Turn currentTurn;
 	
-	private static Rectangle handLoc = new Rectangle(182,670,1110,150);
-	private static Rectangle playedLoc = new Rectangle(335,470,1050,150);
-	private static Rectangle centerRow = new Rectangle(210,260,1070,150);
-	private static Rectangle constructs = new Rectangle(60, 860, 1540, 895);
+	private static Rectangle centerRow = new Rectangle(204,253,1168,167);
+	
+	private static Rectangle handLoc = new Rectangle(184,670,1224,160);
+	private static Rectangle playedLoc = new Rectangle(184,460,1224,161);
+	private static Rectangle constructs = new Rectangle(52, 856, 1495, 160);
 	
 	Game(int honor) {
 		this(honor, null, null);
@@ -48,69 +50,58 @@ public class Game extends JComponent {
 		
 		Image image_card = new ImageIcon(this.getClass().getResource("BasicUser.jpg")).getImage();
 		
-		for(Player p:this.players){
-			if(p.yourTurn){
-				for(Card c:p.playerDeck.hand){
-					g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
-				}
-				for(Card c:this.gameDeck.hand) {
-					g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
-				}
-				for(Card c:p.playerDeck.played) {
-					g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
-				}
-			}else{
-				continue;
-			}
+		if(this.gameDeck.hand == null || this.currentTurn == null || this.currentTurn.player.playerDeck == null) {
+			System.out.println("Fail");
+			return;
+		}
+		for(Card c:this.gameDeck.hand) {
+			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+		}
+		for(Card c:this.currentTurn.player.playerDeck.played) {
+			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+		}
+		for(Card c:this.currentTurn.player.playerDeck.constructs) {
+			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+		}
+		for(Card c:this.currentTurn.player.playerDeck.hand){
+			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
 		
-		
-	
-	
 	}
 	
 	
 	public void play() {
 
+		this.theListener = new MouseListen(null, this);
+		this.addMouseListener(this.theListener);
 
+		nextTurn();
+		
 		while (this.totalHonor > 0) {
 			try {
-				
-				for(int i = 0; i < this.players.size(); i++){
-					
-					Player current = this.players.get(i);
-					
-					current.playerDeck.drawNCards(5);
-					
-					current.yourTurn = true;
-					
-					Turn thisTurn = new Turn(current, this.gameDeck);
-					
-					
-					this.addMouseListener(new MouseListen(thisTurn));
-					
-					this.repaint();
-					
-					while(current.yourTurn){
-						
-						Thread.sleep(50);
-						this.repaint();
-						
-					}
-					
-				}
-				
-				Thread.sleep(400);
-				this.repaint();
-				
+				Thread.sleep(50);
+				repaint();
 			} catch (Exception e) {
-				System.out.println("Errored out.");
+				e.printStackTrace();
 			}
+		
 		}
-		
-		
 
 	}
+	
+	public void nextTurn() {
+		if(currentTurn == null) {
+			this.currentTurn = new Turn(players.get(0));
+		} else {
+			int i = players.indexOf(currentTurn.player);
+			int n = (i++) % players.size();
+			this.currentTurn = new Turn(players.get(n));
+		}
+		
+		this.currentTurn.player.startingHand();
+		this.theListener.setTurn(this.currentTurn);
+	}
+	
 	public void loadGame(){
 		ArrayList<Card> start = new ArrayList<Card>();
 		PlayerDeck startingDeck = new PlayerDeck(start, null, null, null);
@@ -123,18 +114,19 @@ public class Game extends JComponent {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		
-		frame.setSize(1600, 900);
+		frame.setSize(1620, 940);
 		frame.setVisible(true);
 
 		ArrayList<Card> notPlayed = DeckTest.randomCardList();
-		ArrayList<Card> hand = DeckTest.randomCardList();
-		ArrayList<Card> discard = DeckTest.randomCardList();
+		ArrayList<Card> hand = new ArrayList<Card>();
+		ArrayList<Card> discard = new ArrayList<Card>();
 		
 		Deck d = new Deck(notPlayed, hand, discard, centerRow);
+		d.drawNCards(6);
 		
 		ArrayList<Card> notPlayed2 = DeckTest.randomCardList();
-		ArrayList<Card> hand2 = DeckTest.randomCardList();
-		ArrayList<Card> discard2 = DeckTest.randomCardList();
+		ArrayList<Card> hand2 =  new ArrayList<Card>();
+		ArrayList<Card> discard2 =  new ArrayList<Card>();
 		
 		PlayerDeck pD = new PlayerDeck(notPlayed2, hand2, discard2, handLoc, playedLoc, constructs);
 		
@@ -149,7 +141,6 @@ public class Game extends JComponent {
 		
 		g.play();
 		
-		g.addMouseListener(g.theListener);
 		
 		
 		
