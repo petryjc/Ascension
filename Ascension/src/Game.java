@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Locale.Category;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -48,23 +49,20 @@ public class Game extends JComponent {
 		g2.drawImage(image_back,0,0,1600,900,null);
 		
 		
-		Image image_card = new ImageIcon(this.getClass().getResource("BasicUser.jpg")).getImage();
-		
 		if(this.gameDeck.hand == null || this.currentTurn == null || this.currentTurn.player.playerDeck == null) {
-			System.out.println("Fail");
 			return;
 		}
 		for(Card c:this.gameDeck.hand) {
-			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+			g2.drawImage(c.getImage(), c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
 		for(Card c:this.currentTurn.player.playerDeck.played) {
-			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+			g2.drawImage(c.getImage(), c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
 		for(Card c:this.currentTurn.player.playerDeck.constructs) {
-			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+			g2.drawImage(c.getImage(), c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
 		for(Card c:this.currentTurn.player.playerDeck.hand){
-			g2.drawImage(image_card, c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
+			g2.drawImage(c.getImage(), c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
 		
 	}
@@ -124,7 +122,20 @@ public class Game extends JComponent {
 		Deck d = new Deck(notPlayed, hand, discard, centerRow);
 		d.drawNCards(6);
 		
-		ArrayList<Card> notPlayed2 = DeckTest.randomCardList();
+		ArrayList<Card> notPlayed2 = new ArrayList<Card>();
+		
+		ArrayList<Action> action1 = new ArrayList<Action>();
+		action1.add(new Action(1, Action.ActionType.RuneBoost));
+		for(int i = 0; i < 8; i++) {
+			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action1, "Apprentice"));
+		}
+		
+		ArrayList<Action> action2 = new ArrayList<Action>();
+		action2.add(new Action(1, Action.ActionType.PowerBoost));
+		for(int i = 0; i < 2; i++) {
+			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action2, "Militia"));
+		}
+		
 		ArrayList<Card> hand2 =  new ArrayList<Card>();
 		ArrayList<Card> discard2 =  new ArrayList<Card>();
 		
@@ -138,13 +149,11 @@ public class Game extends JComponent {
 		g.players.add(new Player(pD));
 		
 		frame.add(g);
+
+		frame.setVisible(true);
+		frame.setSize(1621, 941);
 		
 		g.play();
-		
-		
-		
-		
-		frame.setVisible(true);
 		
 	}
 }
