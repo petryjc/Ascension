@@ -1,10 +1,11 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,8 +13,6 @@ import javax.swing.JPanel;
 
 public class Game extends JComponent {
 	
-
-	int i;
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -21,8 +20,12 @@ public class Game extends JComponent {
 		Graphics2D g2 = (Graphics2D) g;
 
 		g2.setColor(Color.BLACK);
-		g2.fill(gameDeck.location);
-		g2.draw(gameDeck.location);
+		//g2.draw(gameDeck.location);
+		Image image = new ImageIcon(this.getClass().getResource("BasicUser.jpg")).getImage();
+		g2.draw(gameDeck.handLocation);
+		for(Card c : gameDeck.hand) {
+			g2.drawImage(image, c.getLocation().x, c.getLocation().y, c.getLocation().width, c.getLocation().height, null);
+		}
 	}
 
 	
@@ -72,23 +75,21 @@ public class Game extends JComponent {
 	}
 	
 	public static void main(String[] args) {
-		JFrame frame  = new JFrame();
-		frame.setSize(1000, 1000);
+		JFrame f = new JFrame();
+		f.setSize(1500, 900);
+		f.setVisible(true);
+		ArrayList<Player> pl  = new ArrayList<Player>();
+		pl.add(new Player());
+		pl.add(new Player());
+		ArrayList<Card> notPlayed = DeckTest.randomCardList();
 		
-		ArrayList<Player> pList = new ArrayList<Player>();
-		Player p1 = new Player();
-		p1.playerDeck = new PlayerDeck(new ArrayList<Card>());
-		p1.playerDeck.location = new Rectangle(0,1000,1000,500);
-		pList.add(p1);
-		pList.add(new Player());
-		Game g = new Game(100,pList);
-		frame.add(g);
-		frame.setVisible(true);
-		if(g.getGraphics() == null)
-			System.out.println("Double Fail");
-		g.gameDeck = new Deck(new Rectangle(0,500,1000,1000));
+		ArrayList<Card> hand =  DeckTest.randomCardList();
+		
+		ArrayList<Card> discard =  DeckTest.randomCardList();
+		
+		Deck d = new Deck(notPlayed, hand, discard, new Rectangle(0,500,1000,300));
+		Game g = new Game(100,pl, d);
+		f.add(g);
 		g.playTheGame();
-		
-		
 	}
 }

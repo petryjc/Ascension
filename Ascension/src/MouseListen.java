@@ -1,4 +1,4 @@
-import java.awt.event.MouseAdapter;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -12,12 +12,11 @@ public class MouseListen implements MouseListener{
 
 	public void mouseClicked(MouseEvent e) {
 		
-		int xPos = e.getLocationOnScreen().x;
-		int yPos = e.getLocationOnScreen().y;
+		Point location = e.getLocationOnScreen();
 		
 		if(e.getButton() == MouseEvent.BUTTON1){
 			System.out.println("hello");	
-			//turn.player.playerDeck.HandleClick
+			turn.player.playerDeck.handleClick(location);
 			
 			
 		}else if(e.getButton() == MouseEvent.BUTTON3){

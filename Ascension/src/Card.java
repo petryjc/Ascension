@@ -4,6 +4,20 @@ import java.awt.Rectangle;
 
 public class Card {
 	
+	public Card() {
+		this(null,null,null);
+	}
+	
+	public Card(Type type, Faction faction) {
+		this(null, type, faction);
+	}
+	
+	public Card(Rectangle location, Type type, Faction faction) {
+		this.location = location;
+		this.type = type;
+		this.faction = faction;
+	}
+	
 	public enum Faction {
 		Mechana, Lifebound, Void, Enlightened
 	}
@@ -41,6 +55,8 @@ public class Card {
 	}
 
 	public boolean onCard(Point p) {
+		if(location == null)
+			return false;
 		return location.contains(p);
 	}
 	
