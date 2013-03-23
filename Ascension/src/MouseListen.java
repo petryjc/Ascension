@@ -2,16 +2,12 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Date;
-
 
 public class MouseListen implements MouseListener{
 	private Turn turn;
-	private Game game;
 	
-	MouseListen(Turn t, Game g) {
+	MouseListen(Turn t) {
 		this.turn = t;
-		this.game = g;
 	}
 	
 	public void setTurn(Turn t) {
@@ -55,23 +51,11 @@ public class MouseListen implements MouseListener{
 //		
 		
 		Point loc = e.getLocationOnScreen();
-		Rectangle end = new Rectangle(1460,492, 91, 91);
 		
 		if(e.getButton() == MouseEvent.BUTTON1){
-			System.out.println("Hello");
-			if(end.contains(loc)){
-				this.turn.player.playerDeck.endTurn();
-				game.nextTurn();
-			}
-			else{
-				if(turn == null) 
-					return;
-				turn.player.playerDeck.handleClick(loc);
-			}
+			turn.leftButtonClick(loc);
 			
 		}else if(e.getButton() == MouseEvent.BUTTON3){
-			
-			System.out.println("hello friend");
 			
 			
 		}else{

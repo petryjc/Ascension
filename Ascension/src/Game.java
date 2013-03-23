@@ -30,14 +30,13 @@ public class Game extends JComponent {
 	}
 	
 	
+	
 	Game(int honor, ArrayList<Player> players, Deck gameDeck) {
 		this.totalHonor = honor;
 		this.players = players;
 		this.gameDeck = gameDeck;
 		
 	}
-
-	int i;
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -62,6 +61,7 @@ public class Game extends JComponent {
 		for(Card c:this.currentTurn.player.playerDeck.hand){
 			g2.drawImage(c.getImage(), c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
+		
 		//Draw the table with players and their current honor
 		g2.setFont(new Font("TimesNewRoman",30,20));
 		for(int i = 0; i < this.players.size(); i++) {
@@ -78,10 +78,9 @@ public class Game extends JComponent {
 		g2.drawString(currentTurn.power + "", 790, 100);
 	}
 	
-	
 	public void play() {
 
-		this.theListener = new MouseListen(null, this);
+		this.theListener = new MouseListen(null);
 		this.addMouseListener(this.theListener);
 
 		nextTurn();
@@ -100,11 +99,11 @@ public class Game extends JComponent {
 	
 	public void nextTurn() {
 		if(currentTurn == null) {
-			this.currentTurn = new Turn(players.get(0));
+			this.currentTurn = new Turn(players.get(0),this);
 		} else {
 			int i = players.indexOf(currentTurn.player);
 			int n = (i++) % players.size();
-			this.currentTurn = new Turn(players.get(n));
+			this.currentTurn = new Turn(players.get(n), this);
 		}
 		
 		this.currentTurn.player.startingHand();
