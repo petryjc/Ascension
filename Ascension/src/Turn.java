@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 
 
@@ -23,12 +24,15 @@ public class Turn {
 		if(end.contains(loc)){
 			this.player.playerDeck.endTurn();
 			this.game.nextTurn();
+			return;
 		}
-		else{
-			Card c = this.player.playerDeck.handleClick(loc);
-			if(c != null) {
-				executeCardAction(c);
-			}
+		Card c = this.player.playerDeck.handleClick(loc);
+		if(c != null) {
+			executeCardAction(c);
+			return;
+		}
+		if(staticCardList(this.game.gameDeck.constructs, loc)) {
+			return;
 		}
 	}
 	
@@ -42,6 +46,27 @@ public class Turn {
 				this.rune += a.magnitude;
 			}
 		}
+	}
+	
+	public boolean staticCardList(ArrayList<Card> s, Point p) {
+		for(Card c : s) {
+			if(c.getLocation().contains(p)) {
+				if(c.getType() == Card.Type.Monster) {
+					if(c.getCost() <= this.power) {
+						this.power -= c.getCost();
+						executeCardAction(c);
+					}
+				} else {
+					if(c.getCost() <= this.rune) {
+						this.rune -= c.getCost();
+						//Todo copy card
+						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+					}
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

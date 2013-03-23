@@ -15,27 +15,28 @@ public class Deck {
 	ArrayList<Card> notPlayed;
 	ArrayList<Card> hand;
 	ArrayList<Card> discard;
+	ArrayList<Card> constructs;
 	Random generator = new Random();
 	Rectangle handLocation;
 
 	public Deck() {
-		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), null);
+		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), null);
 	}
 	
 	public Deck(Rectangle location) {
-		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), location);
+		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), location);
 	}
 
 	public Deck(ArrayList<Card> notPlayed, Rectangle location) {
-		this(notPlayed, new ArrayList<Card>(), new ArrayList<Card>(), location);
+		this(notPlayed, new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), location);
 	}
 	
-	public Deck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, Rectangle location) {
+	public Deck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, ArrayList<Card> constructs, Rectangle location) {
 		this.notPlayed = notPlayed;
 		this.hand = hand;
 		this.discard = discard;
 		this.handLocation = location;
-		
+		this.constructs = constructs;
 		resetHandLocation();
 	}
 

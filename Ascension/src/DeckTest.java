@@ -31,7 +31,7 @@ public class DeckTest {
 		discardOrigional.addAll(discard);
 
 		handLocation = new Rectangle(0, 500, 1000, 300);
-		d = new Deck(notPlayed, hand, discard, handLocation);
+		d = new Deck(notPlayed, hand, discard, new ArrayList<Card>(), handLocation);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class DeckTest {
 		ArrayList<Card> notPlayed = randomCardList();
 		ArrayList<Card> hand = randomCardList();
 		ArrayList<Card> discard = randomCardList();
-		Deck d = new Deck(notPlayed, hand, discard, handLocation);
+		Deck d = new Deck(notPlayed, hand, discard, new ArrayList<Card>(), handLocation);
 		assertEquals(notPlayed, d.notPlayed);
 		assertEquals(hand, d.hand);
 		assertEquals(discard, d.discard);
@@ -165,7 +165,6 @@ public class DeckTest {
 
 	@Test
 	public void testHandleClickNothing() {
-		Card c;
 		assertEquals(null,
 				d.handleClick(new Point(handLocation.x, handLocation.y)));
 
@@ -176,7 +175,6 @@ public class DeckTest {
 
 	@Test
 	public void testHandleClickOutside() {
-		Card c;
 		assertEquals(null, d.handleClick(new Point(0, 0)));
 
 		assertTrue(handOrigional.containsAll(d.hand));

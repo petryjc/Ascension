@@ -21,6 +21,10 @@ public class Card {
 		this(null,null,null, 0, new ArrayList<Action>(),"");
 	}
 	
+	public Card(Card c) {
+		this(c.location, c.type, c.faction, c.cost, c.actions, c.name);
+	}
+	
 	public Card(Type type, Faction faction) {
 		this(null, type, faction, 0, new ArrayList<Action>(),"");
 	}
@@ -36,7 +40,7 @@ public class Card {
 		this.cost = cost;
 		this.actions = actions;
 		this.name = name;
-		URL url = this.getClass().getResource(name + ".jpg");
+		URL url = this.getClass().getResource(this.name + ".jpg");
 		if(url != null) {
 			i = new ImageIcon(url).getImage();
 		} else {

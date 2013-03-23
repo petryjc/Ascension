@@ -7,7 +7,6 @@ public class PlayerDeck extends Deck {
 	ArrayList<Card> played;
 	Rectangle playedLocation;
 	
-	ArrayList<Card> constructs;
 	Rectangle constructLocation;
 	
 	public PlayerDeck() {
@@ -28,10 +27,9 @@ public class PlayerDeck extends Deck {
 	
 	public PlayerDeck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, ArrayList<Card> played, 
 			ArrayList<Card> constructs,Rectangle handLocation, Rectangle playedLocation, Rectangle constructLocation) {
-		super(notPlayed, hand, discard, handLocation);
+		super(notPlayed, hand, discard, constructs, handLocation);
 		this.played = played;
 		this.playedLocation = playedLocation;
-		this.constructs = constructs;
 		this.constructLocation = constructLocation;
 		resetHandLocation();
 	}
@@ -41,10 +39,8 @@ public class PlayerDeck extends Deck {
 			throw new IllegalArgumentException("Cannot play a card that is not in your hand");
 		}
 		if(c.getType() == Card.Type.Construct) {
-			System.out.println("1");
 			constructs.add(c);
 		} else if(c.getType() == Card.Type.Hero) {
-			System.out.println("2");
 			played.add(c);
 		} else {
 			throw new IllegalArgumentException("Cannot have a card that is not of type hero or construct");
