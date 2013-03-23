@@ -1,16 +1,20 @@
+import java.util.ArrayList;
+
 
 public class Player {
 	
 	public PlayerDeck playerDeck;
 	public int honorTotal;
+	public String name;
 	
 	public Player(){
 		
 	}
 	
-	public Player(PlayerDeck deck){
+	public Player(PlayerDeck deck, String name){
 		this.playerDeck = deck;
 		this.honorTotal = 0;
+		this.name = name;
 	}
 	
 	public void inncrementHonor(int incre){
@@ -20,4 +24,29 @@ public class Player {
 	public void startingHand(){
 		this.playerDeck.drawNCards(5);
 	}
+	
+	public static Player getNewPlayer(String name) {
+
+		ArrayList<Card> notPlayed2 = new ArrayList<Card>();
+		
+		ArrayList<Action> action1 = new ArrayList<Action>();
+		action1.add(new Action(1, Action.ActionType.RuneBoost));
+		for(int i = 0; i < 8; i++) {
+			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action1, "Apprentice"));
+		}
+		
+		ArrayList<Action> action2 = new ArrayList<Action>();
+		action2.add(new Action(1, Action.ActionType.PowerBoost));
+		for(int i = 0; i < 2; i++) {
+			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action2, "Militia"));
+		}
+		
+		ArrayList<Card> hand2 =  new ArrayList<Card>();
+		ArrayList<Card> discard2 =  new ArrayList<Card>();
+		
+		PlayerDeck pD = new PlayerDeck(notPlayed2, hand2, discard2, Game.handLoc, Game.playedLoc, Game.constructs);
+		pD.shuffle();
+		return new Player(pD, name);
+	}
+
 }

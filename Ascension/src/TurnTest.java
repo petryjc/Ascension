@@ -8,7 +8,7 @@ public class TurnTest {
 	@Test
 	public void testInitialization() {
 		
-		Player player1 = new Player(null);
+		Player player1 = new Player(null, null);
 		
 		
 		

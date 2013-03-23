@@ -1,10 +1,9 @@
-import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Locale.Category;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -18,12 +17,13 @@ public class Game extends JComponent {
 	public Deck gameDeck;
 	public MouseListen theListener;
 	public Turn currentTurn;
+	Image image_back;
 	
 	private static Rectangle centerRow = new Rectangle(204,253,1168,167);
 	
-	private static Rectangle handLoc = new Rectangle(184,670,1224,160);
-	private static Rectangle playedLoc = new Rectangle(184,460,1224,161);
-	private static Rectangle constructs = new Rectangle(52, 856, 1495, 160);
+	public static Rectangle handLoc = new Rectangle(184,670,1224,160);
+	public static Rectangle playedLoc = new Rectangle(184,460,1224,161);
+	public static Rectangle constructs = new Rectangle(52, 856, 1495, 160);
 	
 	Game(int honor) {
 		this(honor, null, null);
@@ -42,13 +42,11 @@ public class Game extends JComponent {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		Graphics2D g2 = (Graphics2D) g;
 		
-		Image image_back = new ImageIcon(this.getClass().getResource("Background.jpg")).getImage();
 		g2.drawImage(image_back,0,0,1600,900,null);
 		
-		
+		//draw the four visible card sets
 		if(this.gameDeck.hand == null || this.currentTurn == null || this.currentTurn.player.playerDeck == null) {
 			return;
 		}
@@ -64,7 +62,20 @@ public class Game extends JComponent {
 		for(Card c:this.currentTurn.player.playerDeck.hand){
 			g2.drawImage(c.getImage(), c.getLocation().x,c.getLocation().y,c.getLocation().width,c.getLocation().height,null);
 		}
+		//Draw the table with players and their current honor
+		g2.setFont(new Font("TimesNewRoman",30,20));
+		for(int i = 0; i < this.players.size(); i++) {
+			Rectangle r = new Rectangle(0,i*30,200,30);
+			g2.draw(r);
+			g2.drawString(players.get(i).name, 5, i*30 + 28);
+			g2.drawString(players.get(i).honorTotal + "", 170, i*30 + 28);
+		}
 		
+		//Draw the additional game state info
+		g2.setFont(new Font("TimesNewRoman",30,50));
+		g2.drawString(currentTurn.player.honorTotal + "", 370, 100);
+		g2.drawString(currentTurn.rune + "", 585, 100);
+		g2.drawString(currentTurn.power + "", 790, 100);
 	}
 	
 	
@@ -100,15 +111,6 @@ public class Game extends JComponent {
 		this.theListener.setTurn(this.currentTurn);
 	}
 	
-	public void loadGame(){
-		ArrayList<Card> start = new ArrayList<Card>();
-		PlayerDeck startingDeck = new PlayerDeck(start, null, null, null);
-		
-		Player p1 = new Player(startingDeck);
-		
-		this.players.add(p1);
-	}
-
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		
@@ -122,31 +124,13 @@ public class Game extends JComponent {
 		Deck d = new Deck(notPlayed, hand, discard, centerRow);
 		d.drawNCards(6);
 		
-		ArrayList<Card> notPlayed2 = new ArrayList<Card>();
-		
-		ArrayList<Action> action1 = new ArrayList<Action>();
-		action1.add(new Action(1, Action.ActionType.RuneBoost));
-		for(int i = 0; i < 8; i++) {
-			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action1, "Apprentice"));
-		}
-		
-		ArrayList<Action> action2 = new ArrayList<Action>();
-		action2.add(new Action(1, Action.ActionType.PowerBoost));
-		for(int i = 0; i < 2; i++) {
-			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action2, "Militia"));
-		}
-		
-		ArrayList<Card> hand2 =  new ArrayList<Card>();
-		ArrayList<Card> discard2 =  new ArrayList<Card>();
-		
-		PlayerDeck pD = new PlayerDeck(notPlayed2, hand2, discard2, handLoc, playedLoc, constructs);
-		
 		ArrayList<Player> plays = new ArrayList<Player>();
 		
 		Game g = new Game(100,plays,d);
-		
+		g.image_back = new ImageIcon(g.getClass().getResource("Background.jpg")).getImage();
 	
-		g.players.add(new Player(pD));
+		g.players.add(Player.getNewPlayer("Jack"));
+		g.players.add(Player.getNewPlayer("Gabe"));
 		
 		frame.add(g);
 

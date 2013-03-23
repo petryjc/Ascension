@@ -10,7 +10,7 @@ public class GameTest {
 
 	@Test
 	public void testInitialization() {
-		Player player1 = new Player(null);
+		Player player1 = new Player(null, null);
 		
 		ArrayList<Player> players = new ArrayList<Player>();
 		
