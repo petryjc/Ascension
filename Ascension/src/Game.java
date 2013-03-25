@@ -64,13 +64,16 @@ public class Game extends JComponent {
 		
 		//Draw the table with players and their current honor
 		g2.setFont(new Font("TimesNewRoman",30,20));
+		g2.drawString(currentTurn.player.name, 5, 0 + 28);
+		g2.drawString(currentTurn.player.honorTotal + "", 170, 28);
+		this.players.remove(currentTurn.player);
 		for(int i = 0; i < this.players.size(); i++) {
-			Rectangle r = new Rectangle(0,i*30,200,30);
-			g2.draw(r);
-			g2.drawString(players.get(i).name, 5, i*30 + 28);
-			g2.drawString(players.get(i).honorTotal + "", 170, i*30 + 28);
+				Rectangle r = new Rectangle(0,(i + 1)*30,200,30);
+				g2.draw(r);
+				g2.drawString(players.get(i).name, 5, (i + 1)*30 + 28);
+				g2.drawString(players.get(i).honorTotal + "", 170, (i + 1)*30 + 28);
 		}
-		
+		this.players.add(currentTurn.player);
 		//Draw the additional game state info
 		g2.setFont(new Font("TimesNewRoman",30,50));
 		g2.drawString(currentTurn.player.honorTotal + "", 370, 100);
@@ -102,7 +105,8 @@ public class Game extends JComponent {
 			this.currentTurn = new Turn(players.get(0),this);
 		} else {
 			int i = players.indexOf(currentTurn.player);
-			int n = (i++) % players.size();
+			int n = (i + 1) % players.size();
+			System.out.println(n);
 			this.currentTurn = new Turn(players.get(n), this);
 		}
 		
