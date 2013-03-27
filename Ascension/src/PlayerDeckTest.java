@@ -143,7 +143,27 @@ public class PlayerDeckTest extends DeckTest{
 	}
 	
 	@Test
-	public void testShit() {
+	public void testClick() {
 		d.handleClick(new Point(150, 150));
 	}
+	
+	@Test
+	public void testEndTurn(){
+		PlayerDeck pd = new PlayerDeck();
+		for(int i = 0; i < 6; i++){
+			Card c = new Card();
+			Card c2 = new Card();
+			pd.hand.add(c);
+			pd.played.add(c2);
+		}
+		assertEquals(pd.hand.size(), 6);
+		assertEquals(pd.played.size(),6);
+		assertEquals(pd.discard.size(), 0);
+		pd.endTurn();
+		assertEquals(pd.hand.size(), 0);
+		assertEquals(pd.played.size(),0);
+		assertEquals(pd.discard.size(), 12);
+		
+	}
+	
 }
