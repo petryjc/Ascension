@@ -1,0 +1,7 @@
+Arha_Initiate "Arha_Initiate.jpg" Hero Enlightened 1 1 DrawCard 1
+Starchild "Starchild.jpg" Hero Lifebound 4 2 RuneBoost 1 DrawCard 1
+Lifebound_Initiate "Lifebound_Initiate.jpg" Hero Lifebound 1 2 RuneBoost 1 HonorBoost 1
+Samaels_Trickster "Samaels_Trickster.jpg" Monster Void 3 2 RuneBoost 1 HonorBoost 1
+Tormented_Soul "Tormented_Soul.jpg" Monster Void 3 2 HonorBoost 1 DrawCard 1
+Ascetic_of_the_Lidless_Eye "Ascetic_of_the_Lidless_Eye" Hero Enlightened 5 1 DrawCard 2
+Master_Dhartha "Master_Dhartha" Hero Enlightened 7 1 DrawCard 3
