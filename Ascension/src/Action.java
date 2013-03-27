@@ -5,7 +5,7 @@ public class Action {
 	ActionType action;
 	
 	public enum ActionType {
-		HonorBoost, RuneBoost, PowerBoost
+		HonorBoost, RuneBoost, PowerBoost, DrawCard
 	}
 	
 	public Action(int magnitude, ActionType at) {

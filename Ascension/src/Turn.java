@@ -2,9 +2,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-
-
-
 public class Turn {
 
 	Player player;
@@ -34,6 +31,9 @@ public class Turn {
 		if(staticCardList(this.game.gameDeck.constructs, loc)) {
 			return;
 		}
+		if(staticCardList(this.game.gameDeck.hand, loc)) {
+			return;
+		}
 	}
 	
 	public void executeCardAction(Card c) {
@@ -44,7 +44,8 @@ public class Turn {
 				this.power += a.magnitude;
 			} else if(a.action == Action.ActionType.RuneBoost) {
 				this.rune += a.magnitude;
-			}
+			} else if(a.action == Action.ActionType.DrawCard)
+				player.playerDeck.drawNCards(a.magnitude);
 		}
 	}
 	
@@ -55,12 +56,19 @@ public class Turn {
 					if(c.getCost() <= this.power) {
 						this.power -= c.getCost();
 						executeCardAction(c);
+						this.game.gameDeck.hand.remove(c);
+						if(!c.getName().equals("Cultist")) {
+						this.game.gameDeck.discard.add(c);
+						}
+						this.game.gameDeck.drawCard();
 					}
 				} else {
 					if(c.getCost() <= this.rune) {
 						this.rune -= c.getCost();
 						//Todo copy card
 						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						this.game.gameDeck.hand.remove(c);
+						this.game.gameDeck.drawCard();
 					}
 				}
 				return true;
