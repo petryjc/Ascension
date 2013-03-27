@@ -129,6 +129,7 @@ public class Game extends JComponent {
 		ArrayList<Card> centerDeck = getCenterDeck("src/centerDeck.txt");
 		
 		Deck d = new Deck(centerDeck, hand, discard, getTopCards(),centerRow);
+		d.shuffle();
 		d.drawNCards(6);
 		
 		ArrayList<Player> plays = new ArrayList<Player>();
@@ -202,11 +203,11 @@ public class Game extends JComponent {
 				ArrayList<Action> actions = new ArrayList<Action>();
 				for (int i = 1; i <= Integer.parseInt(tokens[5]); i++) {
 					Action.ActionType actionType;
-					if (tokens[5+i].equals("RuneBoost")) {
+					if (tokens[5+(2*i-1)].equals("RuneBoost")) {
 						actionType = Action.ActionType.RuneBoost;
-					} else if (tokens[5+i].equals("PowerBoost")) {
+					} else if (tokens[5+(2*i-1)].equals("PowerBoost")) {
 						actionType = Action.ActionType.PowerBoost;
-					} else if (tokens[5+i].equals("HonorBoost")) {
+					} else if (tokens[5+(2*i-1)].equals("HonorBoost")) {
 						actionType = Action.ActionType.HonorBoost;
 					} else {
 						actionType = Action.ActionType.DrawCard;
@@ -215,8 +216,10 @@ public class Game extends JComponent {
 					Action action = new Action(magnitude, actionType);
 					actions.add(action);
 				}
-				Card card = new Card(type, faction, cost, actions, name);
-				cards.add(card);
+				for (int i = 0; i < Integer.parseInt(tokens[1]); i++) {
+					Card card = new Card(type, faction, cost, actions, name);
+					cards.add(card);
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -14,6 +14,9 @@ public class Turn {
 		this.rune = 0;
 		this.power = 0;
 		this.game = g;
+		for (Card c : this.player.playerDeck.constructs) {
+			executeCardAction(c);
+		}
 	}
 	
 	public void leftButtonClick(Point loc) {
@@ -59,16 +62,18 @@ public class Turn {
 						this.game.gameDeck.hand.remove(c);
 						if(!c.getName().equals("Cultist")) {
 						this.game.gameDeck.discard.add(c);
-						}
 						this.game.gameDeck.drawCard();
+						}
 					}
 				} else {
 					if(c.getCost() <= this.rune) {
 						this.rune -= c.getCost();
 						//Todo copy card
 						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						if (this.game.gameDeck.hand.contains(c)) {
 						this.game.gameDeck.hand.remove(c);
 						this.game.gameDeck.drawCard();
+						}
 					}
 				}
 				return true;
