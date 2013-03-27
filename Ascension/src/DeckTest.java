@@ -31,7 +31,8 @@ public class DeckTest {
 		discardOrigional.addAll(discard);
 
 		handLocation = new Rectangle(0, 500, 1000, 300);
-		d = new Deck(notPlayed, hand, discard, new ArrayList<Card>(), handLocation);
+		d = new Deck(notPlayed, hand, discard, new ArrayList<Card>(),
+				handLocation);
 	}
 
 	@Test
@@ -71,7 +72,8 @@ public class DeckTest {
 		ArrayList<Card> notPlayed = randomCardList();
 		ArrayList<Card> hand = randomCardList();
 		ArrayList<Card> discard = randomCardList();
-		Deck d = new Deck(notPlayed, hand, discard, new ArrayList<Card>(), handLocation);
+		Deck d = new Deck(notPlayed, hand, discard, new ArrayList<Card>(),
+				handLocation);
 		assertEquals(notPlayed, d.notPlayed);
 		assertEquals(hand, d.hand);
 		assertEquals(discard, d.discard);
@@ -140,7 +142,8 @@ public class DeckTest {
 		assertEquals(
 				(c = handOrigional.get(0)),
 				d.handleClick(new Point(handLocation.x + handLocation.width
-						/ d.hand.size() / 2 - 10, handLocation.y + d.handLocation.height / 4)));
+						/ d.hand.size() / 2 - 10, handLocation.y
+						+ d.handLocation.height / 4)));
 		// check that it drew something
 		assertFalse(d.hand.containsAll(handOrigional));
 
@@ -196,4 +199,26 @@ public class DeckTest {
 		return ret;
 	}
 
+	@Test
+	public void testDrawNCards() {
+		Deck d = new Deck();
+		assertFalse(d.drawNCards(5));
+		for (int i = 0; i < 10; i++) {
+			Card c = new Card();
+			d.notPlayed.add(c);
+		}
+		assertTrue(d.drawNCards(5));
+
+	}
+
+	@Test
+	public void testDiscard() {
+		Deck d = new Deck();
+		Card c = new Card();
+		d.discard.add(c);
+		d.drawCard();
+		assertEquals(d.discard.size(), 0);
+		assertEquals(d.notPlayed.size(), 0);
+		assertEquals(d.hand.size(), 1);
+	}
 }
