@@ -155,7 +155,6 @@ public class Game extends JComponent {
 		} else {
 			int i = players.indexOf(currentTurn.player);
 			int n = (i + 1) % players.size();
-			System.out.println(n);
 			this.currentTurn = new Turn(players.get(n), this);
 		}
 		
@@ -266,6 +265,7 @@ public class Game extends JComponent {
 		
 		g.players.add(Player.getNewPlayer("Jack"));
 		g.players.add(Player.getNewPlayer("Gabe"));
+		g.players.add(Player.getNewPlayer("Kenny"));
 		
 		frame.add(g);
 		
@@ -273,6 +273,8 @@ public class Game extends JComponent {
 		frame.setSize(1621, 941);
 		
 		g.play();
+		
+		frame.dispose();
 		
 	}
 }
