@@ -1,21 +1,21 @@
-Arha_Initiate 3 Hero Enlightened 1 1 DrawCard 1
-Starchild 3 Hero Lifebound 4 3 RuneBoost 1 HonorBoost 1 DrawCard 1
-Lifebound_Initiate 3 Hero Lifebound 1 2 RuneBoost 1 HonorBoost 1
-The_All-Seeing_Eye 1 Construct Enlightened 6 1 DrawCard 1
-Samaels_Trickster 4 Monster Void 3 2 RuneBoost 1 HonorBoost 1
-Tormented_Soul 3 Monster Void 3 2 HonorBoost 1 DrawCard 1
-Ascetic_of_the_Lidless_Eye 2 Hero Enlightened 5 1 DrawCard 2
-Master_Dhartha 1 Hero Enlightened 7 1 DrawCard 3
-Flytrap_Witch 2 Hero Lifebound 5 2 HonorBoost 2 DrawCard 1
-Landtalker 1 Hero Lifebound 6 1 RuneBoost 3
-Nairi,_Henge_Queen 1 Hero Lifebound 6 1 HonorBoost 5
-Wolf_Shaman 3 Hero Lifebound 3 2 RuneBoost 1 DrawCard 1
-Everbloom 2 Construct Lifebound 3 1 HonorBoost 1
-Demon_Slayer 2 Hero Void 4 1 PowerBoost 3
-Emri,_One_with_the_Void 1 Hero Void 6 1 PowerBoost 4
-Spike_Vixen 2 Hero Void 2 2 PowerBoost 1 DrawCard 1
-Muramasa 1 Construct Void 7 1 PowerBoost 3
-Shadow_Star 2 Construct Void 3 1 PowerBoost 1
-Doom_Weeper 3 Monster Void 4 2 HonorBoost 2 RuneBoost 2
-Earth_Tyrant 2 Monster Void 6 2 HonorBoost 5 DrawCard 2
-Wind_Tyrant 3 Monster Void 5 2 HonorBoost 3 RuneBoost 3
+Arha_Initiate 3 Hero Enlightened 1 1 1 DrawCard 1
+Starchild 3 Hero Lifebound 4 2 3 RuneBoost 1 HonorBoost 1 DrawCard 1
+Lifebound_Initiate 3 Hero Lifebound 1 1 2 RuneBoost 1 HonorBoost 1
+The_All-Seeing_Eye 1 Construct Enlightened 6 2 1 DrawCard 1
+Samaels_Trickster 4 Monster Void 3 0 2 RuneBoost 1 HonorBoost 1
+Tormented_Soul 3 Monster Void 3 0 2 HonorBoost 1 DrawCard 1
+Ascetic_of_the_Lidless_Eye 2 Hero Enlightened 5 2 1 DrawCard 2
+Master_Dhartha 1 Hero Enlightened 7 3 1 DrawCard 3
+Flytrap_Witch 2 Hero Lifebound 5 2 2 HonorBoost 2 DrawCard 1
+Landtalker 1 Hero Lifebound 6 3 1 RuneBoost 3
+Nairi,_Henge_Queen 1 Hero Lifebound 6 3 1 HonorBoost 5
+Wolf_Shaman 3 Hero Lifebound 3 1 2 RuneBoost 1 DrawCard 1
+Everbloom 2 Construct Lifebound 3 2 1 HonorBoost 1
+Demon_Slayer 2 Hero Void 4 2 1 PowerBoost 3
+Emri,_One_with_the_Void 1 Hero Void 6 3 1 PowerBoost 4
+Spike_Vixen 2 Hero Void 2 1 2 PowerBoost 1 DrawCard 1
+Muramasa 1 Construct Void 7 4 1 PowerBoost 3
+Shadow_Star 2 Construct Void 3 2 1 PowerBoost 1
+Doom_Weeper 3 Monster Void 4 0 2 HonorBoost 2 RuneBoost 2
+Earth_Tyrant 2 Monster Void 6 0 2 HonorBoost 5 DrawCard 2
+Wind_Tyrant 3 Monster Void 5 0 2 HonorBoost 3 RuneBoost 3

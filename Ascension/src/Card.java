@@ -16,7 +16,7 @@ public class Card {
 	private int cost;
 	private ArrayList<Action> actions;
 	private Image i;
-	private int honorWorth = 1;
+	private int honorWorth = 0;
 	
 	public Card() {
 		this(null,null,null, 0, new ArrayList<Action>(),"");
@@ -32,6 +32,11 @@ public class Card {
 	
 	public Card(Type type, Faction faction, int cost, ArrayList<Action> actions, String name) {
 		this(null, type, faction, cost, actions,name);
+	}
+	
+	public Card(Type type, Faction faction, int cost, ArrayList<Action> actions, String name, int honorWorth) {
+		this(null, type, faction, cost, actions,name);
+		this.honorWorth = honorWorth;
 	}
 	
 	public Card(Rectangle location, Type type, Faction faction, int cost, ArrayList<Action> actions, String name) {
