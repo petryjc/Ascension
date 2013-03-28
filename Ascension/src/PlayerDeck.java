@@ -50,6 +50,10 @@ public class PlayerDeck extends Deck {
 		return c;
 	}
 	
+	public void playAll() {
+		
+	}
+	
 	public void resetHandLocation() {
 		super.resetHandLocation();
 		setCardListWithinLocation(played, playedLocation);
