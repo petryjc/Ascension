@@ -79,7 +79,7 @@ public class Game extends JComponent {
 		this.players.add(currentTurn.player);
 		//Draw the additional game state info
 		g2.setFont(new Font("TimesNewRoman",30,50));
-		g2.drawString(currentTurn.player.honorTotal + "", 370, 100);
+		g2.drawString(this.totalHonor + "", 370, 100);
 		g2.drawString(currentTurn.rune + "", 585, 100);
 		g2.drawString(currentTurn.power + "", 790, 100);
 	}
@@ -101,6 +101,10 @@ public class Game extends JComponent {
 		
 		}
 
+	}
+	
+	public void decrementHonor(int n) {
+		this.totalHonor -= n;
 	}
 	
 	public void nextTurn() {
@@ -134,7 +138,7 @@ public class Game extends JComponent {
 		
 		ArrayList<Player> plays = new ArrayList<Player>();
 		
-		Game g = new Game(100,plays,d);
+		Game g = new Game(80,plays,d);
 		g.image_back = new ImageIcon(g.getClass().getResource("Background.jpg")).getImage();
 	
 		g.players.add(Player.getNewPlayer("Jack"));

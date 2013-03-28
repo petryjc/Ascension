@@ -43,6 +43,7 @@ public class Turn {
 		for(Action a: c.getActions()) {
 			if(a.action == Action.ActionType.HonorBoost) {
 				this.player.inncrementHonor(a.magnitude);
+				this.game.decrementHonor(a.magnitude);
 			} else if(a.action == Action.ActionType.PowerBoost) {
 				this.power += a.magnitude;
 			} else if(a.action == Action.ActionType.RuneBoost) {
