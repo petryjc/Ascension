@@ -16,6 +16,7 @@ public class Card {
 	private int cost;
 	private ArrayList<Action> actions;
 	private Image i;
+	private int honorWorth = 1;
 	
 	public Card() {
 		this(null,null,null, 0, new ArrayList<Action>(),"");
@@ -74,6 +75,9 @@ public class Card {
 	
 	public Type getType() {
 		return type;
+	}
+	public int getHonorWorth(){
+		return this.honorWorth;
 	}
 
 	public void setType(Type type) {

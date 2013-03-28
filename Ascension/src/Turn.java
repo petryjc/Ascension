@@ -21,10 +21,19 @@ public class Turn {
 	
 	public void leftButtonClick(Point loc) {
 		Rectangle end = new Rectangle(1460,492, 91, 91);
+		Rectangle playAllCardsInHand = new Rectangle(47,493,83,100);
 		if(end.contains(loc)){
 			this.player.playerDeck.endTurn();
 			this.game.nextTurn();
 			return;
+		}
+		if(playAllCardsInHand.contains(loc)){
+			while(!this.player.playerDeck.hand.isEmpty()) {
+				Card c = this.player.playerDeck.hand.get(0);
+				this.executeCardAction(c);
+				this.player.playerDeck.playCard(c);
+			}
+			
 		}
 		Card c = this.player.playerDeck.handleClick(loc);
 		if(c != null) {

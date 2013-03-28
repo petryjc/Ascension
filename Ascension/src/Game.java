@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class Game extends JComponent {
 
-	public int totalHonor;
+	public int gameHonor;
 	public ArrayList<Player> players;
 	public Deck gameDeck;
 	public MouseListen theListener;
@@ -35,7 +35,7 @@ public class Game extends JComponent {
 	
 	
 	Game(int honor, ArrayList<Player> players, Deck gameDeck) {
-		this.totalHonor = honor;
+		this.gameHonor = honor;
 		this.players = players;
 		this.gameDeck = gameDeck;
 		
@@ -91,7 +91,9 @@ public class Game extends JComponent {
 
 		nextTurn();
 		
-		while (this.totalHonor > 0) {
+		
+		
+		while (this.gameHonor > 0) {
 			try {
 				Thread.sleep(50);
 				repaint();
@@ -99,6 +101,46 @@ public class Game extends JComponent {
 				e.printStackTrace();
 			}
 		
+		}
+		int highestAmount = 0;
+		ArrayList<String> winners = new ArrayList<>();
+		
+		for(Player p:this.players){
+			p.playerDeck.discard.addAll(p.playerDeck.notPlayed);
+			p.playerDeck.notPlayed.clear();
+			p.playerDeck.discard.addAll(p.playerDeck.played);
+			p.playerDeck.played.clear();
+			p.playerDeck.discard.addAll(p.playerDeck.hand);
+			p.playerDeck.hand.clear();
+			p.playerDeck.discard.addAll(p.playerDeck.constructs);
+			p.playerDeck.constructs.clear();
+			
+			for(Card c:p.playerDeck.discard){
+				p.honorTotal += c.getHonorWorth();
+			}
+			
+			if(p.honorTotal > highestAmount){
+				highestAmount = p.honorTotal;
+				winners.clear();
+				winners.add(p.name);
+			}else if (p.honorTotal == highestAmount ){
+				for(String s:winners){
+					if(s.equals("none")){
+						winners.add(p.name);
+					}else{
+						continue;
+					}
+				}
+			}
+		}
+		
+		if(winners.size() == 1){
+			System.out.println(winners.get(0) + " WINS!!!!!!!");
+		}else{
+			for(String s:winners){
+				System.out.println(s + " ");
+			}
+			System.out.println("have tied");
 		}
 
 	}
@@ -117,37 +159,6 @@ public class Game extends JComponent {
 		this.theListener.setTurn(this.currentTurn);
 	}
 	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		
-		frame.setSize(1620, 940);
-		frame.setVisible(true);
-
-		ArrayList<Card> hand = new ArrayList<Card>();
-		ArrayList<Card> discard = new ArrayList<Card>();
-		
-		ArrayList<Card> centerDeck = getCenterDeck("src/centerDeck.txt");
-		
-		Deck d = new Deck(centerDeck, hand, discard, getTopCards(),centerRow);
-		d.shuffle();
-		d.drawNCards(6);
-		
-		ArrayList<Player> plays = new ArrayList<Player>();
-		
-		Game g = new Game(100,plays,d);
-		g.image_back = new ImageIcon(g.getClass().getResource("Background.jpg")).getImage();
-	
-		g.players.add(Player.getNewPlayer("Jack"));
-		g.players.add(Player.getNewPlayer("Gabe"));
-		
-		frame.add(g);
-
-		frame.setVisible(true);
-		frame.setSize(1621, 941);
-		
-		g.play();
-		
-	}
 
 	private static ArrayList<Card> getTopCards() {
 		ArrayList<Card> cards = new ArrayList<Card>();
@@ -226,5 +237,37 @@ public class Game extends JComponent {
 		}
 		
 		return cards;
+	}
+	
+	public static void main(String[] args) {
+		JFrame frame = new JFrame();
+		
+		frame.setSize(1620, 940);
+		frame.setVisible(true);
+		
+		ArrayList<Card> hand = new ArrayList<Card>();
+		ArrayList<Card> discard = new ArrayList<Card>();
+		
+		ArrayList<Card> centerDeck = getCenterDeck("src/centerDeck.txt");
+		
+		Deck d = new Deck(centerDeck, hand, discard, getTopCards(),centerRow);
+		d.shuffle();
+		d.drawNCards(6);
+		
+		ArrayList<Player> plays = new ArrayList<Player>();
+		
+		Game g = new Game(5,plays,d);
+		g.image_back = new ImageIcon(g.getClass().getResource("Background.jpg")).getImage();
+		
+		g.players.add(Player.getNewPlayer("Jack"));
+		g.players.add(Player.getNewPlayer("Gabe"));
+		
+		frame.add(g);
+		
+		frame.setVisible(true);
+		frame.setSize(1621, 941);
+		
+		g.play();
+		
 	}
 }
