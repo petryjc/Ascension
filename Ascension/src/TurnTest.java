@@ -23,7 +23,7 @@ public class TurnTest {
 
 	@Test
 	public void testInitialization() {
-		Turn t = new Turn(null, null);	
+		Turn t = new Turn(g.players.get(0), g);	
 		assertTrue(t != null);
 	}
 
