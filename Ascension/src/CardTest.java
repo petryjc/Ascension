@@ -16,11 +16,13 @@ public class CardTest {
 		Card c3 = new Card(Card.Type.Hero, Card.Faction.Lifebound);
 		Card c4 = new Card(Card.Type.Hero, Card.Faction.Lifebound, 2,
 				new ArrayList<Action>(), "derp");
+		Card c5 = new Card(Card.Type.Hero, Card.Faction.Lifebound, 2,
+				new ArrayList<Action>(), "derp", 5);
 		assertNotNull(c);
 		assertNotNull(c2);
 		assertNotNull(c3);
 		assertNotNull(c4);
-
+		assertNotNull(c5);
 	}
 
 	@Test
@@ -91,5 +93,14 @@ public class CardTest {
 		assertEquals(c.onCard(new Point(100,100)), false);
 	}
 	
-	
+	@Test
+	public void testExtraGettersAndSetters() {
+		Card c = new Card(Card.Type.Hero, Card.Faction.Lifebound, 2,
+				new ArrayList<Action>(), "Apprentice", 5);
+		assertEquals(5, c.getHonorWorth());
+		assertEquals("Apprentice", c.getName());
+		c.setName("Test");
+		assertEquals("Test", c.getName());
+		assertNotNull(c.getImage());
+	}
 }
