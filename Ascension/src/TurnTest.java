@@ -91,4 +91,36 @@ public class TurnTest {
 		assertEquals(t.power, 0);
 		assertEquals(t.player.honorTotal, 0);
 	}
+	
+	@Test
+	public void testExecuteActionDraw() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.DrawCard));
+		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		int before = this.t.player.playerDeck.hand.size();
+		t.executeCardAction(c);
+		assertEquals(before + 1, this.t.player.playerDeck.hand.size());
+		
+		actionList.clear();
+		actionList.add(new Action(2, Action.ActionType.DrawCard));
+		c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		before = this.t.player.playerDeck.hand.size();
+		t.executeCardAction(c);
+		assertEquals(before + 2, this.t.player.playerDeck.hand.size());
+		
+	}
+	
+	@Test
+	public void testExecuteActionDiscard() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.Discard));
+		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.executeCardAction(c);
+		assertEquals(t.turnState, Turn.TurnState.Discard);
+		assertEquals(t.turnStateMagnitude, 3);
+		
+	}
+	
 }

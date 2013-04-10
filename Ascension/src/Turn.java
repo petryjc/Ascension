@@ -8,57 +8,88 @@ public class Turn {
 	int rune;
 	int power;
 	Game game;
+	TurnState turnState;
+	int turnStateMagnitude;
 	
 	public Turn(Player player, Game g){
 		this.player = player;
 		this.rune = 0;
 		this.power = 0;
 		this.game = g;
+		this.turnState = TurnState.Default;
 		for (Card c : this.player.playerDeck.constructs) {
 			executeCardAction(c);
 		}
 	}
 	
 	public void leftButtonClick(Point loc) {
-		Rectangle end = new Rectangle(1460,492, 91, 91);
-		Rectangle playAllCardsInHand = new Rectangle(47,493,83,100);
-		if(end.contains(loc)){
-			this.player.playerDeck.endTurn();
-			this.game.nextTurn();
-			return;
-		}
-		if(playAllCardsInHand.contains(loc)){
-			while(!this.player.playerDeck.hand.isEmpty()) {
-				Card c = this.player.playerDeck.hand.get(0);
-				this.executeCardAction(c);
-				this.player.playerDeck.playCard(c);
+		
+		switch (turnState) {
+		case Default: 
+			Rectangle end = new Rectangle(1460,492, 91, 91);
+			Rectangle playAllCardsInHand = new Rectangle(47,493,83,100);
+			if(end.contains(loc)){
+				this.player.playerDeck.endTurn();
+				this.game.nextTurn();
+				return;
 			}
-			
+			if(playAllCardsInHand.contains(loc)){
+				while(!this.player.playerDeck.hand.isEmpty()) {
+					Card c = this.player.playerDeck.hand.get(0);
+					this.executeCardAction(c);
+					this.player.playerDeck.playCard(c);
+				}
+				
+			}
+			Card c = this.player.playerDeck.handleClick(loc);
+			if(c != null) {
+				executeCardAction(c);
+				return;
+			}
+			if(staticCardList(this.game.gameDeck.constructs, loc)) {
+				return;
+			}
+			if(staticCardList(this.game.gameDeck.hand, loc)) {
+				return;
+			}
+			break;
+		case Discard:
+			if(this.player.playerDeck.attemptDiscard(loc)) {
+				this.turnStateMagnitude--;
+				if(this.turnStateMagnitude < 1) {
+					this.turnState = TurnState.Default;
+				}
+			}
+			break;
+		default:
+			break;
 		}
-		Card c = this.player.playerDeck.handleClick(loc);
-		if(c != null) {
-			executeCardAction(c);
-			return;
-		}
-		if(staticCardList(this.game.gameDeck.constructs, loc)) {
-			return;
-		}
-		if(staticCardList(this.game.gameDeck.hand, loc)) {
-			return;
-		}
+		
 	}
 	
 	public void executeCardAction(Card c) {
 		for(Action a: c.getActions()) {
-			if(a.action == Action.ActionType.HonorBoost) {
+			switch (a.action) {
+			case HonorBoost:
 				this.player.inncrementHonor(a.magnitude);
 				this.game.decrementHonor(a.magnitude);
-			} else if(a.action == Action.ActionType.PowerBoost) {
+				break;
+			case PowerBoost:
 				this.power += a.magnitude;
-			} else if(a.action == Action.ActionType.RuneBoost) {
+				break;
+			case RuneBoost:
 				this.rune += a.magnitude;
-			} else if(a.action == Action.ActionType.DrawCard)
+				break;
+			case DrawCard:
 				player.playerDeck.drawNCards(a.magnitude);
+				break;
+			case Discard:
+				this.turnState = TurnState.Discard;
+				this.turnStateMagnitude = a.magnitude;
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	
@@ -92,4 +123,7 @@ public class Turn {
 		return false;
 	}
 	
+	public enum TurnState {
+		Default, Discard
+	}
 }

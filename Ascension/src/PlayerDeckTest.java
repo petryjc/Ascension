@@ -166,4 +166,34 @@ public class PlayerDeckTest extends DeckTest{
 		
 	}
 	
+
+	@Test
+	public void testAttemptDiscard() {
+		assertTrue(d.attemptDiscard(new Point(handLocation.x + handLocation.width
+						/ d.hand.size() / 2 - 10, handLocation.y
+						+ d.handLocation.height / 4)));
+		// check that it discarded something
+		assertEquals(handOrigional.size() - 1, d.hand.size());
+		assertEquals(discardOrigional.size() + 1, d.discard.size());
+	}
+	
+
+	@Test
+	public void testHandleClickLast() {
+		assertTrue(d.attemptDiscard(new Point(handLocation.x + handLocation.width
+				- handLocation.width / d.hand.size() / 2 + 10,
+				handLocation.y + d.handLocation.height / 4)));
+		// check that it discarded something
+		assertEquals(handOrigional.size() - 1, d.hand.size());
+		assertEquals(discardOrigional.size() + 1, d.discard.size());
+	}
+
+	@Test
+	public void testHandleClickNothing() {
+		assertFalse(d.attemptDiscard(new Point(handLocation.x, handLocation.y)));
+		// check that it discarded nothing
+		assertEquals(handOrigional.size(), d.hand.size());
+		assertEquals(discardOrigional.size(), d.discard.size());
+
+	}
 }

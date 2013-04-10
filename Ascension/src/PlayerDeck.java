@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
@@ -71,5 +72,18 @@ public class PlayerDeck extends Deck {
 		resetHandLocation();
 		//nullOutCardLocation(played);
 		//setCardListWithinLocation(played, playedLocation);
+	}
+	
+	public boolean attemptDiscard(Point p) {
+		if(handLocation.contains(p)) {
+			for(Card c : hand) {
+				if(c.onCard(p)) {
+					hand.remove(c);
+					discard.add(c);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
