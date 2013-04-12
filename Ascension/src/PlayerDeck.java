@@ -80,6 +80,7 @@ public class PlayerDeck extends Deck {
 				if(c.onCard(p)) {
 					hand.remove(c);
 					discard.add(c);
+					resetHandLocation();
 					return true;
 				}
 			}
