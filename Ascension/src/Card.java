@@ -39,6 +39,11 @@ public class Card {
 		this.honorWorth = honorWorth;
 	}
 	
+	public Card(Rectangle location, Type type, Faction faction, int cost, ArrayList<Action> actions, String name, int honorWorth) {
+		this(location, type, faction, cost, actions, name);
+		this.honorWorth = honorWorth;
+	}
+	
 	public Card(Rectangle location, Type type, Faction faction, int cost, ArrayList<Action> actions, String name) {
 		this.location = location;
 		this.type = type;

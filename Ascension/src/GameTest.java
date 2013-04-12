@@ -24,16 +24,74 @@ public class GameTest {
 		Game g = new Game(10);
 		g.gameDeck = new Deck();
 		g.gameDeck.notPlayed = Game.getCenterDeck("src/testDeck.txt");
-		ArrayList<Action> a = new ArrayList<Action>();
-		a.add(new Action(1,Action.ActionType.RuneBoost));
+		
 		ArrayList<Card> c = new ArrayList<Card>();
-		c.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, a, "TestCard"));
-		assertEquals(c.get(0).getName(), g.gameDeck.notPlayed.get(0).getName());
-		assertEquals(c.get(0).getType(), g.gameDeck.notPlayed.get(0).getType());
-		assertEquals(c.get(0).getFaction(), g.gameDeck.notPlayed.get(0).getFaction());
-		assertEquals(c.get(0).getCost(), g.gameDeck.notPlayed.get(0).getCost());
-		assertEquals(c.get(0).getActions().get(0).magnitude, g.gameDeck.notPlayed.get(0).getActions().get(0).magnitude);
-		assertEquals(c.get(0).getActions().get(0).action, g.gameDeck.notPlayed.get(0).getActions().get(0).action);
+		
+		//Arha_Initiate
+		ArrayList<Action> a = new ArrayList<Action>();
+		a.add(new Action(1,Action.ActionType.DrawCard));
+		c.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, a, "Arha_Initiate",1));
+		
+		//Samaels_Trickster
+		ArrayList<Action> a2 = new ArrayList<Action>();
+		a2.add(new Action(1,Action.ActionType.RuneBoost));
+		a2.add(new Action(1,Action.ActionType.HonorBoost));
+		c.add(new Card(Card.Type.Monster, Card.Faction.Void,3, a2, "Samaels_Trickster", 0));
+		
+		//The_All-Seeing_Eye
+		ArrayList<Action> a3 = new ArrayList<Action>();
+		a3.add(new Action(1,Action.ActionType.DrawCard));
+		c.add(new Card(Card.Type.Construct, Card.Faction.Enlightened, 6, a3, "The_All-Seeing_Eye",2));
+				
+		//Arha_Initiate
+		ArrayList<Action> a4 = new ArrayList<Action>();
+		a4.add(new Action(3,Action.ActionType.PowerBoost));
+		c.add(new Card(Card.Type.Hero, Card.Faction.Void, 4, a4, "Demon_Slayer",2));
+		
+		//Arha_Initiate
+		ArrayList<Action> a5 = new ArrayList<Action>();
+		a5.add(new Action(2,Action.ActionType.DrawCard));
+		a5.add(new Action(1,Action.ActionType.Discard));
+		c.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 3, a5, "Elder_Skeptic",1));
+		
+		for(int i = 0; i < 3; i++) {
+			helperTestCardsEqual(c.get(0), g.gameDeck.notPlayed.get(i));
+		}
+		for(int i = 3; i < 7; i++) {
+			helperTestCardsEqual(c.get(1), g.gameDeck.notPlayed.get(i));
+		}
+		for(int i = 7; i < 8; i++) {
+			helperTestCardsEqual(c.get(2), g.gameDeck.notPlayed.get(i));
+		}
+		for(int i = 8; i < 10; i++) {
+			helperTestCardsEqual(c.get(3), g.gameDeck.notPlayed.get(i));
+		}
+		for(int i = 10; i < 13; i++) {
+			helperTestCardsEqual(c.get(4), g.gameDeck.notPlayed.get(i));
+		}
+	}
+	
+	public void helperTestCardsEqual(Card c1, Card c2) {
+		assertEquals(c1.getName(), c2.getName());
+		assertEquals(c1.getType(), c2.getType());
+		assertEquals(c1.getFaction(), c2.getFaction());
+		assertEquals(c1.getCost(), c2.getCost());
+		assertEquals(c1.getActions().size(), c2.getActions().size());
+		for(int i = 0; i < c1.getActions().size(); i++) {
+			assertEquals(c1.getActions().get(i).magnitude, c2.getActions().get(i).magnitude);
+			assertEquals(c1.getActions().get(i).action, c2.getActions().get(i).action);
+		}
+		
+	}
+	
+	@Test
+	public void testGetTopCards() {
+		ArrayList<Card> cards = Game.getTopCards();
+		for(Card c : cards) {
+			assertTrue((c.getName().equals("Heavy Infantry") && c.getCost() == 2)
+					|| (c.getName().equals("Cultist") && c.getCost() == 2)
+					|| (c.getName().equals("Mystic")&& c.getCost() == 3));
+		}
 	}
 
 }

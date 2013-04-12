@@ -19,3 +19,4 @@ Shadow_Star 2 Construct Void 3 2 1 PowerBoost 1
 Doom_Weeper 3 Monster Void 4 0 2 HonorBoost 2 RuneBoost 2
 Earth_Tyrant 2 Monster Void 6 0 2 HonorBoost 5 DrawCard 2
 Wind_Tyrant 3 Monster Void 5 0 2 HonorBoost 3 RuneBoost 3
+Elder_Skeptic 3 Hero Enlightened 3 1 2 DrawCard 2 Discard 1

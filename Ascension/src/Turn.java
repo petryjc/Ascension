@@ -61,6 +61,16 @@ public class Turn {
 				}
 			}
 			break;
+		case DeckBanish:
+			Card banished = this.player.playerDeck.attemptDeckBanish(loc);
+			if(banished != null) {
+				this.turnStateMagnitude--;
+				if(this.turnStateMagnitude < 1) {
+					this.turnState = TurnState.Default;
+				}
+				this.game.gameDeck.discard.add(banished);
+			}
+			break;
 		default:
 			break;
 		}
@@ -85,6 +95,10 @@ public class Turn {
 				break;
 			case Discard:
 				this.turnState = TurnState.Discard;
+				this.turnStateMagnitude = a.magnitude;
+				break;
+			case ForcedDeckBanish:
+				this.turnState = TurnState.DeckBanish;
 				this.turnStateMagnitude = a.magnitude;
 				break;
 			default:
@@ -124,6 +138,6 @@ public class Turn {
 	}
 	
 	public enum TurnState {
-		Default, Discard
+		Default, Discard, DeckBanish
 	}
 }
