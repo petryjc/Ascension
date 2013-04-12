@@ -103,4 +103,17 @@ public class Deck {
 		drawCard();
 		return c;
 	}
+	
+	public void attemptCenterBanish(Point p) {
+		if(handLocation.contains(p)) {
+			for(Card c : hand) {
+				if(c.onCard(p)) {
+					hand.remove(c);
+					discard.add(c);
+					drawCard();
+					return;
+				}
+			}
+		}
+	}
 }

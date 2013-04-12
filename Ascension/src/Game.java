@@ -228,6 +228,10 @@ public class Game extends JComponent {
 						actionType = Action.ActionType.ForcedDeckBanish;
 					} else if (tokens[6+(2*i-1)].equals("Discard")) {
 						actionType = Action.ActionType.Discard;
+					} else if (tokens[6+(2*i-1)].equals("OptionalDeckBanish")) {
+						actionType = Action.ActionType.OptionalDeckBanish;
+					} else if (tokens[6+(2*i-1)].equals("CenterBanish")) {
+						actionType = Action.ActionType.CenterBanish;
 					} else {
 						actionType = Action.ActionType.DrawCard;
 					}
