@@ -170,18 +170,18 @@ public class Game extends JComponent {
 		//Mystic
 		ArrayList<Action> action1 = new ArrayList<Action>();
 		action1.add(new Action(2, Action.ActionType.RuneBoost));
-		cards.add(new Card(new Rectangle(1118, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 3, action1,"Mystic"));
+		cards.add(new Card(new Rectangle(1118, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 3, action1,"Mystic",1));
 		
 		//Heavy Infantry
 		ArrayList<Action> action2 = new ArrayList<Action>();
 		action2.add(new Action(2, Action.ActionType.PowerBoost));
-		cards.add(new Card(new Rectangle(1277, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 2, action2,"Heavy Infantry"));
+		cards.add(new Card(new Rectangle(1277, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 2, action2,"Heavy Infantry",1));
 		
 
 		//Heavy Infantry
 		ArrayList<Action> action3 = new ArrayList<Action>();
 		action3.add(new Action(1, Action.ActionType.HonorBoost));
-		cards.add(new Card(new Rectangle(1426, 27, 128, 166),Card.Type.Monster, Card.Faction.Enlightened, 2, action3,"Cultist"));
+		cards.add(new Card(new Rectangle(1426, 27, 128, 166),Card.Type.Monster, Card.Faction.Enlightened, 2, action3,"Cultist",1));
 		
 		return cards;
 	}
@@ -224,6 +224,10 @@ public class Game extends JComponent {
 						actionType = Action.ActionType.PowerBoost;
 					} else if (tokens[6+(2*i-1)].equals("HonorBoost")) {
 						actionType = Action.ActionType.HonorBoost;
+					} else if (tokens[6+(2*i-1)].equals("ForcedDeckBanish")) {
+						actionType = Action.ActionType.ForcedDeckBanish;
+					} else if (tokens[6+(2*i-1)].equals("Discard")) {
+						actionType = Action.ActionType.Discard;
 					} else {
 						actionType = Action.ActionType.DrawCard;
 					}

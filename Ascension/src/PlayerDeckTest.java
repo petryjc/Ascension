@@ -196,4 +196,44 @@ public class PlayerDeckTest extends DeckTest{
 		assertEquals(discardOrigional.size(), d.discard.size());
 
 	}
+	
+	@Test
+	public void testAttemptDeckBanish() {
+		assertTrue(d.attemptDeckBanish(new Point(handLocation.x + handLocation.width
+						/ d.hand.size() / 2 - 10, handLocation.y
+						+ d.handLocation.height / 4)) != null);
+		// Check that it banished something.
+		assertEquals(handOrigional.size() - 1, d.hand.size());
+		// Check that no other fields were altered.
+		assertEquals(discardOrigional.size(), d.discard.size());
+		assertEquals(notPlayedOrigional.size(), d.notPlayed.size());
+		assertEquals(constructOrigional.size(), d.constructs.size());
+		assertEquals(playedOrigional.size(), d.played.size());
+	}
+	
+	@Test
+	public void testAttemptDeckBanishLast() {
+		assertTrue(d.attemptDeckBanish(new Point(handLocation.x + handLocation.width
+				- handLocation.width / d.hand.size() / 2 + 10,
+				handLocation.y + d.handLocation.height / 4)) != null);
+		// Check that it banished something.
+		assertEquals(handOrigional.size() - 1, d.hand.size());
+		// Check that no other fields were altered.
+		assertEquals(discardOrigional.size(), d.discard.size());
+		assertEquals(notPlayedOrigional.size(), d.notPlayed.size());
+		assertEquals(constructOrigional.size(), d.constructs.size());
+		assertEquals(playedOrigional.size(), d.played.size());
+	}
+	
+	@Test
+	public void testAttemptDeckBanishOnNothing() {
+		assertTrue(d.attemptDeckBanish(new Point(handLocation.x, handLocation.y)) == null);
+		// Check that it discarded nothing.
+		assertEquals(handOrigional.size(), d.hand.size());
+		assertEquals(discardOrigional.size(), d.discard.size());
+		assertEquals(notPlayedOrigional.size(), d.notPlayed.size());
+		assertEquals(constructOrigional.size(), d.constructs.size());
+		assertEquals(playedOrigional.size(), d.played.size());
+
+	}
 }
