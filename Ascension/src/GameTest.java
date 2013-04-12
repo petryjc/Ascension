@@ -48,6 +48,12 @@ public class GameTest {
 		a4.add(new Action(3,Action.ActionType.PowerBoost));
 		c.add(new Card(Card.Type.Hero, Card.Faction.Void, 4, a4, "Demon_Slayer",2));
 		
+		//Arha_Initiate
+		ArrayList<Action> a5 = new ArrayList<Action>();
+		a5.add(new Action(2,Action.ActionType.DrawCard));
+		a5.add(new Action(1,Action.ActionType.Discard));
+		c.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 3, a5, "Elder_Skeptic",1));
+		
 		for(int i = 0; i < 3; i++) {
 			helperTestCardsEqual(c.get(0), g.gameDeck.notPlayed.get(i));
 		}
@@ -59,6 +65,9 @@ public class GameTest {
 		}
 		for(int i = 8; i < 10; i++) {
 			helperTestCardsEqual(c.get(3), g.gameDeck.notPlayed.get(i));
+		}
+		for(int i = 10; i < 13; i++) {
+			helperTestCardsEqual(c.get(4), g.gameDeck.notPlayed.get(i));
 		}
 	}
 	
