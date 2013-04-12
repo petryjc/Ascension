@@ -87,6 +87,7 @@ public class Turn {
 			if(this.turnStateMagnitude < 1) {
 				this.turnState = TurnState.Default;
 			}
+			break;
 		default:
 			break;
 		}
@@ -120,9 +121,11 @@ public class Turn {
 			case CenterBanish:
 				this.turnState = TurnState.CenterBanish;
 				this.turnStateMagnitude = a.magnitude;
+				break;
 			case OptionalDeckBanish:
 				this.turnState = TurnState.OptionalDeckBanish;
 				this.turnStateMagnitude = a.magnitude;
+				break;
 			default:
 				break;
 			}

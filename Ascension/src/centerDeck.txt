@@ -20,3 +20,12 @@ Doom_Weeper 3 Monster Void 4 0 2 HonorBoost 2 RuneBoost 2
 Earth_Tyrant 2 Monster Void 6 0 2 HonorBoost 5 DrawCard 2
 Wind_Tyrant 3 Monster Void 5 0 2 HonorBoost 3 RuneBoost 3
 Elder_Skeptic 3 Hero Enlightened 3 1 2 DrawCard 2 Discard 1
+Hectic_Scribe 3 Hero Enlightened 1 1 2 DrawCard 2 Discard 2
+Seer_of_the_Forked_Path 3 Hero Enlightened 2 1 2 DrawCard 1 CenterBanish 1
+Arbiter_of_the_Precipice 2 Hero Void 4 1 2 DrawCard 2 ForcedDeckBanish 1
+Black_Watch_Elite 2 Hero Void 5 2 2 PowerBoost 3 OptionalDeckBanish 1
+Shade_of_the_Black_Watch 3 Hero Void 3 1 2 PowerBoost 2 OptionalDeckBanish 1
+Void_Initiate 3 Hero Void 1 1 2 RuneBoost 1 OptionalDeckBanish 1
+Fettered_Soul 4 Monster Void 3 0 2 HonorBoost 2 CenterBanish 1
+Mephit 3 Monster Void 3 0 2 HonorBoost 2 CenterBanish 1
+Mistake_of_Creation 4 Monster Void 4 0 3 HonorBoost 4 CenterBanish 1 OptionalDeckBanish 1
