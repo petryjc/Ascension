@@ -164,7 +164,7 @@ public class Game extends JComponent {
 	
 
 
-	private static ArrayList<Card> getTopCards() {
+	public static ArrayList<Card> getTopCards() {
 		ArrayList<Card> cards = new ArrayList<Card>();
 		
 		//Mystic
@@ -178,7 +178,7 @@ public class Game extends JComponent {
 		cards.add(new Card(new Rectangle(1277, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 2, action2,"Heavy Infantry"));
 		
 
-		//Heavy Infantry
+		//Cultist
 		ArrayList<Action> action3 = new ArrayList<Action>();
 		action3.add(new Action(1, Action.ActionType.HonorBoost));
 		cards.add(new Card(new Rectangle(1426, 27, 128, 166),Card.Type.Monster, Card.Faction.Enlightened, 2, action3,"Cultist"));

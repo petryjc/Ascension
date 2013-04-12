@@ -1,1 +1,4 @@
-TestCard 1 Hero Enlightened 1 1 RuneBoost 1
+Arha_Initiate 3 Hero Enlightened 1 1 1 DrawCard 1
+Samaels_Trickster 4 Monster Void 3 0 2 RuneBoost 1 HonorBoost 1
+The_All-Seeing_Eye 1 Construct Enlightened 6 2 1 DrawCard 1
+Demon_Slayer 2 Hero Void 4 2 1 PowerBoost 3
