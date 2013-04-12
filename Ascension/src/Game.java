@@ -22,7 +22,7 @@ public class Game extends JComponent {
 	public Turn currentTurn;
 	Image image_back;
 	
-	private static Rectangle centerRow = new Rectangle(204,253,1168,167);
+	
 	
 	public static Rectangle handLoc = new Rectangle(184,670,1224,160);
 	public static Rectangle playedLoc = new Rectangle(184,460,1224,161);
@@ -161,125 +161,6 @@ public class Game extends JComponent {
 		this.currentTurn.player.startingHand();
 		this.theListener.setTurn(this.currentTurn);
 	}
-	
-
-
-	public static ArrayList<Card> getTopCards() {
-		ArrayList<Card> cards = new ArrayList<Card>();
-		
-		//Mystic
-		ArrayList<Action> action1 = new ArrayList<Action>();
-		action1.add(new Action(2, Action.ActionType.RuneBoost));
-		cards.add(new Card(new Rectangle(1118, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 3, action1,"Mystic",1));
-		
-		//Heavy Infantry
-		ArrayList<Action> action2 = new ArrayList<Action>();
-		action2.add(new Action(2, Action.ActionType.PowerBoost));
-		cards.add(new Card(new Rectangle(1277, 27, 128, 166),Card.Type.Hero, Card.Faction.Enlightened, 2, action2,"Heavy Infantry",1));
 		
 
-		//Cultist
-		ArrayList<Action> action3 = new ArrayList<Action>();
-		action3.add(new Action(1, Action.ActionType.HonorBoost));
-		cards.add(new Card(new Rectangle(1426, 27, 128, 166),Card.Type.Monster, Card.Faction.Enlightened, 2, action3,"Cultist",1));
-		
-		return cards;
-	}
-	
-	public static ArrayList<Card> getCenterDeck(String filename) {
-		ArrayList<Card> cards = new ArrayList<Card>();
-		
-		File file = new File(filename);
-		try {
-			Scanner scanner = new Scanner(file);
-			while (scanner.hasNextLine()) {
-				String cardInfo = scanner.nextLine();
-				String[] tokens = cardInfo.split(" ");
-				String name = tokens[0];
-				Card.Type type;
-				if (tokens[2].equals("Hero")) {
-					type = Card.Type.Hero;
-				} else if (tokens[2].equals("Construct")) {
-					type = Card.Type.Construct;
-				} else {
-					type = Card.Type.Monster;
-				}
-				Card.Faction faction;
-				if (tokens[3].equals("Enlightened")) {
-					faction = Card.Faction.Enlightened;
-				} else if (tokens[3].equals("Void")) {
-					faction = Card.Faction.Void;
-				} else if (tokens[3].equals("Lifebound")) {
-					faction = Card.Faction.Lifebound;
-				} else {
-					faction = Card.Faction.Mechana;
-				}
-				int cost = Integer.parseInt(tokens[4]);
-				ArrayList<Action> actions = new ArrayList<Action>();
-				for (int i = 1; i <= Integer.parseInt(tokens[6]); i++) {
-					Action.ActionType actionType;
-					if (tokens[6+(2*i-1)].equals("RuneBoost")) {
-						actionType = Action.ActionType.RuneBoost;
-					} else if (tokens[6+(2*i-1)].equals("PowerBoost")) {
-						actionType = Action.ActionType.PowerBoost;
-					} else if (tokens[6+(2*i-1)].equals("HonorBoost")) {
-						actionType = Action.ActionType.HonorBoost;
-					} else if (tokens[6+(2*i-1)].equals("ForcedDeckBanish")) {
-						actionType = Action.ActionType.ForcedDeckBanish;
-					} else if (tokens[6+(2*i-1)].equals("Discard")) {
-						actionType = Action.ActionType.Discard;
-					} else {
-						actionType = Action.ActionType.DrawCard;
-					}
-					int magnitude = Integer.parseInt(tokens[6 + (2*i)]);
-					Action action = new Action(magnitude, actionType);
-					actions.add(action);
-				}
-				int honorWorth = Integer.parseInt(tokens[5]);
-				for (int i = 0; i < Integer.parseInt(tokens[1]); i++) {
-					Card card = new Card(type, faction, cost, actions, name, honorWorth);
-					cards.add(card);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		return cards;
-	}
-	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		
-		frame.setSize(1620, 940);
-		frame.setVisible(true);
-		
-		ArrayList<Card> hand = new ArrayList<Card>();
-		ArrayList<Card> discard = new ArrayList<Card>();
-		
-		ArrayList<Card> centerDeck = getCenterDeck("src/centerDeck.txt");
-		
-		Deck d = new Deck(centerDeck, hand, discard, getTopCards(),centerRow);
-		d.shuffle();
-		d.drawNCards(6);
-		
-		ArrayList<Player> plays = new ArrayList<Player>();
-		
-		Game g = new Game(5,plays,d);
-		g.image_back = new ImageIcon(g.getClass().getResource("Background.jpg")).getImage();
-		
-		g.players.add(Player.getNewPlayer("Jack"));
-		g.players.add(Player.getNewPlayer("Gabe"));
-		g.players.add(Player.getNewPlayer("Kenny"));
-		
-		frame.add(g);
-		
-		frame.setVisible(true);
-		frame.setSize(1621, 941);
-		
-		g.play();
-		
-		frame.dispose();
-		
-	}
 }
