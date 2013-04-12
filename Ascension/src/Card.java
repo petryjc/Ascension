@@ -16,7 +16,7 @@ public class Card {
 	private int cost;
 	private ArrayList<Action> actions;
 	private Image i;
-	private int honorWorth = 0;
+	private int honorWorth;
 	
 	public Card() {
 		this(null,null,null, 0, new ArrayList<Action>(),"");
