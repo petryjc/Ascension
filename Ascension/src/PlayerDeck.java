@@ -1,4 +1,4 @@
-import java.awt.Point;
+import java.awt.Point; 
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
@@ -56,9 +56,9 @@ public class PlayerDeck extends Deck {
 	}
 	
 	public void resetHandLocation() {
-		super.resetHandLocation();
-		setCardListWithinLocation(played, playedLocation);
-		setCardListWithinLocation(constructs, constructLocation);
+		super.deckRend.resetHandLocation();
+		deckRend.setCardListWithinLocation(played, playedLocation);
+		deckRend.setCardListWithinLocation(constructs, constructLocation);
 	}
 	public void endTurn(){
 		for(Card c:this.hand){

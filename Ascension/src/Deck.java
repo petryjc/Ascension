@@ -18,7 +18,9 @@ public class Deck {
 	ArrayList<Card> constructs;
 	Random generator = new Random();
 	Rectangle handLocation;
-
+	DeckRender deckRend;
+	
+	
 	public Deck() {
 		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), null);
 	}
@@ -37,7 +39,8 @@ public class Deck {
 		this.discard = discard;
 		this.handLocation = location;
 		this.constructs = constructs;
-		resetHandLocation();
+		this.deckRend = new DeckRender(this);
+		this.deckRend.resetHandLocation();
 	}
 
 	public boolean drawCard() {
@@ -54,7 +57,7 @@ public class Deck {
 		//remove from not played and add to hand
 		Card c = notPlayed.remove(0);
 		hand.add(c);
-		resetHandLocation();
+		this.deckRend.resetHandLocation();
 		return true;
 	}
 	
@@ -100,35 +103,4 @@ public class Deck {
 		drawCard();
 		return c;
 	}
-	
-	public void resetHandLocation() {
-		nullOutCardLocation(notPlayed);
-		nullOutCardLocation(discard);
-		setCardListWithinLocation(hand, handLocation);
-	}
-	
-	public void setCardListWithinLocation(ArrayList<Card> cardList, Rectangle location) {
-		if(location == null)
-			return;
-		
-		int size = cardList.size();
-		int sf1 = (int) Math.round((location.height-2*yBorder)/cardDimensionRatio);
-		int sf2 = (int) Math.round((location.width - (size + 1) * xBorder)/(size + 0.0));
-		int sf = Math.min(sf1, sf2);
-		int x = xBorder + location.x;
-		if(sf2 > sf1) {
-			x += (location.width - ((size + 1) * xBorder + size * sf))/2;
-		}
-		for(Card c : cardList) {
-			c.setLocation(new Rectangle(x, yBorder + location.y, sf, (int) (sf * cardDimensionRatio)));
-			x += sf + xBorder;
-		}
-	}
-	
-	public void nullOutCardLocation(ArrayList<Card> cardList) {
-		for(Card c : cardList) {
-			c.setLocation(null);
-		}
-	}
-
 }
