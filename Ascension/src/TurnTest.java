@@ -123,4 +123,16 @@ public class TurnTest {
 		
 	}
 	
+	@Test
+	public void testForcedDeckDiscard() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(2, Action.ActionType.ForcedDeckBanish));
+		Card c = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.executeCardAction(c);
+		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
+		assertEquals(t.turnStateMagnitude, 2);
+	}
+	
 }

@@ -86,4 +86,16 @@ public class PlayerDeck extends Deck {
 		}
 		return false;
 	}
+	
+	public Card attemptDeckBanish(Point p) {
+		if(handLocation.contains(p)) {
+			for(Card c : hand) {
+				if(c.onCard(p)) {
+					hand.remove(c);
+					return c;
+				}
+			}
+		}
+		return null;
+	}
 }
