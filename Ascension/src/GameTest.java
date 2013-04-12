@@ -23,7 +23,7 @@ public class GameTest {
 	public void testGetCenterDeck() {
 		Game g = new Game(10);
 		g.gameDeck = new Deck();
-		g.gameDeck.notPlayed = Game.getCenterDeck("src/testDeck.txt");
+	//	g.gameDeck.notPlayed = Game.getCenterDeck("src/testDeck.txt");
 		
 		ArrayList<Card> c = new ArrayList<Card>();
 		
@@ -84,14 +84,14 @@ public class GameTest {
 		
 	}
 	
-	@Test
-	public void testGetTopCards() {
-		ArrayList<Card> cards = Game.getTopCards();
-		for(Card c : cards) {
-			assertTrue((c.getName().equals("Heavy Infantry") && c.getCost() == 2)
-					|| (c.getName().equals("Cultist") && c.getCost() == 2)
-					|| (c.getName().equals("Mystic")&& c.getCost() == 3));
-		}
-	}
+//	@Test
+//	public void testGetTopCards() {
+//		ArrayList<Card> cards = Game.getTopCards();
+//		for(Card c : cards) {
+//			assertTrue((c.getName().equals("Heavy Infantry") && c.getCost() == 2)
+//					|| (c.getName().equals("Cultist") && c.getCost() == 2)
+//					|| (c.getName().equals("Mystic")&& c.getCost() == 3));
+//		}
+//	}
 
 }
