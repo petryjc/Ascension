@@ -18,12 +18,13 @@ public class GameTest {
 		
 		
 	}
-	
+
+
 	@Test
 	public void testGetCenterDeck() {
 		Game g = new Game(10);
 		g.gameDeck = new Deck();
-	//	g.gameDeck.notPlayed = Game.getCenterDeck("src/testDeck.txt");
+		g.gameDeck.notPlayed = Main.getCenterDeck("src/testDeck.txt");
 		
 		ArrayList<Card> c = new ArrayList<Card>();
 		
@@ -84,14 +85,31 @@ public class GameTest {
 		
 	}
 	
-//	@Test
-//	public void testGetTopCards() {
-//		ArrayList<Card> cards = Game.getTopCards();
-//		for(Card c : cards) {
-//			assertTrue((c.getName().equals("Heavy Infantry") && c.getCost() == 2)
-//					|| (c.getName().equals("Cultist") && c.getCost() == 2)
-//					|| (c.getName().equals("Mystic")&& c.getCost() == 3));
-//		}
-//	}
+	@Test
+	public void testGetTopCards() {
+		ArrayList<Card> cards = Main.getTopCards();
+		for(Card c : cards) {
+			assertTrue((c.getName().equals("Heavy Infantry") && c.getCost() == 2)
+					|| (c.getName().equals("Cultist") && c.getCost() == 2)
+					|| (c.getName().equals("Mystic")&& c.getCost() == 3));
+		}
+	}
+	
+	@Test
+	public void testEndGame(){
+		Game g = new Game(0);
+		ArrayList<Card> discard = new ArrayList<Card>();
+		
+		PlayerDeck d = new PlayerDeck(discard, discard, discard, g.handLoc, g.constructs,g.playedLoc);
+		
+		g.players = new ArrayList<Player>();
+		
+		g.players.add(new Player(d, "jack"));
+		g.players.add(new Player(d, "gabe"));
+		g.players.add(new Player(d, "kenneth"));
+		
+		assertTrue(g.endGame().equals("jackgabekenneth have tied"));
+		
+	}
 
 }

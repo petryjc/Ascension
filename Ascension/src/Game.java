@@ -123,7 +123,7 @@ public class Game extends JComponent {
 		this.theListener.setTurn(this.currentTurn);
 	}
 
-	public void endGame() {
+	public String endGame() {
 
 		int highestAmount = 0;
 		ArrayList<String> winners = new ArrayList<String>();
@@ -165,13 +165,18 @@ public class Game extends JComponent {
 
 		if (winners.size() == 1) {
 			System.out.println(winners.get(0) + " wins");
+			return winners.get(0) + " wins";
 		} else {
+			String save = "";
 			for (String s : winners) {
 				System.out.print(s + ", ");
+				save += s;
 			}
 			System.out.print("have tied");
+			return save + " have tied";
 		}
 
 	}
+	
 
 }
