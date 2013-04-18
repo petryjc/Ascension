@@ -1,16 +1,25 @@
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Label;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.awt.peer.TextAreaPeer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class Game extends JComponent {
@@ -21,6 +30,13 @@ public class Game extends JComponent {
 	public MouseListen theListener;
 	public Turn currentTurn;
 	Image image_back;
+	Image card_back;
+	Image honor_symbol;
+	Image rune_symbol;
+	Image power_symbol;
+	
+	String country;
+	String language;
 
 	public static Rectangle handLoc = new Rectangle(184, 670, 1224, 160);
 	public static Rectangle playedLoc = new Rectangle(184, 460, 1224, 161);
@@ -44,26 +60,24 @@ public class Game extends JComponent {
 
 		g2.drawImage(image_back, 0, 0, 1600, 900, null);
 
+		this.removeAll(); //Remove previous test areas
+		
 		// draw the four visible card sets
 		if (this.gameDeck.hand == null || this.currentTurn == null
 				|| this.currentTurn.player.playerDeck == null) {
 			return;
 		}
 		for (Card c : this.gameDeck.hand) {
-			g2.drawImage(c.getImage(), c.getLocation().x, c.getLocation().y,
-					c.getLocation().width, c.getLocation().height, null);
+			drawCard(c, g2);
 		}
 		for (Card c : this.currentTurn.player.playerDeck.played) {
-			g2.drawImage(c.getImage(), c.getLocation().x, c.getLocation().y,
-					c.getLocation().width, c.getLocation().height, null);
+			drawCard(c, g2);
 		}
 		for (Card c : this.currentTurn.player.playerDeck.constructs) {
-			g2.drawImage(c.getImage(), c.getLocation().x, c.getLocation().y,
-					c.getLocation().width, c.getLocation().height, null);
+			drawCard(c, g2);
 		}
 		for (Card c : this.currentTurn.player.playerDeck.hand) {
-			g2.drawImage(c.getImage(), c.getLocation().x, c.getLocation().y,
-					c.getLocation().width, c.getLocation().height, null);
+			drawCard(c, g2);
 		}
 
 		// Draw the table with players and their current honor
@@ -86,6 +100,112 @@ public class Game extends JComponent {
 		g2.drawString(currentTurn.power + "", 790, 100);
 	}
 
+	protected void drawCard(Card c, Graphics2D g2) {
+		Rectangle loc = c.getLocation();
+		//draw background
+		g2.drawImage(card_back, loc.x, loc.y,
+				loc.width, loc.height, null);
+		
+		//draw cost
+		g2.setFont(new Font("TimesNewRoman", 10, 10));
+		if(c.getType() == Card.Type.Monster) {
+			g2.drawImage(power_symbol, (int) (loc.x + loc.width*0.85), (int) (loc.y + loc.height * 0.03),
+					(int) (loc.width*0.15), (int)(loc.height*0.07), null);
+			g2.setColor(Color.white);
+ 		} else {
+ 			g2.drawImage(rune_symbol, (int) (loc.x + loc.width*0.85), (int) (loc.y + loc.height * 0.03),
+					(int) (loc.width*0.15), (int)(loc.height*0.07), null);
+ 		}
+		g2.drawString(c.getCost() +"", (int)(loc.x + loc.width*0.89), (int)(loc.y + loc.height * 0.09));
+		g2.setColor(Color.black);
+		
+		//draw name
+		String name = c.getName().replace('_', ' ');
+		g2.setFont(scaleFont(name, new Rectangle((int) (loc.width * 0.8), (int) (loc.height * 0.1)),(Graphics) g2));
+		g2.drawString(name, (int) (loc.x + loc.width*0.05),
+				(int) (loc.y + loc.height*0.10));
+		
+		//draw card image
+		g2.drawImage(c.getImage(), (int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.13),
+				(int) (loc.width * 0.9), (int) (loc.height * 0.4), null);
+		
+		//draw type/faction
+		String factiontype = c.getFaction() + " " + c.getType();
+		g2.setFont(scaleFont(factiontype, new Rectangle((int) (loc.width * 0.9), (int) (loc.height * 0.08)),(Graphics) g2));
+		g2.drawString(factiontype, (int) (loc.x + loc.width*0.05),
+				(int) (loc.y + loc.height*0.61));
+		
+		//draw card description
+		Locale currentLocale = new Locale(this.language, this.country);
+		ResourceBundle descriptions= ResourceBundle.getBundle("CardDescription", currentLocale);
+		
+		try {
+			System.out.println(descriptions.getString(c.getName()));
+			Rectangle r = new Rectangle((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.63),(int) (loc.width * 0.9), (int) (loc.height * 0.35));
+			g2.setColor(Color.LIGHT_GRAY);
+			g2.fill(r);
+			g2.setColor(Color.black);
+			g2.setFont(new Font("TimesNewRoman", 10, 15));
+			ArrayList<String> lines = getTextInLines(descriptions.getString(c.getName()), (int) (loc.width * 0.9), g2);
+			for(int i = 0; i < lines.size(); i++) {
+				g2.drawString(lines.get(i), (int) (loc.x + loc.width*0.06),
+						(int) (loc.y + loc.height*0.61 + g2.getFont().getSize() * (i + 1)));
+			}
+//			JTextArea t = new JTextArea(descriptions.getString(c.getName()));
+//			t.setBounds((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.63),(int) (loc.width * 0.9), (int) (loc.height * 0.35));
+//			t.setLineWrap(true);
+//			t.setWrapStyleWord(true);
+//			t.setBackground(Color.lightGray);
+//			t.setFocusable(false);
+//			this.add(t);
+		} catch (Exception e){
+			System.out.println("Missing card reference of " + c.getName() + " in CardDescription");
+		}
+		
+		//draw honor
+		g2.setFont(new Font("TimesNewRoman", 10, 10));
+		g2.setColor(Color.red);
+		g2.drawImage(honor_symbol, (int) (loc.x), (int) (loc.y + loc.height * 0.9),
+				(int) (loc.width*0.2), (int)(loc.height*0.11), null);
+		g2.drawString(c.getHonorWorth() + "", (int) (loc.x + loc.width*0.06),
+				(int) (loc.y + loc.height*0.98));
+		g2.setColor(Color.black);
+	}
+	
+	public Font scaleFont(String text, Rectangle2D rect, Graphics g) {
+	    float nextTry=18.0f;
+	    Font font = new Font("TimesNewRoman", 0, 20);
+
+	    while(nextTry > 2) {                             
+	            font=g.getFont().deriveFont(nextTry);
+	            FontMetrics fm=g.getFontMetrics(font);
+	            int width=fm.stringWidth(text);
+	            if(width <= rect.getWidth() && nextTry <= rect.getHeight())
+	                return font;
+	            nextTry*=.9;            
+	    }
+	    return font;
+	}
+	
+	public ArrayList<String> getTextInLines(String s, int width, Graphics g) {
+		ArrayList<String> a = new ArrayList<String>();
+		String[] temp = s.split(" ");
+		a.add(temp[0]);
+		Font font = g.getFont();
+		for(int i = 1; i < temp.length; i++) {
+			String ts = a.get(a.size() - 1) + " " + temp[i];
+            FontMetrics fm=g.getFontMetrics(font);
+            int swidth = fm.stringWidth(ts);
+			if(swidth < width) {
+				a.remove(a.size() - 1);
+				a.add(ts);
+			} else {
+				a.add(temp[i]);
+			}
+		}
+		return a;
+	}
+	
 	public void play() {
 
 		this.theListener = new MouseListen(null);
@@ -129,7 +249,7 @@ public class Game extends JComponent {
 		ArrayList<String> winners = new ArrayList<String>();
 
 		for (Player p : this.players) {
-			System.out.println(p.name);
+			//System.out.println(p.name);
 
 			p.playerDeck.discard.addAll(p.playerDeck.notPlayed);
 			p.playerDeck.notPlayed.clear();
@@ -142,7 +262,7 @@ public class Game extends JComponent {
 
 			for (Card c : p.playerDeck.discard) {
 				p.honorTotal += c.getHonorWorth();
-				System.out.println(c.getName() + ": " + c.getHonorWorth());
+				//System.out.println(c.getName() + ": " + c.getHonorWorth());
 			}
 
 			System.out.println("Total Honor for " + p.name + ": "

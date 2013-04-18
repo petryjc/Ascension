@@ -78,7 +78,6 @@ public class Deck {
 	public boolean drawNCards(int n) {
 		for(int i = 0; i < n; i++) {
 			if(!drawCard()) {
-				System.out.println("Here");
 				return false;
 			}
 		}

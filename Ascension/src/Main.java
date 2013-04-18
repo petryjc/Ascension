@@ -136,6 +136,17 @@ public class Main {
 		g.gameHonor = amountHonor;
 		g.image_back = new ImageIcon(g.getClass().getResource("Background.jpg"))
 				.getImage();
+		g.card_back = new ImageIcon(g.getClass().getResource("CardBackground.jpg"))
+				.getImage();
+		g.power_symbol = new ImageIcon(g.getClass().getResource("PowerSymbol.jpg"))
+				.getImage();
+		g.rune_symbol = new ImageIcon(g.getClass().getResource("RuneSymbol.jpg"))
+				.getImage();
+		g.honor_symbol = new ImageIcon(g.getClass().getResource("HonorSymbol.jpg"))
+				.getImage();
+		
+		g.country = "US";
+		g.language = "en";
 
 		g.players.add(Player.getNewPlayer("Jack"));
 		g.players.add(Player.getNewPlayer("Gabe"));
