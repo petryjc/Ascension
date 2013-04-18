@@ -50,7 +50,20 @@ public class Game extends JComponent {
 		this.gameHonor = honor;
 		this.players = players;
 		this.gameDeck = gameDeck;
+		
+		this.theListener = new MouseListen(null);
+		this.addMouseListener(this.theListener);
 
+		this.image_back = new ImageIcon(this.getClass().getResource("Background.jpg"))
+		.getImage();
+		this.card_back = new ImageIcon(this.getClass().getResource("CardBackground.jpg"))
+		.getImage();
+		this.power_symbol = new ImageIcon(this.getClass().getResource("PowerSymbol.jpg"))
+		.getImage();
+		this.rune_symbol = new ImageIcon(this.getClass().getResource("RuneSymbol.jpg"))
+		.getImage();
+		this.honor_symbol = new ImageIcon(this.getClass().getResource("HonorSymbol.jpg"))
+		.getImage();
 	}
 
 	@Override
@@ -68,16 +81,16 @@ public class Game extends JComponent {
 			return;
 		}
 		for (Card c : this.gameDeck.hand) {
-			drawCard(c, g2);
+			paintCard(c, g2);
 		}
 		for (Card c : this.currentTurn.player.playerDeck.played) {
-			drawCard(c, g2);
+			paintCard(c, g2);
 		}
 		for (Card c : this.currentTurn.player.playerDeck.constructs) {
-			drawCard(c, g2);
+			paintCard(c, g2);
 		}
 		for (Card c : this.currentTurn.player.playerDeck.hand) {
-			drawCard(c, g2);
+			paintCard(c, g2);
 		}
 
 		// Draw the table with players and their current honor
@@ -100,7 +113,7 @@ public class Game extends JComponent {
 		g2.drawString(currentTurn.power + "", 790, 100);
 	}
 
-	protected void drawCard(Card c, Graphics2D g2) {
+	protected void paintCard(Card c, Graphics2D g2) {
 		Rectangle loc = c.getLocation();
 		//draw background
 		g2.drawImage(card_back, loc.x, loc.y,
@@ -207,9 +220,6 @@ public class Game extends JComponent {
 	}
 	
 	public void play() {
-
-		this.theListener = new MouseListen(null);
-		this.addMouseListener(this.theListener);
 
 		nextTurn();
 

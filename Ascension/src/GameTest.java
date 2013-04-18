@@ -2,6 +2,8 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import junit.framework.Assert;
+
 
 import org.junit.Test;
 
@@ -112,4 +114,36 @@ public class GameTest {
 		
 	}
 
+	@Test
+	public void testNextTurn() {
+		ArrayList<Card> centerDeck = Main.getCenterDeck("src/centerDeck.txt");
+		Deck d = new Deck(centerDeck, new ArrayList<Card>(), new ArrayList<Card>(), Main.getTopCards(), null);
+		d.shuffle();
+		d.drawNCards(6);
+		
+		ArrayList<Player> pList = new ArrayList<Player>();
+		Player jack = Player.getNewPlayer("Jack");
+		Player gabe = Player.getNewPlayer("Gabe");
+		pList.add(jack);
+		pList.add(gabe);
+		Game g = new Game(3, pList, d);
+		
+		Assert.assertNull(g.currentTurn);
+		
+		g.nextTurn();
+		Assert.assertNotNull(g.currentTurn);
+		Assert.assertNotNull(g.currentTurn.player);
+		Assert.assertEquals(jack, g.currentTurn.player);
+		
+		g.nextTurn();
+		Assert.assertNotNull(g.currentTurn);
+		Assert.assertNotNull(g.currentTurn.player);
+		Assert.assertEquals(gabe, g.currentTurn.player);
+		
+		g.nextTurn();
+		Assert.assertNotNull(g.currentTurn);
+		Assert.assertNotNull(g.currentTurn.player);
+		Assert.assertEquals(jack, g.currentTurn.player);
+	}
+	
 }

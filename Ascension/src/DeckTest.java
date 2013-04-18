@@ -5,6 +5,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -220,5 +222,23 @@ public class DeckTest {
 		assertEquals(d.discard.size(), 0);
 		assertEquals(d.notPlayed.size(), 0);
 		assertEquals(d.hand.size(), 1);
+	}
+	
+	@Test
+	public void testBannish() {
+		d.attemptCenterBanish(new Point(handLocation.x + handLocation.width
+				/ d.hand.size() / 2 - 10, handLocation.y
+				+ d.handLocation.height / 4));
+		
+		//size shouldn't change
+		Assert.assertEquals(handOrigional.size(), d.hand.size());
+		
+		for(Card c: d.hand) {
+			Assert.assertFalse(c == handOrigional.get(0));
+		}
+		
+		for(int i = 0; i < d.hand.size() - 1; i++) {
+			handOrigional.contains(d.hand.get(i));
+		}
 	}
 }
