@@ -43,27 +43,42 @@ public class Main {
 				ArrayList<Action> actions = new ArrayList<Action>();
 				for (int i = 1; i <= Integer.parseInt(tokens[6]); i++) {
 					Action.ActionType actionType;
-					if (tokens[6 + (2 * i - 1)].equals("RuneBoost")) {
+					if (tokens[6 + (4 * i - 3)].equals("RuneBoost")) {
 						actionType = Action.ActionType.RuneBoost;
-					} else if (tokens[6 + (2 * i - 1)].equals("PowerBoost")) {
+					} else if (tokens[6 + (4 * i - 3)].equals("PowerBoost")) {
 						actionType = Action.ActionType.PowerBoost;
-					} else if (tokens[6 + (2 * i - 1)].equals("HonorBoost")) {
+					} else if (tokens[6 + (4 * i - 3)].equals("HonorBoost")) {
 						actionType = Action.ActionType.HonorBoost;
-					} else if (tokens[6 + (2 * i - 1)]
+					} else if (tokens[6 + (4 * i - 3)]
 							.equals("ForcedDeckBanish")) {
 						actionType = Action.ActionType.ForcedDeckBanish;
-					} else if (tokens[6 + (2 * i - 1)].equals("Discard")) {
+					} else if (tokens[6 + (4 * i - 3)].equals("Discard")) {
 						actionType = Action.ActionType.Discard;
-					} else if (tokens[6 + (2 * i - 1)].equals("OptionalDeckBanish")) {
+					} else if (tokens[6 + (4 * i - 3)].equals("OptionalDeckBanish")) {
 						actionType = Action.ActionType.OptionalDeckBanish;
-					} else if (tokens[6 + (2 * i - 1)].equals("CenterBanish")) {
+					} else if (tokens[6 + (4 * i - 3)].equals("CenterBanish")) {
 						actionType = Action.ActionType.CenterBanish;
+					} else if (tokens[6 + (4 * i - 3)].equals("HonorAndRuneBoost")) {
+						actionType = Action.ActionType.HonorAndRuneBoost;
+					} else if (tokens[6 + (4 * i - 3)].equals("ConstructRuneBoost")) {
+						actionType = Action.ActionType.ConstructRuneBoost;
+					} else if (tokens[6 + (4 * i - 3)].equals("MechanaConstructRuneBoost")) {
+						actionType = Action.ActionType.MechanaConstructRuneBoost;
+					} else if (tokens[6 + (4 * i - 3)].equals("EnterAiyanaState")) {
+						actionType = Action.ActionType.EnterAiyanaState;
 					} 
 					else {
 						actionType = Action.ActionType.DrawCard;
 					}
-					int magnitude = Integer.parseInt(tokens[6 + (2 * i)]);
-					Action action = new Action(magnitude, actionType);
+					int magnitude = Integer.parseInt(tokens[6 + (4 * i - 2)]);
+					int dependency = Integer.parseInt(tokens[6 + (4 * i - 1)]);
+					int onUnite =  Integer.parseInt(tokens[6 + (4 * i)]);
+					Action action;
+					if (onUnite == 1) {
+						action = new Action(magnitude, actionType, dependency, true);
+					} else {
+						action = new Action(magnitude, actionType, dependency);
+					}
 					actions.add(action);
 				}
 				int honorWorth = Integer.parseInt(tokens[5]);

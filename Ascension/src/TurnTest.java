@@ -160,4 +160,110 @@ public class TurnTest {
 		
 	}
 	
+	@Test
+	public void testExecuteUnitedAction() {
+		Action a = new Action(1,Action.ActionType.CenterBanish,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.turnState, Turn.TurnState.CenterBanish);
+		a = new Action(1,Action.ActionType.ConstructRuneBoost,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.constructRune, 1);
+		a = new Action(1,Action.ActionType.Discard,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.turnState, Turn.TurnState.Discard);
+		a = new Action(1,Action.ActionType.DrawCard,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(1,1);
+		a = new Action(1,Action.ActionType.EnterAiyanaState,-1,false);
+		t.executeUnitedAction(a);
+		assertTrue(t.AiyanaState);
+		a = new Action(1,Action.ActionType.ForcedDeckBanish,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
+		a = new Action(1,Action.ActionType.HonorAndRuneBoost,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.rune, 1);
+		assertEquals(t.player.honorTotal, 1);
+		a = new Action(1,Action.ActionType.HonorBoost,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.player.honorTotal, 2);
+		a = new Action(1,Action.ActionType.MechanaConstructRuneBoost,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.mechanaConstructRune, 1);
+		a = new Action(1,Action.ActionType.OptionalDeckBanish,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.turnState, Turn.TurnState.OptionalDeckBanish);
+		a = new Action(1,Action.ActionType.PowerBoost,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.power, 1);
+		a = new Action(1,Action.ActionType.RuneBoost,-1,false);
+		t.executeUnitedAction(a);
+		assertEquals(t.rune, 2);
+	}
+	
+	@Test
+	public void testExecuteActionCenterBanish() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.CenterBanish));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.executeCardAction(testCard);
+		assertEquals(t.turnState, Turn.TurnState.CenterBanish);
+		assertEquals(t.turnStateMagnitude, 4);
+	}
+	
+	@Test
+	public void testExecuteActionOptionalDeckBanish() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(2, Action.ActionType.OptionalDeckBanish));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.executeCardAction(testCard);
+		assertEquals(t.turnState, Turn.TurnState.OptionalDeckBanish);
+		assertEquals(t.turnStateMagnitude, 2);
+	}
+	
+	@Test
+	public void testExecuteActionHonorAndRuneBoost() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.HonorAndRuneBoost));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		assertEquals(t.rune, 0);
+		assertEquals(t.player.honorTotal, 0);
+		t.executeCardAction(testCard);
+		assertEquals(t.rune, 3);
+		assertEquals(t.player.honorTotal, 3);
+	}
+	
+	@Test
+	public void testExecuteActionConstructRuneBoost() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.ConstructRuneBoost));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1, actionList, "Test");
+		assertEquals(t.constructRune, 0);
+		t.executeCardAction(testCard);
+		assertEquals(t.constructRune, 1);
+	}
+	
+	@Test
+	public void testExecuteActionMechanaConstructRuneBoost() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(2, Action.ActionType.MechanaConstructRuneBoost));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1, actionList, "Test");
+		assertEquals(t.mechanaConstructRune, 0);
+		t.executeCardAction(testCard);
+		assertEquals(t.mechanaConstructRune, 2);
+	}
+	
+	@Test
+	public void testExecuteActionEnterAiyanaState() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.EnterAiyanaState));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
+		assertFalse(t.AiyanaState);
+		t.executeCardAction(testCard);
+		assertTrue(t.AiyanaState);
+	}
 }

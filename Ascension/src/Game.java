@@ -29,6 +29,7 @@ public class Game extends JComponent {
 	public Deck gameDeck;
 	public MouseListen theListener;
 	public Turn currentTurn;
+	public boolean isTest = false;
 	Image image_back;
 	Image card_back;
 	Image honor_symbol;
@@ -153,7 +154,7 @@ public class Game extends JComponent {
 		ResourceBundle descriptions= ResourceBundle.getBundle("CardDescription", currentLocale);
 		
 		try {
-			System.out.println(descriptions.getString(c.getName()));
+			//System.out.println(descriptions.getString(c.getName()));
 			Rectangle r = new Rectangle((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.63),(int) (loc.width * 0.9), (int) (loc.height * 0.35));
 			g2.setColor(Color.LIGHT_GRAY);
 			g2.fill(r);
@@ -172,7 +173,7 @@ public class Game extends JComponent {
 //			t.setFocusable(false);
 //			this.add(t);
 		} catch (Exception e){
-			System.out.println("Missing card reference of " + c.getName() + " in CardDescription");
+			//System.out.println("Missing card reference of " + c.getName() + " in CardDescription");
 		}
 		
 		//draw honor
@@ -225,7 +226,11 @@ public class Game extends JComponent {
 
 		while (this.gameHonor > 0) {
 			try {
+				if (!this.isTest) {
 				Thread.sleep(50);
+				} else {
+					decrementHonor(1);
+				}
 				repaint();
 			} catch (Exception e) {
 				e.printStackTrace();
