@@ -1,7 +1,9 @@
 import static org.junit.Assert.*;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -133,6 +135,29 @@ public class TurnTest {
 		t.executeCardAction(c);
 		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
 		assertEquals(t.turnStateMagnitude, 2);
+	}
+	
+	@Test
+	public void testStaticCardList(){
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		PlayerDeck d = new PlayerDeck();
+		d.played.add(new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test"));
+		d.hand.add(new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test"));
+		d.discard.add(new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test"));
+		d.notPlayed.add(new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test"));
+		Player p1 = new Player(d, "gabe");
+		Player p2 = new Player(d, "jack");
+		ArrayList<Player> ps = new ArrayList<Player>();
+		ps.add(p1);
+		ps.add(p2);
+		Game g = new Game(100);
+		g.players = ps;
+		Turn t1 = new Turn(p1,g);
+		Turn t2 = new Turn(p2,g);
+		
+		t1.leftButtonClick(new Point(1461,493));
+		
+		
 	}
 	
 }
