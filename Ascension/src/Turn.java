@@ -98,7 +98,7 @@ public class Turn {
 		for(Action a: c.getActions()) {
 			switch (a.action) {
 			case HonorBoost:
-				this.player.inncrementHonor(a.magnitude);
+				this.player.incrementHonor(a.magnitude);
 				this.game.decrementHonor(a.magnitude);
 				break;
 			case PowerBoost:

@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
@@ -112,6 +113,13 @@ public class GameTest {
 		
 		assertTrue(g.endGame().equals("jackgabekenneth have tied"));
 		
+		g.players.get(0).honorTotal = 100;
+		g.players.get(1).playerDeck.hand.add(new Card(new Rectangle(0,0,10,10), Card.Type.Construct, Card.Faction.Enlightened, 10, new ArrayList<Action>(),"bitch", 0));
+		
+		assertTrue(g.endGame().equals("jack wins"));
+		assertEquals(g.players.get(1).honorTotal, 0);
+		
+		
 	}
 
 	@Test
@@ -144,6 +152,14 @@ public class GameTest {
 		Assert.assertNotNull(g.currentTurn);
 		Assert.assertNotNull(g.currentTurn.player);
 		Assert.assertEquals(jack, g.currentTurn.player);
+		
+		g.gameHonor = 22;
+		
+		g.decrementHonor(20);
+		
+		Assert.assertEquals(2, g.gameHonor);
+		
+		
 	}
 	
 }

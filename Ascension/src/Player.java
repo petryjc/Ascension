@@ -17,7 +17,7 @@ public class Player {
 		this.name = name;
 	}
 	
-	public void inncrementHonor(int incre){
+	public void incrementHonor(int incre){
 		this.honorTotal += incre;
 	}
 	
@@ -46,6 +46,7 @@ public class Player {
 		
 		PlayerDeck pD = new PlayerDeck(notPlayed2, hand2, discard2, Game.handLoc, Game.playedLoc, Game.constructs);
 		pD.shuffle();
+		
 		return new Player(pD, name);
 	}
 

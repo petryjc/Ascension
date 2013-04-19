@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+
 public class CardTest {
 
 	@Test
@@ -18,11 +19,13 @@ public class CardTest {
 				new ArrayList<Action>(), "derp");
 		Card c5 = new Card(Card.Type.Hero, Card.Faction.Lifebound, 2,
 				new ArrayList<Action>(), "derp", 5);
+		Card c6 = new Card(new Rectangle(0,0,10,10), Card.Type.Hero, Card.Faction.Enlightened, 4, new ArrayList<Action>(), "cool", 55);
 		assertNotNull(c);
 		assertNotNull(c2);
 		assertNotNull(c3);
 		assertNotNull(c4);
 		assertNotNull(c5);
+		assertNotNull(c6);
 	}
 
 	@Test
