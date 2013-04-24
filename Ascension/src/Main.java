@@ -150,8 +150,8 @@ public class Main {
 
 		g.gameHonor = amountHonor;
 		
-		g.country = "US";
-		g.language = "en";
+		g.country = "KR";
+		g.language = "kr";
 
 		g.players.add(Player.getNewPlayer("Jack"));
 		g.players.add(Player.getNewPlayer("Gabe"));
