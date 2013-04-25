@@ -9,6 +9,8 @@ public class Turn {
 	int power;
 	int constructRune;
 	int mechanaConstructRune;
+	int heroRune;
+	int monsterPower;
 	Game game;
 	TurnState turnState;
 	Boolean turnStateActionCompleted;
@@ -25,6 +27,10 @@ public class Turn {
 		this.rune = 0;
 		this.power = 0;
 		this.game = g;
+		this.heroRune = 0;
+		this.monsterPower = 0;
+		this.constructRune = 0;
+		this.mechanaConstructRune = 0;
 		this.turnState = TurnState.Default;
 		actions = new ArrayList<Action>();
 		this.uniteOccurred = false;
@@ -37,9 +43,6 @@ public class Turn {
 	}
 
 	public void leftButtonClick(Point loc) {
-		if (actions.size() <= 0) {
-			this.turnState = TurnState.Default;
-		}
 		switch (turnState) {
 		case Default:
 			completedActions = new ArrayList<Boolean>();
@@ -111,6 +114,14 @@ public class Turn {
 				this.turnState = TurnState.Default;
 			}
 			this.completedActions.add(this.turnStateActionCompleted);
+			break;
+		case DefeatMonster:
+			Card defeatedMonster = this.game.gameDeck.attemptDefeatMonster(loc, this.turnStateMagnitude);
+			if (defeatedMonster != null) {
+				executeCardAction(defeatedMonster);
+				this.turnState = TurnState.Default;
+				this.turnStateMagnitude = 0;
+			}
 			break;
 		default:
 			break;
@@ -234,6 +245,21 @@ public class Turn {
 				case EnterAiyanaState:
 					this.AiyanaState = true;
 					break;
+				case HeroRuneBoost:
+					this.heroRune += a.magnitude;
+					break;
+				case MonsterPowerBoost:
+					this.monsterPower += a.magnitude;
+					break;
+				case DefeatMonster:
+					if (!this.game.gameDeck.canAMonsterBeDefeated(a.magnitude)) {
+					this.player.incrementHonor(1);
+					this.game.decrementHonor(1);
+					} else {
+					this.turnState = TurnState.DefeatMonster;
+					this.turnStateMagnitude = a.magnitude;
+					}
+					break;
 				}
 			}
 		}
@@ -243,7 +269,15 @@ public class Turn {
 		for (Card c : s) {
 			if (c.getLocation().contains(p)) {
 				if (c.getType() == Card.Type.Monster) {
-					if (c.getCost() <= this.power) {
+					if (this.monsterPower > 0 && c.getCost() < this.power + this.monsterPower) {
+						for (int i = 0; i < c.getCost(); i++) {
+							if (this.monsterPower > 0) {
+								this.monsterPower--;
+							} else {
+								this.power--;
+							}
+						}
+					} else if (c.getCost() <= this.power) {
 						this.power -= c.getCost();
 						executeCardAction(c);
 						this.game.gameDeck.hand.remove(c);
@@ -291,6 +325,19 @@ public class Turn {
 							this.game.gameDeck.hand.remove(c);
 							this.game.gameDeck.drawCard();
 						}
+					} else if (this.heroRune > 0 && c.getType() == Card.Type.Hero && c.getCost() < this.rune + this.heroRune) {
+						for (int i = 0; i < c.getCost(); i++) {
+							if (this.heroRune > 0) {
+								this.heroRune--;
+							} else {
+								this.rune--;
+							}
+						}
+						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						if (this.game.gameDeck.hand.contains(c)) {
+							this.game.gameDeck.hand.remove(c);
+							this.game.gameDeck.drawCard();
+						}
 					} else if (c.getCost() <= this.rune) {
 						this.rune -= c.getCost();
 						this.player.playerDeck.addNewCardToDiscard(new Card(c));
@@ -307,6 +354,6 @@ public class Turn {
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, OptionalDeckBanish
+		Default, Discard, DeckBanish, CenterBanish, OptionalDeckBanish, DefeatMonster
 	}
 }

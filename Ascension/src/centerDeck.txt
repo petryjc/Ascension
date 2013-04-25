@@ -38,5 +38,10 @@ Battery_Monk 3 Hero Mechana 2 1 2 ConstructRuneBoost 1 -1 0 DrawCard 1 -1 0
 Grease_Monk 3 Hero Mechana 1 1 2 RuneBoost 1 -1 0 ConstructRuneBoost 1 -1 0
 Reactor_Monk 2 Hero Mechana 4 2 2 RuneBoost 2 -1 0 ConstructRuneBoost 1 -1 0
 The_Grand_Design 2 Construct Mechana 6 6 1 MechanaConstructRuneBoost 2 -1 0
-Watchmaker's_Altar 2 Construct Mechana 5 5 1 MechanaConstructRuneBoost 1 -1 0
+Watchmakers_Altar 2 Construct Mechana 5 5 1 MechanaConstructRuneBoost 1 -1 0
 Avatar_of_Aiyana 1 Hero Lifebound 7 4 2 RuneBoost 2 -1 0 EnterAiyanaState 0 -1 0
+Prodigal 3 Hero Enlightened 1 1 1 DefeatMonster 3 -1 0
+Arha_Templar 2 Hero Enlightened 4 2 1 DefeatMonster 4 -1 0
+Oziah_the_Peerless 1 Hero Enlightened 6 3 1 DefeatMonster 6 -1 0
+Aiyanas_Messenger 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HeroRuneBoost 1 -1 0
+Void_Militia 3 Hero Void 1 1 2 PowerBoost 1 -1 0 MonsterPowerBoost 1 -1 0
