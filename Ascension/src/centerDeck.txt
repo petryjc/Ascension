@@ -1,3 +1,4 @@
+//Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
 Arha_Initiate 3 Hero Enlightened 1 1 1 DrawCard 1 -1 0
 Starchild 3 Hero Lifebound 4 2 3 RuneBoost 1 -1 0 HonorBoost 1 -1 0 DrawCard 1 -1 0
 Lifebound_Initiate 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HonorBoost 1 -1 0

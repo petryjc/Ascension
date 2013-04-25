@@ -1,3 +1,4 @@
+//Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
 Arha_Initiate 3 Hero Enlightened 1 1 1 DrawCard 1 -1 0
 Starchild 3 Hero Lifebound 4 2 3 RuneBoost 1 -1 0 HonorBoost 1 -1 0 DrawCard 1 -1 0
 Lifebound_Initiate 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HonorBoost 1 -1 0
@@ -44,3 +45,4 @@ Prodigal 3 Hero Enlightened 1 1 1 DefeatMonster 3 -1 0
 Arha_Templar 2 Hero Enlightened 4 2 1 DefeatMonster 4 -1 0
 Oziah_the_Peerless 1 Hero Enlightened 6 3 1 DefeatMonster 6 -1 0
 Aiyanas_Messenger 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HeroRuneBoost 1 -1 0
+Void_Militia 3 Hero Void 1 1 2 PowerBoost 1 -1 0 MonsterPowerBoost 1 -1 0

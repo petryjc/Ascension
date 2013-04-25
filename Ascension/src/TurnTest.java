@@ -3,6 +3,8 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +22,7 @@ public class TurnTest {
 		pList.add(Player.getNewPlayer("Jack"));
 		g = new Game(100,pList,new Deck());
 		t = new Turn(g.players.get(0), g);	
+		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
 	}
 
 	@Test
@@ -190,7 +193,7 @@ public class TurnTest {
 		assertEquals(t.mechanaConstructRune, 1);
 		a = new Action(1,Action.ActionType.OptionalDeckBanish,-1,false);
 		t.executeUnitedAction(a);
-		assertEquals(t.turnState, Turn.TurnState.OptionalDeckBanish);
+		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
 		a = new Action(1,Action.ActionType.PowerBoost,-1,false);
 		t.executeUnitedAction(a);
 		assertEquals(t.power, 1);
@@ -212,15 +215,28 @@ public class TurnTest {
 	}
 	
 	@Test
-	public void testExecuteActionOptionalDeckBanish() {
+	public void testExecuteActionOptionalDeckBanishYes() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		actionList.add(new Action(2, Action.ActionType.OptionalDeckBanish));
 		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
 		assertEquals(t.turnState, Turn.TurnState.Default);
 		assertEquals(t.turnStateMagnitude, 0);
 		t.executeCardAction(testCard);
-		assertEquals(t.turnState, Turn.TurnState.OptionalDeckBanish);
+		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
 		assertEquals(t.turnStateMagnitude, 2);
+	}
+	
+	@Test
+	public void testExecuteActionOptionalDeckBanishNo() {
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(2, Action.ActionType.OptionalDeckBanish));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.executeCardAction(testCard);
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
 	}
 	
 	@Test
@@ -263,5 +279,57 @@ public class TurnTest {
 		assertFalse(t.AiyanaState);
 		t.executeCardAction(testCard);
 		assertTrue(t.AiyanaState);
+	}
+	
+	@Test
+	public void testPlayAllWNoDisruptions() {
+		pList.get(0).playerDeck.drawNCards(5);
+		assertEquals(5, pList.get(0).playerDeck.hand.size());
+		t.playAll();
+		assertEquals(0, pList.get(0).playerDeck.hand.size());
+		assertEquals(5, t.rune + t.power);
+	}
+	
+	@Test
+	public void testPlayAllWDiscard() {
+		pList.get(0).playerDeck.drawNCards(2);
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.Discard));
+		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		pList.get(0).playerDeck.hand.add(c);
+		pList.get(0).playerDeck.drawNCards(2);
+		assertEquals(5, pList.get(0).playerDeck.hand.size());
+		t.playAll();
+		assertEquals(2, pList.get(0).playerDeck.hand.size());
+		assertEquals(2, t.rune + t.power);
+	}
+	
+	@Test
+	public void testPlayAllWDeclinedBanish() {
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		pList.get(0).playerDeck.drawNCards(2);
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.OptionalDeckBanish));
+		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		pList.get(0).playerDeck.hand.add(c);
+		pList.get(0).playerDeck.drawNCards(2);
+		assertEquals(5, pList.get(0).playerDeck.hand.size());
+		t.playAll();
+		assertEquals(0, pList.get(0).playerDeck.hand.size());
+		assertEquals(4, t.rune + t.power);
+	}
+	
+	@Test
+	public void testPlayAllWAcceptedBanish() {
+		pList.get(0).playerDeck.drawNCards(2);
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.OptionalDeckBanish));
+		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		pList.get(0).playerDeck.hand.add(c);
+		pList.get(0).playerDeck.drawNCards(2);
+		assertEquals(5, pList.get(0).playerDeck.hand.size());
+		t.playAll();
+		assertEquals(2, pList.get(0).playerDeck.hand.size());
+		assertEquals(2, t.rune + t.power);
 	}
 }

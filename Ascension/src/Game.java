@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 @SuppressWarnings("serial")
 public class Game extends JComponent {
@@ -108,6 +109,8 @@ public class Game extends JComponent {
 
 	protected void paintCard(Card c, Graphics2D g2) {
 		Rectangle loc = c.getLocation();
+		if(loc == null)
+			return;
 		//draw background
 		g2.drawImage(card_back, loc.x, loc.y,
 				loc.width, loc.height, null);
@@ -133,49 +136,44 @@ public class Game extends JComponent {
 		
 		//draw card image
 		g2.drawImage(c.getImage(), (int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.13),
-				(int) (loc.width * 0.9), (int) (loc.height * 0.4), null);
+				(int) (loc.width * 0.9), (int) (loc.height * 0.35), null);
 		
 		//draw type/faction
 		String factiontype = c.getFaction() + " " + c.getType();
 		g2.setFont(scaleFont(factiontype, new Rectangle((int) (loc.width * 0.9), (int) (loc.height * 0.08)),(Graphics) g2));
 		g2.drawString(factiontype, (int) (loc.x + loc.width*0.05),
-				(int) (loc.y + loc.height*0.61));
+				(int) (loc.y + loc.height*0.56));
+		
+		//Description rectangle
+		Rectangle r = new Rectangle((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.58),(int) (loc.width * 0.9), (int) (loc.height * 0.40));
+		g2.setColor(Color.LIGHT_GRAY);
+		g2.fill(r);
+
+		//draw honor
+				g2.setFont(new Font("TimesNewRoman", 10, 10));
+				g2.setColor(Color.red);
+				g2.drawImage(honor_symbol, (int) (loc.x), (int) (loc.y + loc.height * 0.92),
+						(int) (loc.width*0.17), (int)(loc.height*0.09), null);
+				g2.drawString(c.getHonorWorth() + "", (int) (loc.x + loc.width*0.06),
+						(int) (loc.y + loc.height*0.99));
+				g2.setColor(Color.black);
 		
 		//draw card description
 		Locale currentLocale = new Locale(this.language, this.country);
 		ResourceBundle descriptions= ResourceBundle.getBundle("CardDescription", currentLocale);
 		
 		try {
-			//System.out.println(descriptions.getString(c.getName()));
-			Rectangle r = new Rectangle((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.63),(int) (loc.width * 0.9), (int) (loc.height * 0.35));
-			g2.setColor(Color.LIGHT_GRAY);
-			g2.fill(r);
 			g2.setColor(Color.black);
-			g2.setFont(new Font("TimesNewRoman", 10, 15));
+			g2.setFont(new Font("TimesNewRoman", 10, 10));
 			ArrayList<String> lines = getTextInLines(descriptions.getString(c.getName()), (int) (loc.width * 0.9), g2);
 			for(int i = 0; i < lines.size(); i++) {
 				g2.drawString(lines.get(i), (int) (loc.x + loc.width*0.06),
-						(int) (loc.y + loc.height*0.61 + g2.getFont().getSize() * (i + 1)));
+						(int) (loc.y + loc.height*0.56 + g2.getFont().getSize() * (i + 1)));
 			}
-//			JTextArea t = new JTextArea(descriptions.getString(c.getName()));
-//			t.setBounds((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.63),(int) (loc.width * 0.9), (int) (loc.height * 0.35));
-//			t.setLineWrap(true);
-//			t.setWrapStyleWord(true);
-//			t.setBackground(Color.lightGray);
-//			t.setFocusable(false);
-//			this.add(t);
 		} catch (Exception e){
 			//System.out.println("Missing card reference of " + c.getName() + " in CardDescription");
 		}
-		
-		//draw honor
-		g2.setFont(new Font("TimesNewRoman", 10, 10));
-		g2.setColor(Color.red);
-		g2.drawImage(honor_symbol, (int) (loc.x), (int) (loc.y + loc.height * 0.9),
-				(int) (loc.width*0.2), (int)(loc.height*0.11), null);
-		g2.drawString(c.getHonorWorth() + "", (int) (loc.x + loc.width*0.06),
-				(int) (loc.y + loc.height*0.98));
-		g2.setColor(Color.black);
+	
 	}
 	
 	public Font scaleFont(String text, Rectangle2D rect, Graphics g) {

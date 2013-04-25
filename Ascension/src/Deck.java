@@ -5,13 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class Deck {
-	///////////////Used to draw cards within Deck Location////////////
-	public static final float cardDimensionRatio = 2; //height divided by width
-	int yBorder = 4;  // Space between cards and top/bottom
-	int xBorder = 4;  // Space between cards and edges
-	/////////////////////////////////////////////////////////////////
-	
+public class Deck {	
 	ArrayList<Card> notPlayed;
 	ArrayList<Card> hand;
 	ArrayList<Card> discard;

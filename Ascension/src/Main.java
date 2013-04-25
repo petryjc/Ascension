@@ -16,6 +16,8 @@ public class Main {
 		File file = new File(filename);
 		try {
 			Scanner scanner = new Scanner(file);
+			//Clean out the first line, used as comments to explain process
+			scanner.nextLine();
 			while (scanner.hasNextLine()) {
 				String cardInfo = scanner.nextLine();
 				String[] tokens = cardInfo.split(" ");
@@ -114,7 +116,7 @@ public class Main {
 		ArrayList<Action> action2 = new ArrayList<Action>();
 		action2.add(new Action(2, Action.ActionType.PowerBoost));
 		cards.add(new Card(new Rectangle(1277, 27, 128, 166), Card.Type.Hero,
-				Card.Faction.Enlightened, 2, action2, "Heavy Infantry", 1));
+				Card.Faction.Enlightened, 2, action2, "Heavy_Infantry", 1));
 
 		// Cultist
 		ArrayList<Action> action3 = new ArrayList<Action>();
@@ -155,8 +157,8 @@ public class Main {
 
 		g.gameHonor = amountHonor;
 		
-		g.country = "KR";
-		g.language = "kr";
+		g.country = "US";
+		g.language = "en";
 
 		g.players.add(Player.getNewPlayer("Jack"));
 		g.players.add(Player.getNewPlayer("Gabe"));

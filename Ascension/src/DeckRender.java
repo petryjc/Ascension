@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class DeckRender {
 	
-	public static final float cardDimensionRatio = 2; //height divided by width
-	int yBorder = 4;  // Space between cards and top/bottom
-	int xBorder = 4;  // Space between cards and edges
+	public static final double cardDimensionRatio = 1.5; //height divided by width
+	int yBorder = 2;  // Space between cards and top/bottom
+	int xBorder = 2;  // Space between cards and edges
 		
 	private Deck deck;
 	

@@ -2,6 +2,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
+
 public class Turn {
 
 	Player player;
@@ -21,6 +24,7 @@ public class Turn {
 	Boolean uniteOccurred;
 	Action actionOnUnite;
 	Boolean AiyanaState;
+	IOptionPane optionPane;
 
 	public Turn(Player player, Game g) {
 		this.player = player;
@@ -36,10 +40,23 @@ public class Turn {
 		this.uniteOccurred = false;
 		this.united = false;
 		this.AiyanaState = false;
+		optionPane = new DefaultOptionPane();
 		for (Card c : this.player.playerDeck.constructs) {
 			executeCardAction(c);
 		}
 
+	}
+	
+	public void playAll() {
+		//Continue playing cards until you a) run out b) discard c) banish
+		while (!this.player.playerDeck.hand.isEmpty()) {
+			Card c = this.player.playerDeck.hand.get(0);
+			this.executeCardAction(c);
+			this.player.playerDeck.playCard(c);
+			if(this.turnState == TurnState.Discard || 
+					this.turnState == TurnState.DeckBanish)
+				return;	
+		}
 	}
 
 	public void leftButtonClick(Point loc) {
@@ -54,12 +71,7 @@ public class Turn {
 				return;
 			}
 			if (playAllCardsInHand.contains(loc)) {
-				while (!this.player.playerDeck.hand.isEmpty()) {
-					Card c = this.player.playerDeck.hand.get(0);
-					this.executeCardAction(c);
-					this.player.playerDeck.playCard(c);
-				}
-
+				playAll();
 			}
 			Card c = this.player.playerDeck.handleClick(loc);
 			this.game.repaint();
@@ -102,19 +114,6 @@ public class Turn {
 			}
 			this.completedActions.add(this.turnStateActionCompleted);
 			break;
-		case OptionalDeckBanish:
-			Card banishedcard = this.player.playerDeck.attemptDeckBanish(loc);
-			if (banishedcard != null) {
-				this.game.gameDeck.discard.add(banishedcard);
-			} else {
-				this.turnStateActionCompleted = false;
-			}
-			this.turnStateMagnitude--;
-			if (this.turnStateMagnitude < 1) {
-				this.turnState = TurnState.Default;
-			}
-			this.completedActions.add(this.turnStateActionCompleted);
-			break;
 		case DefeatMonster:
 			Card defeatedMonster = this.game.gameDeck.attemptDefeatMonster(loc, this.turnStateMagnitude);
 			if (defeatedMonster != null) {
@@ -128,7 +127,7 @@ public class Turn {
 		}
 
 	}
-
+	
 	public void executeUnitedAction(Action a) {
 		switch (a.action) {
 		case HonorBoost:
@@ -157,8 +156,12 @@ public class Turn {
 			this.turnStateMagnitude = a.magnitude;
 			break;
 		case OptionalDeckBanish:
-			this.turnState = TurnState.OptionalDeckBanish;
-			this.turnStateMagnitude = a.magnitude;
+			int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the deck?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(n == JOptionPane.YES_OPTION) {
+				this.turnState = TurnState.DeckBanish;
+				this.turnStateMagnitude = a.magnitude;
+			}
 			break;
 		case HonorAndRuneBoost:
 			this.rune += a.magnitude;
@@ -174,8 +177,17 @@ public class Turn {
 		case EnterAiyanaState:
 			this.AiyanaState = true;
 			break;
+		case DefeatMonster:
+			break;
+		case HeroRuneBoost:
+			break;
+		case MonsterPowerBoost:
+			break;
+		default:
+			break;
 		}
 	}
+
 
 	public void executeCardAction(Card c) {
 		if (this.united && c.getFaction() == Card.Faction.Lifebound
@@ -216,6 +228,8 @@ public class Turn {
 					this.completedActions.add(true);
 					break;
 				case ForcedDeckBanish:
+					optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from the deck to banish them","",
+							JOptionPane.PLAIN_MESSAGE); 
 					this.turnState = TurnState.DeckBanish;
 					this.turnStateMagnitude = a.magnitude;
 					this.completedActions.add(true);
@@ -225,8 +239,12 @@ public class Turn {
 					this.turnStateMagnitude = a.magnitude;
 					break;
 				case OptionalDeckBanish:
-					this.turnState = TurnState.OptionalDeckBanish;
-					this.turnStateMagnitude = a.magnitude;
+					int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the deck?", 
+							"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(n == JOptionPane.YES_OPTION) {
+						this.turnState = TurnState.DeckBanish;
+						this.turnStateMagnitude = a.magnitude;
+					}
 					break;
 				case HonorAndRuneBoost:
 					this.rune += a.magnitude;
@@ -265,6 +283,7 @@ public class Turn {
 		}
 	}
 
+	
 	public boolean staticCardList(ArrayList<Card> s, Point p) {
 		for (Card c : s) {
 			if (c.getLocation().contains(p)) {
@@ -354,6 +373,6 @@ public class Turn {
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, OptionalDeckBanish, DefeatMonster
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster
 	}
 }
