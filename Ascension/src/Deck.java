@@ -116,4 +116,28 @@ public class Deck {
 		}
 		return false;
 	}
+	
+	public Card attemptDefeatMonster(Point p, int power) {
+		if(handLocation.contains(p)) {
+			for(Card c : hand) {
+				if(c.onCard(p) && c.getType() == Card.Type.Monster && c.getCost() <= power) {
+					hand.remove(c);
+					discard.add(c);
+					drawCard();
+					return c;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public Boolean canAMonsterBeDefeated(int power) {
+		for (Card c : hand) {
+			if (c.getCost() <= power && c.getType() == Card.Type.Monster) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

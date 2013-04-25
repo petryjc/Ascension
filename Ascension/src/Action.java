@@ -9,7 +9,7 @@ public class Action {
 	
 	public enum ActionType {
 		HonorBoost, RuneBoost, HonorAndRuneBoost, PowerBoost, DrawCard, Discard, ForcedDeckBanish, OptionalDeckBanish, CenterBanish, ConstructRuneBoost, MechanaConstructRuneBoost,
-		EnterAiyanaState
+		EnterAiyanaState, HeroRuneBoost, MonsterPowerBoost, DefeatMonster
 	}
 	
 	public Action(int magnitude, ActionType at) {

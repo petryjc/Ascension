@@ -66,6 +66,12 @@ public class Main {
 						actionType = Action.ActionType.MechanaConstructRuneBoost;
 					} else if (tokens[6 + (4 * i - 3)].equals("EnterAiyanaState")) {
 						actionType = Action.ActionType.EnterAiyanaState;
+					} else if (tokens[6 + (4 * i - 3)].equals("HeroRuneBoost")) {
+						actionType = Action.ActionType.HeroRuneBoost;
+					} else if (tokens[6 + (4 * i - 3)].equals("MonsterPowerBoost")) {
+						actionType = Action.ActionType.MonsterPowerBoost;
+					} else if (tokens[6 + (4 * i - 3)].equals("DefeatMonster")) {
+						actionType = Action.ActionType.DefeatMonster;
 					} 
 					else {
 						actionType = Action.ActionType.DrawCard;
