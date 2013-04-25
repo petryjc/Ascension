@@ -30,8 +30,9 @@ public class PlayerTest {
 	@Test
 	public void testGetNewPlayer(){
 		Player p1 =  new Player(new PlayerDeck(PlayerDeckTest.randomCardList(),null,null,null), "Jack");
-		Player p2 = p1.getNewPlayer("Gabe");
+		Player p2 = Player.getNewPlayer("Gabe");
 		
+		Assert.assertEquals("Jack", p1.name);
 		Assert.assertEquals("Gabe", p2.name);
 		Assert.assertNotNull(p2);
 		

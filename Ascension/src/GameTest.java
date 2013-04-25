@@ -2,7 +2,6 @@ import static org.junit.Assert.*;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.swing.JFrame;
 
@@ -143,7 +142,7 @@ public class GameTest {
 		Game g = new Game(0);
 		ArrayList<Card> discard = new ArrayList<Card>();
 		
-		PlayerDeck d = new PlayerDeck(discard, discard, discard, g.handLoc, g.constructs,g.playedLoc);
+		PlayerDeck d = new PlayerDeck(discard, discard, discard, Game.handLoc, Game.constructs,Game.playedLoc);
 		
 		g.players = new ArrayList<Player>();
 		

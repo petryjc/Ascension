@@ -3,7 +3,6 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -153,7 +152,6 @@ public class TurnTest {
 		Game g = new Game(100);
 		g.players = ps;
 		Turn t1 = new Turn(p1,g);
-		Turn t2 = new Turn(p2,g);
 		
 		t1.leftButtonClick(new Point(1461,493));
 		

@@ -4,22 +4,14 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.awt.peer.TextAreaPeer;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class Game extends JComponent {
