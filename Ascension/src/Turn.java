@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 
-public class Turn {
+public class Turn{
 
 	Player player;
 	int rune;
@@ -18,7 +18,6 @@ public class Turn {
 	TurnState turnState;
 	Boolean turnStateActionCompleted;
 	int turnStateMagnitude;
-	ArrayList<Boolean> completedActions;
 	ArrayList<Action> actions;
 	Boolean united;
 	Boolean uniteOccurred;
@@ -42,7 +41,7 @@ public class Turn {
 		this.AiyanaState = false;
 		optionPane = new DefaultOptionPane();
 		for (Card c : this.player.playerDeck.constructs) {
-			executeCardAction(c);
+			executeCard(c);
 		}
 
 	}
@@ -51,18 +50,26 @@ public class Turn {
 		//Continue playing cards until you a) run out b) discard c) banish
 		while (!this.player.playerDeck.hand.isEmpty()) {
 			Card c = this.player.playerDeck.hand.get(0);
-			this.executeCardAction(c);
+			this.executeCard(c);
 			this.player.playerDeck.playCard(c);
-			if(this.turnState == TurnState.Discard || 
-					this.turnState == TurnState.DeckBanish)
-				return;	
 		}
 	}
 
-	public void leftButtonClick(Point loc) {
+	public synchronized void exitActiveWaitingState() {
+		this.turnState = TurnState.Default;
+		notify();
+	}
+	
+	public synchronized void decrementTurnStateMagnitude() {
+		this.turnStateMagnitude--;
+		if (this.turnStateMagnitude < 1) {
+			exitActiveWaitingState();
+		}
+	}
+	
+	public synchronized void leftButtonClick(Point loc) {
 		switch (turnState) {
 		case Default:
-			completedActions = new ArrayList<Boolean>();
 			Rectangle end = new Rectangle(1460, 492, 91, 91);
 			Rectangle playAllCardsInHand = new Rectangle(47, 493, 83, 100);
 			if (end.contains(loc)) {
@@ -76,50 +83,38 @@ public class Turn {
 			Card c = this.player.playerDeck.handleClick(loc);
 			this.game.repaint();
 			if (c != null) {
-				executeCardAction(c);
+				executeCard(c);
 				return;
 			}
-			if (staticCardList(this.game.gameDeck.constructs, loc)) {
+			if (attemptCardPurchaseWithinCardList(this.game.gameDeck.constructs, loc)) {
 				return;
 			}
-			if (staticCardList(this.game.gameDeck.hand, loc)) {
+			if (attemptCardPurchaseWithinCardList(this.game.gameDeck.hand, loc)) {
 				return;
 			}
 			break;
 		case Discard:
 			if (this.player.playerDeck.attemptDiscard(loc)) {
-				this.turnStateMagnitude--;
-				if (this.turnStateMagnitude < 1) {
-					this.turnState = TurnState.Default;
-				}
+				decrementTurnStateMagnitude();
 			}
 			break;
 		case DeckBanish:
 			Card banished = this.player.playerDeck.attemptDeckBanish(loc);
 			if (banished != null) {
-				this.turnStateMagnitude--;
-				if (this.turnStateMagnitude < 1) {
-					this.turnState = TurnState.Default;
-				}
+				decrementTurnStateMagnitude();
 				this.game.gameDeck.discard.add(banished);
 			}
 			break;
 		case CenterBanish:
-			if (!this.game.gameDeck.attemptCenterBanish(loc)) {
-				this.turnStateActionCompleted = false;
+			if(this.game.gameDeck.attemptCenterBanish(loc)) {
+				decrementTurnStateMagnitude();
 			}
-			this.turnStateMagnitude--;
-			if (this.turnStateMagnitude < 1) {
-				this.turnState = TurnState.Default;
-			}
-			this.completedActions.add(this.turnStateActionCompleted);
 			break;
 		case DefeatMonster:
 			Card defeatedMonster = this.game.gameDeck.attemptDefeatMonster(loc, this.turnStateMagnitude);
 			if (defeatedMonster != null) {
-				executeCardAction(defeatedMonster);
-				this.turnState = TurnState.Default;
-				this.turnStateMagnitude = 0;
+				executeCard(defeatedMonster);
+				exitActiveWaitingState();
 			}
 			break;
 		default:
@@ -128,163 +123,107 @@ public class Turn {
 
 	}
 	
-	public void executeUnitedAction(Action a) {
+	public void executeCard(Card c) {
+		if (this.united && c.getFaction() == Card.Faction.Lifebound
+				&& !this.uniteOccurred) {
+			executeAction(this.actionOnUnite);
+			this.uniteOccurred = true;
+		}
+		for (Action a : c.getActions()) {
+			this.turnStateActionCompleted = true;
+			if (a.dependency < 0 ) { //Only execute actions that aren't dependent on others
+				if(executeAction(a)) { //Execute all actions that depend upon this one
+					for(Action a2 : c.getActions()) {
+						if(a2.dependency == c.getActions().indexOf(a))
+							executeAction(a2);
+					}
+				}
+			}
+		}
+	}
+	
+	public synchronized boolean executeAction(Action a) {
+		if (a.onUnite && !this.united) {
+			this.actionOnUnite = a;
+			this.united = true;
+		}
 		switch (a.action) {
 		case HonorBoost:
 			this.player.incrementHonor(a.magnitude);
 			this.game.decrementHonor(a.magnitude);
-			break;
+			return true;
 		case PowerBoost:
 			this.power += a.magnitude;
-			break;
+			return true;
 		case RuneBoost:
 			this.rune += a.magnitude;
-			break;
+			return true;
 		case DrawCard:
 			player.playerDeck.drawNCards(a.magnitude);
-			break;
+			return true;
 		case Discard:
 			this.turnState = TurnState.Discard;
 			this.turnStateMagnitude = a.magnitude;
-			break;
+			return true;
 		case ForcedDeckBanish:
+			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to banish them","",
+					JOptionPane.PLAIN_MESSAGE); 
 			this.turnState = TurnState.DeckBanish;
 			this.turnStateMagnitude = a.magnitude;
-			break;
+			return true;
 		case CenterBanish:
 			this.turnState = TurnState.CenterBanish;
 			this.turnStateMagnitude = a.magnitude;
-			break;
+			return true;
 		case OptionalDeckBanish:
 			int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the deck?", 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(n == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.DeckBanish;
 				this.turnStateMagnitude = a.magnitude;
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
 			}
-			break;
+			return false;
 		case HonorAndRuneBoost:
 			this.rune += a.magnitude;
 			this.player.incrementHonor(a.magnitude);
 			this.game.decrementHonor(a.magnitude);
-			break;
+			return true;
 		case ConstructRuneBoost:
 			this.constructRune += a.magnitude;
-			break;
+			return true;
 		case MechanaConstructRuneBoost:
 			this.mechanaConstructRune += a.magnitude;
-			break;
+			return true;
 		case EnterAiyanaState:
 			this.AiyanaState = true;
-			break;
-		case DefeatMonster:
-			break;
+			return true;
 		case HeroRuneBoost:
-			break;
+			this.heroRune += a.magnitude;
+			return true;
 		case MonsterPowerBoost:
-			break;
-		default:
-			break;
-		}
-	}
-
-
-	public void executeCardAction(Card c) {
-		if (this.united && c.getFaction() == Card.Faction.Lifebound
-				&& !this.uniteOccurred) {
-			executeUnitedAction(this.actionOnUnite);
-			this.uniteOccurred = true;
-		}
-		for (Action a : c.getActions()) {
-			this.completedActions = new ArrayList<Boolean>();
-			this.turnStateActionCompleted = true;
-			if (a.dependency < 0 || this.completedActions.get(a.dependency)) {
-				if (a.onUnite && !this.united) {
-					this.actionOnUnite = a;
-					this.united = true;
-					break;
-				}
-				switch (a.action) {
-				case HonorBoost:
-					this.player.incrementHonor(a.magnitude);
-					this.game.decrementHonor(a.magnitude);
-					this.completedActions.add(true);
-					break;
-				case PowerBoost:
-					this.power += a.magnitude;
-					this.completedActions.add(true);
-					break;
-				case RuneBoost:
-					this.rune += a.magnitude;
-					this.completedActions.add(true);
-					break;
-				case DrawCard:
-					player.playerDeck.drawNCards(a.magnitude);
-					this.completedActions.add(true);
-					break;
-				case Discard:
-					this.turnState = TurnState.Discard;
-					this.turnStateMagnitude = a.magnitude;
-					this.completedActions.add(true);
-					break;
-				case ForcedDeckBanish:
-					optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from the deck to banish them","",
-							JOptionPane.PLAIN_MESSAGE); 
-					this.turnState = TurnState.DeckBanish;
-					this.turnStateMagnitude = a.magnitude;
-					this.completedActions.add(true);
-					break;
-				case CenterBanish:
-					this.turnState = TurnState.CenterBanish;
-					this.turnStateMagnitude = a.magnitude;
-					break;
-				case OptionalDeckBanish:
-					int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the deck?", 
-							"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-					if(n == JOptionPane.YES_OPTION) {
-						this.turnState = TurnState.DeckBanish;
-						this.turnStateMagnitude = a.magnitude;
-					}
-					break;
-				case HonorAndRuneBoost:
-					this.rune += a.magnitude;
-					this.player.incrementHonor(a.magnitude);
-					this.game.decrementHonor(a.magnitude);
-					this.completedActions.add(true);
-					break;
-				case ConstructRuneBoost:
-					this.constructRune += a.magnitude;
-					this.completedActions.add(true);
-					break;
-				case MechanaConstructRuneBoost:
-					this.mechanaConstructRune += a.magnitude;
-					this.completedActions.add(true);
-					break;
-				case EnterAiyanaState:
-					this.AiyanaState = true;
-					break;
-				case HeroRuneBoost:
-					this.heroRune += a.magnitude;
-					break;
-				case MonsterPowerBoost:
-					this.monsterPower += a.magnitude;
-					break;
-				case DefeatMonster:
-					if (!this.game.gameDeck.canAMonsterBeDefeated(a.magnitude)) {
-					this.player.incrementHonor(1);
-					this.game.decrementHonor(1);
-					} else {
-					this.turnState = TurnState.DefeatMonster;
-					this.turnStateMagnitude = a.magnitude;
-					}
-					break;
-				}
+			this.monsterPower += a.magnitude;
+			return true;
+		case DefeatMonster:
+			if (!this.game.gameDeck.canAMonsterBeDefeated(a.magnitude)) {
+				this.player.incrementHonor(1);
+				this.game.decrementHonor(1);
+			} else {
+				this.turnState = TurnState.DefeatMonster;
+				this.turnStateMagnitude = a.magnitude;
 			}
+			return true;
 		}
+		return false;
 	}
-
 	
-	public boolean staticCardList(ArrayList<Card> s, Point p) {
+	public boolean attemptCardPurchaseWithinCardList(ArrayList<Card> s, Point p) {
 		for (Card c : s) {
 			if (c.getLocation().contains(p)) {
 				if (c.getType() == Card.Type.Monster) {
@@ -298,7 +237,7 @@ public class Turn {
 						}
 					} else if (c.getCost() <= this.power) {
 						this.power -= c.getCost();
-						executeCardAction(c);
+						executeCard(c);
 						this.game.gameDeck.hand.remove(c);
 						if (!c.getName().equals("Cultist")) {
 							this.game.gameDeck.discard.add(c);
@@ -375,4 +314,5 @@ public class Turn {
 	public enum TurnState {
 		Default, Discard, DeckBanish, CenterBanish, DefeatMonster
 	}
+
 }

@@ -131,7 +131,7 @@ public class GameTest {
 	public void testGetTopCards() {
 		ArrayList<Card> cards = Main.getTopCards();
 		for(Card c : cards) {
-			assertTrue((c.getName().equals("Heavy Infantry") && c.getCost() == 2)
+			assertTrue((c.getName().equals("Heavy_Infantry") && c.getCost() == 2)
 					|| (c.getName().equals("Cultist") && c.getCost() == 2)
 					|| (c.getName().equals("Mystic")&& c.getCost() == 3));
 		}
