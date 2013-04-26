@@ -28,7 +28,9 @@ public class Game extends JComponent {
 	Image honor_symbol;
 	Image rune_symbol;
 	Image power_symbol;
-	
+	public boolean playing;
+	public int turnNumber;
+
 	String country;
 	String language;
 
@@ -44,20 +46,23 @@ public class Game extends JComponent {
 		this.gameHonor = honor;
 		this.players = players;
 		this.gameDeck = gameDeck;
-		
+
 		this.theListener = new MouseListen(null);
 		this.addMouseListener(this.theListener);
 
-		this.image_back = new ImageIcon(this.getClass().getResource("Background.jpg"))
-		.getImage();
-		this.card_back = new ImageIcon(this.getClass().getResource("CardBackground.jpg"))
-		.getImage();
-		this.power_symbol = new ImageIcon(this.getClass().getResource("PowerSymbol.jpg"))
-		.getImage();
-		this.rune_symbol = new ImageIcon(this.getClass().getResource("RuneSymbol.jpg"))
-		.getImage();
-		this.honor_symbol = new ImageIcon(this.getClass().getResource("HonorSymbol.jpg"))
-		.getImage();
+		this.image_back = new ImageIcon(this.getClass().getResource(
+				"Background.jpg")).getImage();
+		this.card_back = new ImageIcon(this.getClass().getResource(
+				"CardBackground.jpg")).getImage();
+		this.power_symbol = new ImageIcon(this.getClass().getResource(
+				"PowerSymbol.jpg")).getImage();
+		this.rune_symbol = new ImageIcon(this.getClass().getResource(
+				"RuneSymbol.jpg")).getImage();
+		this.honor_symbol = new ImageIcon(this.getClass().getResource(
+				"HonorSymbol.jpg")).getImage();
+
+		this.playing = true;
+		this.turnNumber = 0;
 	}
 
 	@Override
@@ -67,8 +72,8 @@ public class Game extends JComponent {
 
 		g2.drawImage(image_back, 0, 0, 1600, 900, null);
 
-		this.removeAll(); //Remove previous test areas
-		
+		this.removeAll(); // Remove previous test areas
+
 		// draw the four visible card sets
 		if (this.gameDeck.hand == null || this.currentTurn == null
 				|| this.currentTurn.player.playerDeck == null) {
@@ -109,98 +114,112 @@ public class Game extends JComponent {
 
 	protected void paintCard(Card c, Graphics2D g2) {
 		Rectangle loc = c.getLocation();
-		if(loc == null)
+		if (loc == null)
 			return;
-		//draw background
-		g2.drawImage(card_back, loc.x, loc.y,
-				loc.width, loc.height, null);
-		
-		//draw cost
+		// draw background
+		g2.drawImage(card_back, loc.x, loc.y, loc.width, loc.height, null);
+
+		// draw cost
 		g2.setFont(new Font("TimesNewRoman", 10, 10));
-		if(c.getType() == Card.Type.Monster) {
-			g2.drawImage(power_symbol, (int) (loc.x + loc.width*0.85), (int) (loc.y + loc.height * 0.03),
-					(int) (loc.width*0.15), (int)(loc.height*0.07), null);
+		if (c.getType() == Card.Type.Monster) {
+			g2.drawImage(power_symbol, (int) (loc.x + loc.width * 0.85),
+					(int) (loc.y + loc.height * 0.03),
+					(int) (loc.width * 0.15), (int) (loc.height * 0.07), null);
 			g2.setColor(Color.white);
- 		} else {
- 			g2.drawImage(rune_symbol, (int) (loc.x + loc.width*0.85), (int) (loc.y + loc.height * 0.03),
-					(int) (loc.width*0.15), (int)(loc.height*0.07), null);
- 		}
-		g2.drawString(c.getCost() +"", (int)(loc.x + loc.width*0.89), (int)(loc.y + loc.height * 0.09));
+		} else {
+			g2.drawImage(rune_symbol, (int) (loc.x + loc.width * 0.85),
+					(int) (loc.y + loc.height * 0.03),
+					(int) (loc.width * 0.15), (int) (loc.height * 0.07), null);
+		}
+		g2.drawString(c.getCost() + "", (int) (loc.x + loc.width * 0.89),
+				(int) (loc.y + loc.height * 0.09));
 		g2.setColor(Color.black);
-		
-		//draw name
+
+		// draw name
 		String name = c.getName().replace('_', ' ');
-		g2.setFont(scaleFont(name, new Rectangle((int) (loc.width * 0.8), (int) (loc.height * 0.1)),(Graphics) g2));
-		g2.drawString(name, (int) (loc.x + loc.width*0.05),
-				(int) (loc.y + loc.height*0.10));
-		
-		//draw card image
-		g2.drawImage(c.getImage(), (int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.13),
-				(int) (loc.width * 0.9), (int) (loc.height * 0.35), null);
-		
-		//draw type/faction
+		g2.setFont(scaleFont(name, new Rectangle((int) (loc.width * 0.8),
+				(int) (loc.height * 0.1)), (Graphics) g2));
+		g2.drawString(name, (int) (loc.x + loc.width * 0.05),
+				(int) (loc.y + loc.height * 0.10));
+
+		// draw card image
+		g2.drawImage(c.getImage(), (int) (loc.x + loc.width * 0.05),
+				(int) (loc.y + loc.height * 0.13), (int) (loc.width * 0.9),
+				(int) (loc.height * 0.35), null);
+
+		// draw type/faction
 		String factiontype = c.getFaction() + " " + c.getType();
-		g2.setFont(scaleFont(factiontype, new Rectangle((int) (loc.width * 0.9), (int) (loc.height * 0.08)),(Graphics) g2));
-		g2.drawString(factiontype, (int) (loc.x + loc.width*0.05),
-				(int) (loc.y + loc.height*0.56));
-		
-		//Description rectangle
-		Rectangle r = new Rectangle((int) (loc.x + loc.width * 0.05), (int) (loc.y + loc.height * 0.58),(int) (loc.width * 0.9), (int) (loc.height * 0.40));
+		g2.setFont(scaleFont(factiontype, new Rectangle(
+				(int) (loc.width * 0.9), (int) (loc.height * 0.08)),
+				(Graphics) g2));
+		g2.drawString(factiontype, (int) (loc.x + loc.width * 0.05),
+				(int) (loc.y + loc.height * 0.56));
+
+		// Description rectangle
+		Rectangle r = new Rectangle((int) (loc.x + loc.width * 0.05),
+				(int) (loc.y + loc.height * 0.58), (int) (loc.width * 0.9),
+				(int) (loc.height * 0.40));
 		g2.setColor(Color.LIGHT_GRAY);
 		g2.fill(r);
 
-		//draw honor
-				g2.setFont(new Font("TimesNewRoman", 10, 10));
-				g2.setColor(Color.red);
-				g2.drawImage(honor_symbol, (int) (loc.x), (int) (loc.y + loc.height * 0.92),
-						(int) (loc.width*0.17), (int)(loc.height*0.09), null);
-				g2.drawString(c.getHonorWorth() + "", (int) (loc.x + loc.width*0.06),
-						(int) (loc.y + loc.height*0.99));
-				g2.setColor(Color.black);
-		
-		//draw card description
+		// draw honor
+		g2.setFont(new Font("TimesNewRoman", 10, 10));
+		g2.setColor(Color.red);
+		g2.drawImage(honor_symbol, (int) (loc.x),
+				(int) (loc.y + loc.height * 0.92), (int) (loc.width * 0.17),
+				(int) (loc.height * 0.09), null);
+		g2.drawString(c.getHonorWorth() + "", (int) (loc.x + loc.width * 0.06),
+				(int) (loc.y + loc.height * 0.99));
+		g2.setColor(Color.black);
+
+		// draw card description
 		Locale currentLocale = new Locale(this.language, this.country);
-		ResourceBundle descriptions= ResourceBundle.getBundle("CardDescription", currentLocale);
-		
+		ResourceBundle descriptions = ResourceBundle.getBundle(
+				"CardDescription", currentLocale);
+
 		try {
 			g2.setColor(Color.black);
 			g2.setFont(new Font("TimesNewRoman", 10, 10));
-			ArrayList<String> lines = getTextInLines(descriptions.getString(c.getName()), (int) (loc.width * 0.9), g2);
-			for(int i = 0; i < lines.size(); i++) {
-				g2.drawString(lines.get(i), (int) (loc.x + loc.width*0.06),
-						(int) (loc.y + loc.height*0.56 + g2.getFont().getSize() * (i + 1)));
+			ArrayList<String> lines = getTextInLines(
+					descriptions.getString(c.getName()),
+					(int) (loc.width * 0.9), g2);
+			for (int i = 0; i < lines.size(); i++) {
+				g2.drawString(lines.get(i), (int) (loc.x + loc.width * 0.06),
+						(int) (loc.y + loc.height * 0.56 + g2.getFont()
+								.getSize() * (i + 1)));
 			}
-		} catch (Exception e){
-			//System.out.println("Missing card reference of " + c.getName() + " in CardDescription");
+		} catch (Exception e) {
+			// System.out.println("Missing card reference of " + c.getName() +
+			// " in CardDescription");
 		}
-	
-	}
-	
-	public Font scaleFont(String text, Rectangle2D rect, Graphics g) {
-	    float nextTry=18.0f;
-	    Font font = new Font("TimesNewRoman", 0, 20);
 
-	    while(nextTry > 2) {                             
-	            font=g.getFont().deriveFont(nextTry);
-	            FontMetrics fm=g.getFontMetrics(font);
-	            int width=fm.stringWidth(text);
-	            if(width <= rect.getWidth() && nextTry <= rect.getHeight())
-	                return font;
-	            nextTry*=.9;            
-	    }
-	    return font;
 	}
-	
+
+	public Font scaleFont(String text, Rectangle2D rect, Graphics g) {
+		float nextTry = 18.0f;
+		Font font = new Font("TimesNewRoman", 0, 20);
+
+		while (nextTry > 2) {
+			font = g.getFont().deriveFont(nextTry);
+			FontMetrics fm = g.getFontMetrics(font);
+			int width = fm.stringWidth(text);
+			if (width <= rect.getWidth() && nextTry <= rect.getHeight())
+				return font;
+			nextTry *= .9;
+		}
+		return font;
+	}
+
 	public ArrayList<String> getTextInLines(String s, int width, Graphics g) {
 		ArrayList<String> a = new ArrayList<String>();
 		String[] temp = s.split(" ");
 		a.add(temp[0]);
 		Font font = g.getFont();
-		for(int i = 1; i < temp.length; i++) {
+		for (int i = 1; i < temp.length; i++) {
 			String ts = a.get(a.size() - 1) + " " + temp[i];
-            FontMetrics fm=g.getFontMetrics(font);
-            int swidth = fm.stringWidth(ts);
-			if(swidth < width) {
+			FontMetrics fm = g.getFontMetrics(font);
+			int swidth = fm.stringWidth(ts);
+			if (swidth < width) {
 				a.remove(a.size() - 1);
 				a.add(ts);
 			} else {
@@ -209,15 +228,15 @@ public class Game extends JComponent {
 		}
 		return a;
 	}
-	
+
 	public void play() {
 
 		nextTurn();
 
-		while (this.gameHonor > 0) {
+		while (this.playing) {
 			try {
 				if (!this.isTest) {
-				Thread.sleep(50);
+					Thread.sleep(50);
 				} else {
 					decrementHonor(1);
 				}
@@ -227,7 +246,6 @@ public class Game extends JComponent {
 			}
 
 		}
-		endGame();
 
 	}
 
@@ -235,17 +253,44 @@ public class Game extends JComponent {
 		this.gameHonor -= n;
 	}
 
+	/*
+	 * public void nextTurn() { if (currentTurn == null) { this.currentTurn =
+	 * new Turn(this.players.get(0), this); } else { int i = -91; int n = (i +
+	 * 1) % players.size(); n = 1; System.out.println(i); System.out.println("f"
+	 * + n); if(i == 0){ if(this.gameHonor <= 0){ endGame(); this.playing =
+	 * false; } }else{
+	 * 
+	 * } this.currentTurn = new Turn(players.get(n), this); }
+	 * 
+	 * this.currentTurn.player.startingHand();
+	 * this.theListener.setTurn(this.currentTurn); }
+	 */
+
 	public void nextTurn() {
-		if (currentTurn == null) {
-			this.currentTurn = new Turn(players.get(0), this);
+		if (this.currentTurn == null) {
+			this.currentTurn = new Turn(this.players.get(this.turnNumber), this);
+			this.currentTurn.player.startingHand();
+			this.theListener.setTurn(this.currentTurn);
+			this.turnNumber++;
 		} else {
-			int i = players.indexOf(currentTurn.player);
-			int n = (i + 1) % players.size();
-			this.currentTurn = new Turn(players.get(n), this);
+			if (this.turnNumber == this.players.size()) {
+				if (this.gameHonor <= 0) {
+					endGame();
+					this.playing = false;
+				}
+				this.currentTurn = new Turn(this.players.get(0), this);
+				this.currentTurn.player.startingHand();
+				this.theListener.setTurn(this.currentTurn);
+				this.turnNumber = 1;
+			} else {
+				this.currentTurn = new Turn(this.players.get(this.turnNumber),
+						this);
+				this.currentTurn.player.startingHand();
+				this.theListener.setTurn(this.currentTurn);
+				this.turnNumber++;
+			}
 		}
 
-		this.currentTurn.player.startingHand();
-		this.theListener.setTurn(this.currentTurn);
 	}
 
 	public String endGame() {
@@ -254,7 +299,7 @@ public class Game extends JComponent {
 		ArrayList<String> winners = new ArrayList<String>();
 
 		for (Player p : this.players) {
-			//System.out.println(p.name);
+			 System.out.println(p.name);
 
 			p.playerDeck.discard.addAll(p.playerDeck.notPlayed);
 			p.playerDeck.notPlayed.clear();
@@ -267,11 +312,11 @@ public class Game extends JComponent {
 
 			for (Card c : p.playerDeck.discard) {
 				p.honorTotal += c.getHonorWorth();
-				//System.out.println(c.getName() + ": " + c.getHonorWorth());
+				System.out.println(c.getName() + ": " + c.getHonorWorth());
 			}
 
 			System.out.println("Total Honor for " + p.name + ": "
-					+ p.honorTotal);
+				+ p.honorTotal);
 
 		}
 		int numOfPlayers = this.players.size();
@@ -302,6 +347,5 @@ public class Game extends JComponent {
 		}
 
 	}
-	
 
 }

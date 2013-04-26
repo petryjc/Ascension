@@ -23,7 +23,7 @@ public class Card {
 	}
 	
 	public Card(Card c) {
-		this(c.location, c.type, c.faction, c.cost, c.actions, c.name);
+		this(c.location, c.type, c.faction, c.cost, c.actions, c.name, c.honorWorth);
 	}
 	
 	public Card(Type type, Faction faction) {
