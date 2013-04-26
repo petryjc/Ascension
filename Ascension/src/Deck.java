@@ -1,11 +1,9 @@
-
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
-
-public class Deck {	
+public class Deck {
 	ArrayList<Card> notPlayed;
 	ArrayList<Card> hand;
 	ArrayList<Card> discard;
@@ -13,21 +11,25 @@ public class Deck {
 	Random generator = new Random();
 	Rectangle handLocation;
 	DeckRender deckRend;
-	
-	
+
 	public Deck() {
-		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), null);
+		this(new ArrayList<Card>(), new ArrayList<Card>(),
+				new ArrayList<Card>(), new ArrayList<Card>(), null);
 	}
-	
+
 	public Deck(Rectangle location) {
-		this(new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), location);
+		this(new ArrayList<Card>(), new ArrayList<Card>(),
+				new ArrayList<Card>(), new ArrayList<Card>(), location);
 	}
 
 	public Deck(ArrayList<Card> notPlayed, Rectangle location) {
-		this(notPlayed, new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>(), location);
+		this(notPlayed, new ArrayList<Card>(), new ArrayList<Card>(),
+				new ArrayList<Card>(), location);
 	}
-	
-	public Deck(ArrayList<Card> notPlayed, ArrayList<Card> hand, ArrayList<Card> discard, ArrayList<Card> constructs, Rectangle location) {
+
+	public Deck(ArrayList<Card> notPlayed, ArrayList<Card> hand,
+			ArrayList<Card> discard, ArrayList<Card> constructs,
+			Rectangle location) {
 		this.notPlayed = notPlayed;
 		this.hand = hand;
 		this.discard = discard;
@@ -38,69 +40,69 @@ public class Deck {
 	}
 
 	public boolean drawCard() {
-		//if the not played deck is gone, replace with discard deck
-		if(notPlayed.size() == 0) {
-			//if discard deck is also gone, you cannot draw anymore
-			if(discard.size() == 0) {
+		// if the not played deck is gone, replace with discard deck
+		if (notPlayed.size() == 0) {
+			// if discard deck is also gone, you cannot draw anymore
+			if (discard.size() == 0) {
 				return false;
 			}
 			notPlayed.addAll(discard);
 			discard.clear();
 			shuffle();
 		}
-		//remove from not played and add to hand
+		// remove from not played and add to hand
 		Card c = notPlayed.remove(0);
 		hand.add(c);
 		this.deckRend.resetHandLocation();
 		return true;
 	}
-	
+
 	public void shuffle() {
-		//generate a random index and draw that card.  replaces shuffling
+		// generate a random index and draw that card. replaces shuffling
 		ArrayList<Card> temp = new ArrayList<Card>();
-		while(notPlayed.size() > 0) {
+		while (notPlayed.size() > 0) {
 			int i = generator.nextInt(notPlayed.size());
 			temp.add(notPlayed.remove(i));
 		}
 		notPlayed.addAll(temp);
 	}
-	
+
 	public void addNewCardToDiscard(Card c) {
 		discard.add(c);
 	}
-	
+
 	public boolean drawNCards(int n) {
-		for(int i = 0; i < n; i++) {
-			if(!drawCard()) {
+		for (int i = 0; i < n; i++) {
+			if (!drawCard()) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	public Card handleClick(Point p) {
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p)) {
+		if (handLocation.contains(p)) {
+			for (Card c : hand) {
+				if (c.onCard(p)) {
 					return playCard(c);
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	public Card playCard(Card c) {
-		if(!hand.remove(c)) {
+		if (!hand.remove(c)) {
 			throw new IllegalArgumentException();
 		}
 		drawCard();
 		return c;
 	}
-	
+
 	public Boolean attemptCenterBanish(Point p) {
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p)) {
+		if (handLocation.contains(p)) {
+			for (Card c : hand) {
+				if (c.onCard(p)) {
 					hand.remove(c);
 					discard.add(c);
 					drawCard();
@@ -110,11 +112,12 @@ public class Deck {
 		}
 		return false;
 	}
-	
+
 	public Card attemptDefeatMonster(Point p, int power) {
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p) && c.getType() == Card.Type.Monster && c.getCost() <= power) {
+		if (handLocation.contains(p)) {
+			for (Card c : hand) {
+				if (c.onCard(p) && c.getType() == Card.Type.Monster
+						&& c.getCost() <= power) {
 					hand.remove(c);
 					discard.add(c);
 					drawCard();
@@ -122,10 +125,26 @@ public class Deck {
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
+	public Card attemptGetHero(Point p, int cost){
+		
+		if(handLocation.contains(p)) {
+			for(Card c : hand) {
+				if(c.onCard(p) && c.getType() == Card.Type.Hero && c.getCost() <= cost) {
+					hand.remove(c);
+					discard.add(c);
+					drawCard();
+					return c;
+				}
+			}
+		}
+		return null;
+				
+	}
+
 	public Boolean canAMonsterBeDefeated(int power) {
 		for (Card c : hand) {
 			if (c.getCost() <= power && c.getType() == Card.Type.Monster) {

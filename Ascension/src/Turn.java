@@ -23,6 +23,7 @@ public class Turn{
 	Boolean uniteOccurred;
 	Action actionOnUnite;
 	Boolean AiyanaState;
+	Boolean VoidMesmerState;
 	IOptionPane optionPane;
 
 	public Turn(Player player, Game g) {
@@ -39,6 +40,7 @@ public class Turn{
 		this.uniteOccurred = false;
 		this.united = false;
 		this.AiyanaState = false;
+		this.VoidMesmerState = false;
 		optionPane = new DefaultOptionPane();
 		for (Card c : this.player.playerDeck.constructs) {
 			executeCard(c);
@@ -114,6 +116,13 @@ public class Turn{
 			Card defeatedMonster = this.game.gameDeck.attemptDefeatMonster(loc, this.turnStateMagnitude);
 			if (defeatedMonster != null) {
 				executeCard(defeatedMonster);
+				exitActiveWaitingState();
+			}
+			break;
+		case VoidMesmerState:
+			Card aquHero = this.game.gameDeck.attemptGetHero(loc, this.turnStateMagnitude);
+			if (aquHero != null) {
+				executeCard(aquHero);
 				exitActiveWaitingState();
 			}
 			break;
@@ -221,7 +230,10 @@ public class Turn{
 				this.turnStateMagnitude = a.magnitude;
 			}
 			return true;
-		}
+		case EnterVoidMesmer:
+			this.VoidMesmerState = true;
+			return true;
+		}	
 		return false;
 	}
 	
@@ -244,6 +256,10 @@ public class Turn{
 						if (!c.getName().equals("Cultist")) {
 							this.game.gameDeck.discard.add(c);
 							this.game.gameDeck.drawCard();
+						}
+						if(this.VoidMesmerState){
+							this.turnState = TurnState.VoidMesmerState;
+							this.turnStateMagnitude = c.getCost();
 						}
 					}
 				} else {
@@ -314,7 +330,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState
 	}
 
 }
