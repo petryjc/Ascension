@@ -8,8 +8,10 @@ public class Action {
 	boolean onUnite;
 	
 	public enum ActionType {
-		HonorBoost, RuneBoost, HonorAndRuneBoost, PowerBoost, DrawCard, Discard, ForcedDeckBanish, OptionalDeckBanish, CenterBanish, ConstructRuneBoost, MechanaConstructRuneBoost,
-		EnterAiyanaState, HeroRuneBoost, MonsterPowerBoost, DefeatMonster, EnterVoidMesmer
+		HonorBoost, RuneBoost, HonorAndRuneBoost, PowerBoost, DrawCard, Discard, 
+		ForcedDeckBanish, OptionalDeckBanish, CenterBanish, ConstructRuneBoost, 
+		MechanaConstructRuneBoost, EnterAiyanaState, HeroRuneBoost, MonsterPowerBoost, 
+		DefeatMonster, EnterVoidMesmer, FreeCard
 	}
 	
 	public Action(int magnitude, ActionType at) {

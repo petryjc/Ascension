@@ -59,6 +59,7 @@ public class Turn{
 
 	public synchronized void exitActiveWaitingState() {
 		this.turnState = TurnState.Default;
+		this.turnStateMagnitude = 0;
 		notify();
 	}
 	
@@ -126,10 +127,13 @@ public class Turn{
 				exitActiveWaitingState();
 			}
 			break;
-		default:
+			
+		case FreeCard:
+			if (attemptCardPurchaseWithinCardList(this.game.gameDeck.hand, loc)) {
+				decrementTurnStateMagnitude();
+			}
 			break;
 		}
-
 	}
 	
 	public void executeCard(Card c) {
@@ -171,6 +175,8 @@ public class Turn{
 			player.playerDeck.drawNCards(a.magnitude);
 			return true;
 		case Discard:
+			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to discard","",
+					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.Discard;
 			this.turnStateMagnitude = a.magnitude;
 			return true;
@@ -181,13 +187,25 @@ public class Turn{
 			this.turnStateMagnitude = a.magnitude;
 			return true;
 		case CenterBanish:
-			this.turnState = TurnState.CenterBanish;
-			this.turnStateMagnitude = a.magnitude;
-			return true;
+			int m = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the center deck?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(m == JOptionPane.YES_OPTION) {
+				this.turnState = TurnState.CenterBanish;
+				this.turnStateMagnitude = a.magnitude;
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
+			}
+			return false;
+			
 		case OptionalDeckBanish:
 			if(player.playerDeck.hand.size() == 0)
 				return false;
-			int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the deck?", 
+			int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from your deck?", 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(n == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.DeckBanish;
@@ -233,6 +251,11 @@ public class Turn{
 		case EnterVoidMesmer:
 			this.VoidMesmerState = true;
 			return true;
+		case FreeCard:
+			optionPane.showMessageDialog(game,"Select a free center card","",
+					JOptionPane.PLAIN_MESSAGE);
+			this.turnState = TurnState.FreeCard;
+			this.turnStateMagnitude = a.magnitude;
 		}	
 		return false;
 	}
@@ -240,8 +263,17 @@ public class Turn{
 	public boolean attemptCardPurchaseWithinCardList(ArrayList<Card> s, Point p) {
 		for (Card c : s) {
 			if (c.getLocation().contains(p)) {
+				
 				if (c.getType() == Card.Type.Monster) {
-					if (this.monsterPower > 0 && c.getCost() < this.power + this.monsterPower) {
+					if(this.turnState == TurnState.FreeCard) {
+						executeCard(c);
+						this.game.gameDeck.hand.remove(c);
+						if (!c.getName().equals("Cultist")) {
+							this.game.gameDeck.discard.add(c);
+							this.game.gameDeck.drawCard();
+						}
+					}
+					else if (this.monsterPower > 0 && c.getCost() < this.power + this.monsterPower) {
 						for (int i = 0; i < c.getCost(); i++) {
 							if (this.monsterPower > 0) {
 								this.monsterPower--;
@@ -263,7 +295,14 @@ public class Turn{
 						}
 					}
 				} else {
-					if (c.getType() == Card.Type.Construct
+					if(this.turnState == TurnState.FreeCard) {
+						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						if (this.game.gameDeck.hand.contains(c)) {
+							this.game.gameDeck.hand.remove(c);
+							this.game.gameDeck.drawCard();
+						}
+					}
+					else if (c.getType() == Card.Type.Construct
 							&& c.getFaction() == Card.Faction.Mechana
 							&& c.getCost() <= (this.rune + this.constructRune + this.mechanaConstructRune)) {
 						for (int i = 0; i < c.getCost(); i++) {
@@ -330,7 +369,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard
 	}
 
 }

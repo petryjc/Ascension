@@ -1,6 +1,9 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
+Avatar_of_the_fallen 1 Monster Void 8 0 2 HonorBoost 4 -1 0 FreeCard 1 -1 0
+Adayu,_the_Chosen 2 Hero Enlightened 8 6 1 FreeCard 1 -1 0
+Elemental_Adept 2 Hero Enlightened 4 3 2 DrawCard 1 -1 0 CenterBanish 1 -1 0
 Emri,_Soulslayer 1 Hero Void 8 4 5 PowerBoost 4 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 3 0 
-Nihilmancer 25 Hero Void 3 1 3 PowerBoost 2 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0
+Nihilmancer 2 Hero Void 3 1 3 PowerBoost 2 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0
 Shadowcaster 2 Hero Void 5 3 3 DrawCard 1 -1 0 OptionalDeckBanish 1 -1 0 DrawCard 1 -1 0
 Abolisher 2 Hero Void 2 1 3 RuneBoost 1 -1 0 OptionalDeckBanish 1 -1 0 RuneBoost 1 1 0
 Arha_Initiate 3 Hero Enlightened 1 1 1 DrawCard 1 -1 0
@@ -49,4 +52,4 @@ Arha_Templar 2 Hero Enlightened 4 2 1 DefeatMonster 4 -1 0
 Oziah_the_Peerless 1 Hero Enlightened 6 3 1 DefeatMonster 6 -1 0
 Aiyanas_Messenger 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HeroRuneBoost 1 -1 0
 Void_Militia 3 Hero Void 1 1 2 PowerBoost 1 -1 0 MonsterPowerBoost 1 -1 0
-Void_Mesemer Hero Void 6 3 2 PowerBoost 2 -1 0 EnterVoidMesmer 0 -1 0
+Void_Mesemer 3 Hero Void 6 3 2 PowerBoost 2 -1 0 EnterVoidMesmer 0 -1 0

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 public class Main {
@@ -73,9 +74,14 @@ public class Main {
 						actionType = Action.ActionType.MonsterPowerBoost;
 					} else if (tokens[6 + (4 * i - 3)].equals("DefeatMonster")) {
 						actionType = Action.ActionType.DefeatMonster;
-					} 
-					else {
+					} else if (tokens[6 + (4 * i - 3)].equals("DrawCard")){
 						actionType = Action.ActionType.DrawCard;
+					} else if (tokens[6 + (4 * i - 3)].equals("FreeCard")){
+						actionType = Action.ActionType.FreeCard;
+					} else if (tokens[6 + (4 * i - 3)].equals("EnterVoidMesmer")){
+						actionType = Action.ActionType.EnterVoidMesmer;
+					} else {
+						throw new UnsupportedOperationException("Unrecognized token name: " + tokens[6 + (4 * i - 3)]);
 					}
 					int magnitude = Integer.parseInt(tokens[6 + (4 * i - 2)]);
 					int dependency = Integer.parseInt(tokens[6 + (4 * i - 1)]);
