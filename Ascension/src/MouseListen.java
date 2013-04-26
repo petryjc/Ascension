@@ -25,7 +25,6 @@ public class MouseListen implements MouseListener{
 	
 	@Override
 	public synchronized void mouseReleased(MouseEvent e) {
-		System.out.println(e.getPoint().x + ", " + e.getPoint().y);
 		if(e.getButton() == MouseEvent.BUTTON1){
 			Thread t = new Thread(new TurnRunner(turn, e.getPoint()));
 			t.start();

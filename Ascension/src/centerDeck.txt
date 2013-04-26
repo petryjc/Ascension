@@ -1,4 +1,8 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
+Emri,_Soulslayer 25 Hero Void 8 4 5 PowerBoost 4 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 3 0 
+Nihilmancer 25 Hero Void 3 1 3 PowerBoost 2 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0
+Shadowcaster 2 Hero Void 5 3 3 DrawCard 1 -1 0 OptionalDeckBanish 1 -1 0 DrawCard 1 -1 0
+Abolisher 2 Hero Void 2 1 3 RuneBoost 1 -1 0 OptionalDeckBanish 1 -1 0 RuneBoost 1 1 0
 Arha_Initiate 3 Hero Enlightened 1 1 1 DrawCard 1 -1 0
 Starchild 3 Hero Lifebound 4 2 3 RuneBoost 1 -1 0 HonorBoost 1 -1 0 DrawCard 1 -1 0
 Lifebound_Initiate 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HonorBoost 1 -1 0
@@ -30,7 +34,6 @@ Void_Initiate 3 Hero Void 1 1 2 RuneBoost 1 -1 0 OptionalDeckBanish 1 -1 0
 Fettered_Soul 4 Monster Void 3 0 2 HonorBoost 2 -1 0 CenterBanish 1 -1 0
 Mephit 3 Monster Void 3 0 2 HonorBoost 2 -1 0 CenterBanish 1 -1 0
 Mistake_of_Creation 4 Monster Void 4 0 3 HonorBoost 4 -1 0 CenterBanish 1 -1 0 OptionalDeckBanish 1 -1 0
-Shadowcaster 2 Hero Void 5 3 3 DrawCard 1 -1 0 OptionalDeckBanish 1 -1 0 DrawCard 1 -1 0
 Granger 2 Hero Lifebound 3 2 2 HonorAndRuneBoost 1 -1 0 HonorAndRuneBoost 1 -1 1
 Lionheart 2 Hero Lifebound 5 3 2 HonorBoost 3 -1 0 DrawCard 1 -1 1
 Runic_Lycanthrope 2 Hero Lifebound 3 1 2 RuneBoost 2 -1 0 PowerBoost 2 -1 1

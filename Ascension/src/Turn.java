@@ -50,8 +50,8 @@ public class Turn{
 		//Continue playing cards until you a) run out b) discard c) banish
 		while (!this.player.playerDeck.hand.isEmpty()) {
 			Card c = this.player.playerDeck.hand.get(0);
-			this.executeCard(c);
 			this.player.playerDeck.playCard(c);
+			this.executeCard(c);
 		}
 	}
 
@@ -176,6 +176,8 @@ public class Turn{
 			this.turnStateMagnitude = a.magnitude;
 			return true;
 		case OptionalDeckBanish:
+			if(player.playerDeck.hand.size() == 0)
+				return false;
 			int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the deck?", 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(n == JOptionPane.YES_OPTION) {
