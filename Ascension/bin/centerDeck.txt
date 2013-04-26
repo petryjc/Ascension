@@ -1,5 +1,5 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
-Emri,_Soulslayer 25 Hero Void 8 4 5 PowerBoost 4 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 3 0 
+Emri,_Soulslayer 1 Hero Void 8 4 5 PowerBoost 4 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 3 0 
 Nihilmancer 25 Hero Void 3 1 3 PowerBoost 2 -1 0 OptionalDeckBanish 1 -1 0 PowerBoost 1 1 0
 Shadowcaster 2 Hero Void 5 3 3 DrawCard 1 -1 0 OptionalDeckBanish 1 -1 0 DrawCard 1 -1 0
 Abolisher 2 Hero Void 2 1 3 RuneBoost 1 -1 0 OptionalDeckBanish 1 -1 0 RuneBoost 1 1 0

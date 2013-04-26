@@ -283,6 +283,36 @@ public class TurnTest implements Runnable {
 	}
 	
 	@Test
+	public void testBoostMonsterPower() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.MonsterPowerBoost));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		assertEquals(0, t.monsterPower);
+		t.executeCard(testCard);
+		assertEquals(3, t.monsterPower);
+	}
+	
+	@Test
+	public void testBoostHeroRune() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(2, Action.ActionType.HeroRuneBoost));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(0, t.heroRune);
+		t.executeCard(testCard);
+		assertEquals(2, t.heroRune);
+	}
+	
+	@Test
+	public void testDefeatMonster() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.DefeatMonster));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
+		assertEquals(Turn.TurnState.Default, t.turnState);
+		t.executeCard(testCard);
+		assertEquals(t.player.honorTotal, 1);
+	}
+	
+	@Test
 	public void testPlayAllWNoDisruptions() {
 		pList.get(0).playerDeck.drawNCards(5);
 		assertEquals(5, pList.get(0).playerDeck.hand.size());
