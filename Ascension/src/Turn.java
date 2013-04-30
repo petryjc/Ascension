@@ -1,3 +1,4 @@
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ public class Turn{
 		for (Card c : this.player.playerDeck.constructs) {
 			executeCard(c);
 		}
-
 	}
 	
 	public void playAll() {
@@ -133,6 +133,15 @@ public class Turn{
 				decrementTurnStateMagnitude();
 			}
 			break;
+		case HandBanish:
+			Card b = this.player.playerDeck.attemptDeckBanish(loc);
+			if (b != null) {
+				decrementTurnStateMagnitude();
+				this.game.gameDeck.discard.add(b);
+			}
+			break;
+		default:
+			break;
 		}
 	}
 	
@@ -201,7 +210,21 @@ public class Turn{
 				return true;
 			}
 			return false;
-			
+		case HandBanish:
+			int z = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from your hand?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(z == JOptionPane.YES_OPTION) {
+				this.turnState = TurnState.HandBanish;
+				this.turnStateMagnitude = a.magnitude;
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
+			}
+			return false;
 		case OptionalDeckBanish:
 			if(player.playerDeck.hand.size() == 0)
 				return false;
@@ -256,6 +279,26 @@ public class Turn{
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.FreeCard;
 			this.turnStateMagnitude = a.magnitude;
+		case HeavyOrMystic:
+			Object objects[] = {"Mystic", "Heavy Infantry"};
+			int heavyOrMysticChoice = optionPane.showOptionDialog(game, "Aquire a Mystic or Heavy Infantry?", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, objects);
+			if(heavyOrMysticChoice == JOptionPane.YES_OPTION) {
+				this.player.playerDeck.hand.add(new Card(Main.getMystic()));
+				this.player.playerDeck.deckRend.resetHandLocation();
+			} else {
+				this.player.playerDeck.hand.add(new Card(Main.getHeavyInfantry()));
+				this.player.playerDeck.deckRend.resetHandLocation();
+			}
+			return true;
+		case LunarStag:
+			Object objects2[] = {"2 Rune", "2 Honor"};
+			int lunarStagChoice = optionPane.showOptionDialog(game, "Gain 2 Rune or 2 Honor", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, objects2);
+			if (lunarStagChoice == JOptionPane.YES_OPTION) {
+				this.rune += 2;
+			} else {
+				this.player.incrementHonor(2);
+				this.game.decrementHonor(2);
+			}
 		}	
 		return false;
 	}
@@ -369,7 +412,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish
 	}
 
 }

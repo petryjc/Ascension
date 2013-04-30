@@ -20,5 +20,10 @@ public class TestOptionPane implements IOptionPane{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public int showOptionDialog(Component parentComponent, Object message,
+			String title, int optionType, int messageType, Object[] options) {
+		return returnResult;
+	}
 
 }

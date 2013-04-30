@@ -281,7 +281,7 @@ public class Game extends JComponent {
 				this.currentTurn = new Turn(this.players.get(0), this);
 				this.currentTurn.player.startingHand();
 				this.theListener.setTurn(this.currentTurn);
-				this.turnNumber = 1;
+				//this.turnNumber = 1;
 			} else {
 				this.currentTurn = new Turn(this.players.get(this.turnNumber),
 						this);

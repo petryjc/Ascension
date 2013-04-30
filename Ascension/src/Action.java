@@ -11,7 +11,7 @@ public class Action {
 		HonorBoost, RuneBoost, HonorAndRuneBoost, PowerBoost, DrawCard, Discard, 
 		ForcedDeckBanish, OptionalDeckBanish, CenterBanish, ConstructRuneBoost, 
 		MechanaConstructRuneBoost, EnterAiyanaState, HeroRuneBoost, MonsterPowerBoost, 
-		DefeatMonster, EnterVoidMesmer, FreeCard
+		DefeatMonster, EnterVoidMesmer, FreeCard, HeavyOrMystic, HandBanish, LunarStag
 	}
 	
 	public Action(int magnitude, ActionType at) {
