@@ -82,11 +82,9 @@ public class Deck {
 	}
 
 	public Card handleClick(Point p) {
-		if (handLocation.contains(p)) {
-			for (Card c : hand) {
-				if (c.onCard(p)) {
-					return playCard(c);
-				}
+		for (Card c : hand) {
+			if (c.onCard(p)) {
+				return playCard(c);
 			}
 		}
 		return null;
@@ -101,14 +99,12 @@ public class Deck {
 	}
 
 	public Boolean attemptCenterBanish(Point p) {
-		if (handLocation.contains(p)) {
-			for (Card c : hand) {
-				if (c.onCard(p)) {
-					hand.remove(c);
-					discard.add(c);
-					drawCard();
-					return true;
-				}
+		for (Card c : hand) {
+			if (c.onCard(p)) {
+				hand.remove(c);
+				discard.add(c);
+				drawCard();
+				return true;
 			}
 		}
 		return false;

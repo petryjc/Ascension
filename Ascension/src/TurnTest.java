@@ -11,7 +11,7 @@ import org.junit.Test;
 
 
 
-public class TurnTest implements Runnable {
+public class TurnTest {
 	ArrayList<Player> pList;
 	Game g;
 	Turn t;
@@ -22,10 +22,9 @@ public class TurnTest implements Runnable {
 		pList = new ArrayList<Player>();
 		pList.add(Player.getNewPlayer("Jack"));
 		g = new Game(100,pList,new Deck());
+		g.gameDeck= new Deck();
 		t = new Turn(g.players.get(0), g);	
 		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
-		Thread thread = new Thread(this);
-		thread.start();
 	}
 
 	@Test
@@ -167,23 +166,67 @@ public class TurnTest implements Runnable {
 	@Test
 	public void testExecuteActionCenterBanish() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
-		actionList.add(new Action(4, Action.ActionType.CenterBanish));
+		actionList.add(new Action(3, Action.ActionType.CenterBanish));
 		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1, actionList, "Test");
 		assertEquals(t.turnState, Turn.TurnState.Default);
 		assertEquals(t.turnStateMagnitude, 0);
+		final Card c1 = new Card(new Rectangle(0,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test");
+		g.gameDeck.hand.add(c1);
+		
+		final Card c2 = new Card(new Rectangle(100,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test2");
+		g.gameDeck.hand.add(c2);
+		
+		final Card c3 = new Card(new Rectangle(200,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test3");
+		g.gameDeck.hand.add(c3);
+		
+		g.gameDeck.notPlayed.add(new Card());
+		g.gameDeck.notPlayed.add(new Card());
+		g.gameDeck.notPlayed.add(new Card());
 		
 		Thread thread = new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 				try {
 					Thread.sleep(10);
 					assertEquals(t.turnState, Turn.TurnState.CenterBanish);
-					assertEquals(t.turnStateMagnitude, 4);
+					assertEquals(t.turnStateMagnitude, 3);
+					assertTrue(g.gameDeck.hand.contains(c1));
+					assertTrue(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					assertFalse(g.gameDeck.discard.contains(c1));
+					assertFalse(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
 					
-					t.exitActiveWaitingState();
-//					assertEquals(Turn.TurnState.DeckBanish,tstate);
-//					assertEquals(2, tMag);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(t.turnState, Turn.TurnState.CenterBanish);
+					assertEquals(t.turnStateMagnitude, 2);
+					//assertFalse(g.gameDeck.hand.contains(c1));
+					assertTrue(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					//assertTrue(g.gameDeck.discard.contains(c1));
+					assertFalse(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
+					
+					t.leftButtonClick(new Point(150,50));
+					assertEquals(t.turnState, Turn.TurnState.CenterBanish);
+					assertEquals(t.turnStateMagnitude, 1);
+					assertFalse(g.gameDeck.hand.contains(c1));
+					assertFalse(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					assertTrue(g.gameDeck.discard.contains(c1));
+					assertTrue(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
+					
+					t.leftButtonClick(new Point(250,50));
+					assertEquals(t.turnState, Turn.TurnState.Default);
+					assertEquals(t.turnStateMagnitude, 0);
+					assertFalse(g.gameDeck.hand.contains(c1));
+					assertFalse(g.gameDeck.hand.contains(c2));
+					assertFalse(g.gameDeck.hand.contains(c3));
+					assertTrue(g.gameDeck.discard.contains(c1));
+					assertTrue(g.gameDeck.discard.contains(c2));
+					assertTrue(g.gameDeck.discard.contains(c3));
+					
 				} catch (InterruptedException e) {}
 				catch (IllegalMonitorStateException e1) {}
 				
@@ -218,8 +261,6 @@ public class TurnTest implements Runnable {
 					assertEquals(Turn.TurnState.Default,t.turnState);
 					assertFalse(t.player.playerDeck.hand.contains(toBanish));
 					assertTrue(t.game.gameDeck.discard.contains(toBanish));
-//					assertEquals(Turn.TurnState.DeckBanish,tstate);
-//					assertEquals(2, tMag);
 				} catch (InterruptedException e) {}
 				catch (IllegalMonitorStateException e1) {}
 				
@@ -354,25 +395,32 @@ public class TurnTest implements Runnable {
 	public void testPlayAllWAcceptedBanish() throws InterruptedException {
 		pList.get(0).playerDeck.drawNCards(2);
 		ArrayList<Action> actionList = new ArrayList<Action>();
-		actionList.add(new Action(1, Action.ActionType.OptionalDeckBanish));
-		actionList.add(new Action(3, Action.ActionType.PowerBoost,0));
+		actionList.add(new Action(1, Action.ActionType.CenterBanish));
+		actionList.add(new Action(15, Action.ActionType.PowerBoost,0));
 		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
 		pList.get(0).playerDeck.hand.add(c);
 		pList.get(0).playerDeck.drawNCards(2);
+		
+		final Card c1 = new Card(new Rectangle(0,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test");
+		g.gameDeck.hand.add(c1);
+		g.gameDeck.notPlayed.add(new Card());
+		
 		assertEquals(5, pList.get(0).playerDeck.hand.size());
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					Thread.sleep(10);
-					System.out.println(t.player.playerDeck.hand.size());
-					assertEquals(Turn.TurnState.DeckBanish, t.turnState);
+					assertEquals(2, pList.get(0).playerDeck.hand.size());
+					assertEquals(2, t.rune + t.power);
+					assertEquals(Turn.TurnState.CenterBanish, t.turnState);
 					assertEquals(1, t.turnStateMagnitude);
 					
-					t.exitActiveWaitingState();
-					//this.notify();
-//					assertEquals(Turn.TurnState.DeckBanish,tstate);
-//					assertEquals(2, tMag);
+					t.leftButtonClick(new Point(50,50));
+					
+					assertEquals(Turn.TurnState.Default, t.turnState);
+					assertEquals(0, t.turnStateMagnitude);
+
 				} catch (InterruptedException e) {}
 				catch (IllegalMonitorStateException e1) {}
 				
@@ -380,23 +428,8 @@ public class TurnTest implements Runnable {
 		});
 		thread.start();
 		t.playAll();
-		//this.wait();
 		assertEquals(0, pList.get(0).playerDeck.hand.size());
-		assertEquals(7, t.rune + t.power);
+		assertEquals(19, t.rune + t.power);
 	}
 
-	@Override
-	public void run() {
-		while(true) {
-//			try {
-//				Thread.sleep(10);
-//				Turn.TurnState  tstate = t.turnState;
-//				int tMag = t.turnStateMagnitude;
-//				t.exitActiveWaitingState();
-////				assertEquals(Turn.TurnState.DeckBanish,tstate);
-////				assertEquals(2, tMag);
-//			} catch (InterruptedException e) {}
-//			catch (IllegalMonitorStateException e1) {}
-		}
-	}
 }
