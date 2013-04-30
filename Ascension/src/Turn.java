@@ -49,7 +49,7 @@ public class Turn{
 	}
 	
 	public void playAll() {
-		//Continue playing cards until you a) run out b) discard c) banish
+		//Continue playing cards until you run out (aynchronous nature made this easier)
 		while (!this.player.playerDeck.hand.isEmpty()) {
 			Card c = this.player.playerDeck.hand.get(0);
 			this.player.playerDeck.playCard(c);

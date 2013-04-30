@@ -75,26 +75,22 @@ public class PlayerDeck extends Deck {
 	}
 	
 	public boolean attemptDiscard(Point p) {
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p)) {
-					hand.remove(c);
-					discard.add(c);
-					resetHandLocation();
-					return true;
-				}
+		for(Card c : hand) {
+			if(c.onCard(p)) {
+				hand.remove(c);
+				discard.add(c);
+				resetHandLocation();
+				return true;
 			}
 		}
 		return false;
 	}
 	
 	public Card attemptDeckBanish(Point p) {
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p)) {
-					hand.remove(c);
-					return c;
-				}
+		for(Card c : hand) {
+			if(c.onCard(p)) {
+				hand.remove(c);
+				return c;
 			}
 		}
 		return null;

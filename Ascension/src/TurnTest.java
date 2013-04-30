@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -164,65 +165,67 @@ public class TurnTest implements Runnable {
 	}
 	
 	@Test
-	public void testExecuteUnitedAction() {
-		Action a = new Action(1,Action.ActionType.CenterBanish,-1,false);
-		t.executeAction(a);
-		assertEquals(t.turnState, Turn.TurnState.CenterBanish);
-		a = new Action(1,Action.ActionType.ConstructRuneBoost,-1,false);
-		t.executeAction(a);
-		assertEquals(t.constructRune, 1);
-		a = new Action(1,Action.ActionType.Discard,-1,false);
-		t.executeAction(a);
-		assertEquals(t.turnState, Turn.TurnState.Discard);
-		a = new Action(1,Action.ActionType.DrawCard,-1,false);
-		t.executeAction(a);
-		assertEquals(1,1);
-		a = new Action(1,Action.ActionType.EnterAiyanaState,-1,false);
-		t.executeAction(a);
-		assertTrue(t.AiyanaState);
-		a = new Action(1,Action.ActionType.ForcedDeckBanish,-1,false);
-		t.executeAction(a);
-		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
-		a = new Action(1,Action.ActionType.HonorAndRuneBoost,-1,false);
-		t.executeAction(a);
-		assertEquals(t.rune, 1);
-		assertEquals(t.player.honorTotal, 1);
-		a = new Action(1,Action.ActionType.HonorBoost,-1,false);
-		t.executeAction(a);
-		assertEquals(t.player.honorTotal, 2);
-		a = new Action(1,Action.ActionType.MechanaConstructRuneBoost,-1,false);
-		t.executeAction(a);
-		assertEquals(t.mechanaConstructRune, 1);
-		a = new Action(1,Action.ActionType.OptionalDeckBanish,-1,false);
-		//t.executeAction(a);
-		assertEquals(t.turnState, Turn.TurnState.DeckBanish);
-		a = new Action(1,Action.ActionType.PowerBoost,-1,false);
-		t.executeAction(a);
-		assertEquals(t.power, 1);
-		a = new Action(1,Action.ActionType.RuneBoost,-1,false);
-		t.executeAction(a);
-		assertEquals(t.rune, 2);
-	}
-	
-	@Test
 	public void testExecuteActionCenterBanish() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		actionList.add(new Action(4, Action.ActionType.CenterBanish));
 		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1, actionList, "Test");
 		assertEquals(t.turnState, Turn.TurnState.Default);
 		assertEquals(t.turnStateMagnitude, 0);
+		
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(t.turnState, Turn.TurnState.CenterBanish);
+					assertEquals(t.turnStateMagnitude, 4);
+					
+					t.exitActiveWaitingState();
+//					assertEquals(Turn.TurnState.DeckBanish,tstate);
+//					assertEquals(2, tMag);
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
 		t.executeCard(testCard);
-		assertEquals(t.turnState, Turn.TurnState.CenterBanish);
-		assertEquals(t.turnStateMagnitude, 4);
+		
 	}
+	
 	
 	@Test
 	public void testExecuteActionOptionalDeckBanishYes() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
-		actionList.add(new Action(2, Action.ActionType.OptionalDeckBanish));
+		actionList.add(new Action(1, Action.ActionType.OptionalDeckBanish));
 		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
 		assertEquals(t.turnState, Turn.TurnState.Default);
 		assertEquals(t.turnStateMagnitude, 0);
+		t.player.playerDeck.drawNCards(5);
+		final Card toBanish = t.player.playerDeck.hand.get(1);
+		toBanish.setLocation(new Rectangle(0,0,100,100));
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.DeckBanish, t.turnState);
+					assertEquals(1, t.turnStateMagnitude);
+					
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(Turn.TurnState.Default,t.turnState);
+					assertFalse(t.player.playerDeck.hand.contains(toBanish));
+					assertTrue(t.game.gameDeck.discard.contains(toBanish));
+//					assertEquals(Turn.TurnState.DeckBanish,tstate);
+//					assertEquals(2, tMag);
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
 		t.executeCard(testCard);
 		
 	}
@@ -303,7 +306,17 @@ public class TurnTest implements Runnable {
 	}
 	
 	@Test
-	public void testDefeatMonster() {
+	public void testDefeatMonsterWNoMiddleMonster() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(3, Action.ActionType.DefeatMonster));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
+		assertEquals(Turn.TurnState.Default, t.turnState);
+		t.executeCard(testCard);
+		assertEquals(t.player.honorTotal, 1);
+	}
+	
+	@Test
+	public void testDefeatMonsterWMiddleMonster() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		actionList.add(new Action(3, Action.ActionType.DefeatMonster));
 		Card testCard = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
@@ -326,7 +339,7 @@ public class TurnTest implements Runnable {
 		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
 		pList.get(0).playerDeck.drawNCards(2);
 		ArrayList<Action> actionList = new ArrayList<Action>();
-		actionList.add(new Action(3, Action.ActionType.PowerBoost,0));
+		actionList.add(new Action(1, Action.ActionType.PowerBoost,0));
 		actionList.add(new Action(3, Action.ActionType.OptionalDeckBanish));
 		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
 		pList.get(0).playerDeck.hand.add(c);
@@ -338,16 +351,36 @@ public class TurnTest implements Runnable {
 	}
 	
 	@Test
-	public void testPlayAllWAcceptedBanish() {
+	public void testPlayAllWAcceptedBanish() throws InterruptedException {
 		pList.get(0).playerDeck.drawNCards(2);
 		ArrayList<Action> actionList = new ArrayList<Action>();
-		actionList.add(new Action(3, Action.ActionType.OptionalDeckBanish));
+		actionList.add(new Action(1, Action.ActionType.OptionalDeckBanish));
 		actionList.add(new Action(3, Action.ActionType.PowerBoost,0));
 		Card c = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
 		pList.get(0).playerDeck.hand.add(c);
 		pList.get(0).playerDeck.drawNCards(2);
 		assertEquals(5, pList.get(0).playerDeck.hand.size());
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					System.out.println(t.player.playerDeck.hand.size());
+					assertEquals(Turn.TurnState.DeckBanish, t.turnState);
+					assertEquals(1, t.turnStateMagnitude);
+					
+					t.exitActiveWaitingState();
+					//this.notify();
+//					assertEquals(Turn.TurnState.DeckBanish,tstate);
+//					assertEquals(2, tMag);
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
 		t.playAll();
+		//this.wait();
 		assertEquals(0, pList.get(0).playerDeck.hand.size());
 		assertEquals(7, t.rune + t.power);
 	}
@@ -355,15 +388,15 @@ public class TurnTest implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			try {
-				Thread.sleep(10);
-				Turn.TurnState  tstate = t.turnState;
-				int tMag = t.turnStateMagnitude;
-				t.exitActiveWaitingState();
-//				assertEquals(Turn.TurnState.DeckBanish,tstate);
-//				assertEquals(2, tMag);
-			} catch (InterruptedException e) {}
-			catch (IllegalMonitorStateException e1) {}
+//			try {
+//				Thread.sleep(10);
+//				Turn.TurnState  tstate = t.turnState;
+//				int tMag = t.turnStateMagnitude;
+//				t.exitActiveWaitingState();
+////				assertEquals(Turn.TurnState.DeckBanish,tstate);
+////				assertEquals(2, tMag);
+//			} catch (InterruptedException e) {}
+//			catch (IllegalMonitorStateException e1) {}
 		}
 	}
 }
