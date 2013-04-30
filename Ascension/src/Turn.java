@@ -299,7 +299,13 @@ public class Turn{
 				this.player.incrementHonor(2);
 				this.game.decrementHonor(2);
 			}
-		}	
+		case AskaraOfFate:
+			this.player.playerDeck.drawCard();
+			for (Player p : this.game.players) {
+				p.playerDeck.drawCard();
+			}
+			return true;
+		}
 		return false;
 	}
 	

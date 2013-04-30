@@ -86,6 +86,8 @@ public class Main {
 						actionType = Action.ActionType.HeavyOrMystic;
 					} else if (tokens[6 + (4 * i - 3)].equals("LunarStag")){
 						actionType = Action.ActionType.LunarStag;
+					} else if (tokens[6 + (4 * i - 3)].equals("AskaraOfFate")){
+						actionType = Action.ActionType.AskaraOfFate;
 					} else {
 						throw new UnsupportedOperationException("Unrecognized token name: " + tokens[6 + (4 * i - 3)]);
 					}
