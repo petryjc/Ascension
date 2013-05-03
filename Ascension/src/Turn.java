@@ -113,6 +113,16 @@ public class Turn{
 				decrementTurnStateMagnitude();
 			}
 			break;
+		case AskaraCenterBanish:
+			Card c1 = this.game.gameDeck.attemptAskaraCenterBanish(loc);
+			if(c1 != null) {
+				if (c1.getType() == Card.Type.Monster) {
+					this.player.incrementHonor(3);
+					this.game.decrementHonor(3);
+				}
+				decrementTurnStateMagnitude();
+			}
+			break;
 		case DefeatMonster:
 			Card defeatedMonster = this.game.gameDeck.attemptDefeatMonster(loc, this.turnStateMagnitude);
 			if (defeatedMonster != null) {
@@ -305,6 +315,21 @@ public class Turn{
 				p.playerDeck.drawCard();
 			}
 			return true;
+		case AskaraCenterBanish:
+			int num1 = optionPane.showConfirmDialog(game, "Would you like to banish a card from the center deck?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(num1 == JOptionPane.YES_OPTION) {
+				this.turnState = TurnState.AskaraCenterBanish;
+				this.turnStateMagnitude = 1;
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
+			}
+			return false;
 		}
 		return false;
 	}
@@ -418,7 +443,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish
 	}
 
 }

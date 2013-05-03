@@ -237,6 +237,60 @@ public class TurnTest {
 		
 	}
 	
+	@Test
+	public void testExecuteActionAskaraCenterBanish() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.AskaraCenterBanish));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		final Card c1 = new Card(new Rectangle(0,0,100,100),Card.Type.Monster,Card.Faction.Void,3,null,"Test");
+		g.gameDeck.hand.add(c1);
+		
+		final Card c2 = new Card(new Rectangle(100,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test2");
+		g.gameDeck.hand.add(c2);
+		
+		final Card c3 = new Card(new Rectangle(200,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test3");
+		g.gameDeck.hand.add(c3);
+		
+		g.gameDeck.notPlayed.add(new Card());
+		g.gameDeck.notPlayed.add(new Card());
+		g.gameDeck.notPlayed.add(new Card());
+		
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(t.turnState, Turn.TurnState.AskaraCenterBanish);
+					assertEquals(t.turnStateMagnitude, 1);
+					assertTrue(g.gameDeck.hand.contains(c1));
+					assertTrue(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					assertFalse(g.gameDeck.discard.contains(c1));
+					assertFalse(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
+					assertEquals(t.player.honorTotal, 0);
+
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(t.turnState, Turn.TurnState.Default);
+					assertEquals(t.turnStateMagnitude, 0);
+					assertFalse(g.gameDeck.hand.contains(c1));
+					assertTrue(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					assertTrue(g.gameDeck.discard.contains(c1));
+					assertFalse(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
+					assertEquals(t.player.honorTotal, 3);
+
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
+	}
 	
 	@Test
 	public void testExecuteActionOptionalDeckBanishYes() {
