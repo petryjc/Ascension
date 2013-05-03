@@ -62,7 +62,7 @@ public class Game extends JComponent {
 				"HonorSymbol.jpg")).getImage();
 
 		this.playing = true;
-		this.turnNumber = 0;
+		this.turnNumber = this.players.size();
 	}
 
 	@Override
@@ -267,28 +267,23 @@ public class Game extends JComponent {
 	 */
 
 	public void nextTurn() {
-		if (this.currentTurn == null) {
-			this.currentTurn = new Turn(this.players.get(this.turnNumber), this);
-			this.currentTurn.player.startingHand();
-			this.theListener.setTurn(this.currentTurn);
-			this.turnNumber++;
-		} else {
-			if (this.turnNumber == this.players.size()) {
-				if (this.gameHonor <= 0) {
-					endGame();
-					this.playing = false;
-				}
-				this.currentTurn = new Turn(this.players.get(0), this);
-				this.currentTurn.player.startingHand();
-				this.theListener.setTurn(this.currentTurn);
-				this.turnNumber = 1;
+		if (this.turnNumber == this.players.size()) {
+			if (this.gameHonor <= 0) {
+				endGame();
+				this.playing = false;
 			} else {
+				this.turnNumber = 0;
 				this.currentTurn = new Turn(this.players.get(this.turnNumber),
 						this);
 				this.currentTurn.player.startingHand();
 				this.theListener.setTurn(this.currentTurn);
+				this.theListener.setTurn(this.currentTurn);
 				this.turnNumber++;
 			}
+		} else {
+			this.currentTurn = new Turn(this.players.get(this.turnNumber), this);
+			this.currentTurn.player.startingHand();
+			this.theListener.setTurn(this.currentTurn);
 		}
 
 	}
@@ -299,7 +294,7 @@ public class Game extends JComponent {
 		ArrayList<String> winners = new ArrayList<String>();
 
 		for (Player p : this.players) {
-			 System.out.println(p.name);
+			System.out.println(p.name);
 
 			p.playerDeck.discard.addAll(p.playerDeck.notPlayed);
 			p.playerDeck.notPlayed.clear();
@@ -316,7 +311,7 @@ public class Game extends JComponent {
 			}
 
 			System.out.println("Total Honor for " + p.name + ": "
-				+ p.honorTotal);
+					+ p.honorTotal);
 
 		}
 		int numOfPlayers = this.players.size();
