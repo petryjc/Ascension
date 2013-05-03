@@ -1,4 +1,8 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
+Tower_Askara 2 Hero Enlightened 1 2 2 DrawCard 3 -1 0 AskaraDiscard 2 -1 0
+Temple_Librarian 3 Hero Enlightened 2 1 2 Discard 1 -1 0 DrawCard 2 0 0
+Nook_Hound 3 Hero Enlightened 2 1 1 NookHound 1 -1 0
+Eternal_Askara 2 Hero Enlightened 1 3 1 AskaraCenterBanish 1 -1 0
 Askara_of_Fate 100 Hero Enlightened 1 2 2 AskaraOfFate 0 -1 0 CenterBanish 1 -1 0
 Lunar_Stag 3 Hero Lifebound 3 1 1 LunarStag 1 -1 0
 Arha_Sensei 3 Hero Enlightened 3 2 2 HandBanish 1 -1 0 HeavyOrMystic 1 0 0

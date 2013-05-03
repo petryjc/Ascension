@@ -68,7 +68,7 @@ public class Card {
 	}
 
 	public static enum Faction {
-		Mechana, Lifebound, Void, Enlightened
+		Mechana, Lifebound, Void, Enlightened, Common
 	}
 	
 	public enum Type {

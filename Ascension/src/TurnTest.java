@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -23,6 +24,7 @@ public class TurnTest {
 		g.gameDeck = new Deck();
 		t = new Turn(g.players.get(0), g);
 		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
+		t.player.playerDeck.generator = new Random(11142);
 	}
 
 	@Test
@@ -122,7 +124,8 @@ public class TurnTest {
 
 	}
 
-	@Test
+	
+/*	@Test
 	public void testExecuteActionDiscard() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		actionList.add(new Action(3, Action.ActionType.Discard));
@@ -135,7 +138,8 @@ public class TurnTest {
 		assertEquals(t.turnStateMagnitude, 3);
 
 	}
-
+*/
+	
 	@Test
 	public void testForcedDeckDiscard() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
@@ -252,6 +256,63 @@ public class TurnTest {
 		t.executeCard(testCard);
 
 	}
+
+	
+	@Test
+	public void testExecuteActionAskaraCenterBanish() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.AskaraCenterBanish));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		final Card c1 = new Card(new Rectangle(0,0,100,100),Card.Type.Monster,Card.Faction.Void,3,null,"Test");
+		g.gameDeck.hand.add(c1);
+		
+		final Card c2 = new Card(new Rectangle(100,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test2");
+		g.gameDeck.hand.add(c2);
+		
+		final Card c3 = new Card(new Rectangle(200,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,3,null,"Test3");
+		g.gameDeck.hand.add(c3);
+		
+		g.gameDeck.notPlayed.add(new Card());
+		g.gameDeck.notPlayed.add(new Card());
+		g.gameDeck.notPlayed.add(new Card());
+		
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(t.turnState, Turn.TurnState.AskaraCenterBanish);
+					assertEquals(t.turnStateMagnitude, 1);
+					assertTrue(g.gameDeck.hand.contains(c1));
+					assertTrue(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					assertFalse(g.gameDeck.discard.contains(c1));
+					assertFalse(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
+					assertEquals(t.player.honorTotal, 0);
+
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(t.turnState, Turn.TurnState.Default);
+					assertEquals(t.turnStateMagnitude, 0);
+					assertFalse(g.gameDeck.hand.contains(c1));
+					assertTrue(g.gameDeck.hand.contains(c2));
+					assertTrue(g.gameDeck.hand.contains(c3));
+					assertTrue(g.gameDeck.discard.contains(c1));
+					assertFalse(g.gameDeck.discard.contains(c2));
+					assertFalse(g.gameDeck.discard.contains(c3));
+					assertEquals(t.player.honorTotal, 3);
+
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
+	}
+	
 
 	@Test
 	public void testExecuteActionOptionalDeckBanishYes() {
@@ -419,6 +480,70 @@ public class TurnTest {
 		assertEquals(4, t.rune + t.power);
 	}
 
+	@Test
+	public void testNookHound() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.NookHound));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		int handStartingSize = t.player.playerDeck.hand.size();
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.size(), handStartingSize + 1);
+	}
+	
+	@Test
+	public void testVoidMesmer() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.EnterVoidMesmer));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertFalse(t.VoidMesmerState);
+		t.executeCard(testCard);
+		assertTrue(t.VoidMesmerState);
+	}
+	
+	@Test
+	public void testAskaraOfFate() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.AskaraOfFate));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		int startingHandSize = t.player.playerDeck.hand.size();
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.size(), startingHandSize + 2);
+	}
+	
+	@Test
+	public void testHeavyOrMystic() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.HeavyOrMystic));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.get(0).getName(), Main.getMystic().getName());
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.get(1).getName(), Main.getHeavyInfantry().getName());
+	}
+	
+	@Test
+	public void testLunarStag() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.LunarStag));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.rune, 2);
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.player.honorTotal, 2);
+	}
+	
+	@Test
+	public void testFreeCard() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.FreeCard));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Common, 1, actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.turnState, Turn.TurnState.FreeCard);
+		assertEquals(t.turnStateMagnitude, 1);
+	}
+	
 	@Test
 	public void testPlayAllWAcceptedBanish() throws InterruptedException {
 		pList.get(0).playerDeck.drawNCards(2);

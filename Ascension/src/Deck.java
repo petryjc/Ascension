@@ -109,6 +109,18 @@ public class Deck {
 		}
 		return false;
 	}
+	
+	public Card attemptAskaraCenterBanish(Point p) {
+		for (Card c : hand) {
+			if (c.onCard(p)) {
+				hand.remove(c);
+				discard.add(c);
+				drawCard();
+				return c;
+			}
+		}
+		return null;
+	}
 
 	public Card attemptDefeatMonster(Point p, int power) {
 		if (handLocation.contains(p)) {

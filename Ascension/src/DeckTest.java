@@ -38,6 +38,23 @@ public class DeckTest {
 	}
 
 	@Test
+	public void testDefeatMonster() {
+		Card testCard = new Card();
+		testCard.setCost(2);
+		testCard.setLocation(d.handLocation);
+		testCard.setType(Card.Type.Monster);
+		d.hand.add(testCard);
+		assertNull(d.attemptDefeatMonster(new Point(0,0), 0));
+		assertNotNull(d.attemptDefeatMonster(new Point((int)d.handLocation.getCenterX(), (int)d.handLocation.getCenterY()), 3));
+	}
+	
+	@Test
+	public void testGetHero() {
+		assertNull(d.attemptGetHero(new Point(0,0), 0));
+		assertNull(d.attemptGetHero(new Point((int)d.handLocation.getCenterX(), (int)d.handLocation.getCenterY()), 0));
+	}
+	
+	@Test
 	public void testInitialization() {
 		Deck d = new Deck();
 		assertNotNull(d);
