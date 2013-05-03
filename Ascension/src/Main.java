@@ -80,6 +80,14 @@ public class Main {
 						actionType = Action.ActionType.FreeCard;
 					} else if (tokens[6 + (4 * i - 3)].equals("EnterVoidMesmer")){
 						actionType = Action.ActionType.EnterVoidMesmer;
+					} else if (tokens[6 + (4 * i - 3)].equals("HandBanish")){
+						actionType = Action.ActionType.HandBanish;
+					} else if (tokens[6 + (4 * i - 3)].equals("HeavyOrMystic")){
+						actionType = Action.ActionType.HeavyOrMystic;
+					} else if (tokens[6 + (4 * i - 3)].equals("LunarStag")){
+						actionType = Action.ActionType.LunarStag;
+					} else if (tokens[6 + (4 * i - 3)].equals("AskaraOfFate")){
+						actionType = Action.ActionType.AskaraOfFate;
 					} else {
 						throw new UnsupportedOperationException("Unrecognized token name: " + tokens[6 + (4 * i - 3)]);
 					}
@@ -109,20 +117,27 @@ public class Main {
 		return cards;
 	}
 
-	public static ArrayList<Card> getTopCards() {
-		ArrayList<Card> cards = new ArrayList<Card>();
-
+	public static Card getMystic() {
 		// Mystic
 		ArrayList<Action> action1 = new ArrayList<Action>();
 		action1.add(new Action(2, Action.ActionType.RuneBoost));
-		cards.add(new Card(new Rectangle(1118, 27, 128, 166), Card.Type.Hero,
-				Card.Faction.Enlightened, 3, action1, "Mystic", 1));
-
-		// Heavy Infantry
+		return new Card(new Rectangle(1118, 27, 128, 166), Card.Type.Hero,
+				Card.Faction.Enlightened, 3, action1, "Mystic", 1);
+	}
+	
+	public static Card getHeavyInfantry() {
 		ArrayList<Action> action2 = new ArrayList<Action>();
 		action2.add(new Action(2, Action.ActionType.PowerBoost));
-		cards.add(new Card(new Rectangle(1277, 27, 128, 166), Card.Type.Hero,
-				Card.Faction.Enlightened, 2, action2, "Heavy_Infantry", 1));
+		return new Card(new Rectangle(1277, 27, 128, 166), Card.Type.Hero,
+				Card.Faction.Enlightened, 2, action2, "Heavy_Infantry", 1);
+	}
+	
+	public static ArrayList<Card> getTopCards() {
+		ArrayList<Card> cards = new ArrayList<Card>();
+		
+		cards.add(getMystic());
+
+		cards.add(getHeavyInfantry());
 
 		// Cultist
 		ArrayList<Action> action3 = new ArrayList<Action>();

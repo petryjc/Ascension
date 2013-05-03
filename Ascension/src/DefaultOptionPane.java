@@ -18,4 +18,18 @@ public class DefaultOptionPane implements IOptionPane{
 		JOptionPane.showMessageDialog(parentComponent,message,title,
 				messageType); 
 	}
+	
+	@Override
+	public int showOptionDialog(Component parentComponent, Object message,
+			String title, int optionType, int messageType, Object[] options) {
+		return JOptionPane.showOptionDialog(parentComponent,
+				message,
+				title,
+				optionType,
+				messageType,
+				null,
+				options,
+				options[1]);
+	}
+	
 }
