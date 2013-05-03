@@ -431,5 +431,84 @@ public class TurnTest {
 		assertEquals(0, pList.get(0).playerDeck.hand.size());
 		assertEquals(19, t.rune + t.power);
 	}
+	
+	@Test
+	public void testFreeCardHero() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.FreeCard));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.player.playerDeck.drawNCards(5);
+		t.rune = 17;
+		
+		final Card c1 = new Card(new Rectangle(0,0,100,100),Card.Type.Construct,Card.Faction.Lifebound,100,null,"Test");
+		g.gameDeck.hand.add(c1);
+		
+		g.gameDeck.notPlayed.add(new Card());
+		
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.FreeCard, t.turnState);
+					assertEquals(1, t.turnStateMagnitude);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(Turn.TurnState.Default,t.turnState);
+					assertEquals(0, t.turnStateMagnitude);
+					assertTrue(pList.get(0).playerDeck.discard.contains(c1));
+					assertEquals(17, t.rune);
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
+	}
+	
+	@Test
+	public void testFreeCardMonster() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.FreeCard));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.player.playerDeck.drawNCards(5);
+		t.power = 17;
+		
+		ArrayList<Action> monsterActionList = new ArrayList<Action>();
+		monsterActionList.add(new Action(73, Action.ActionType.HonorBoost));
+		final Card c1 = new Card(new Rectangle(0,0,100,100),Card.Type.Monster,Card.Faction.Void,100,monsterActionList,"Test");
+		g.gameDeck.hand.add(c1);
+		
+		g.gameDeck.notPlayed.add(new Card());
+		
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.FreeCard, t.turnState);
+					assertEquals(1, t.turnStateMagnitude);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(Turn.TurnState.Default,t.turnState);
+					assertEquals(0, t.turnStateMagnitude);
+					assertTrue(g.gameDeck.discard.contains(c1));
+					assertEquals(17, t.power);
+					assertEquals(73, pList.get(0).honorTotal);
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
+		
+	}
+
 
 }

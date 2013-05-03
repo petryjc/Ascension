@@ -204,8 +204,6 @@ public class Turn{
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 				return true;
 			}
@@ -345,11 +343,9 @@ public class Turn{
 					}
 				} else {
 					if(this.turnState == TurnState.FreeCard) {
-						this.player.playerDeck.addNewCardToDiscard(new Card(c));
-						if (this.game.gameDeck.hand.contains(c)) {
-							this.game.gameDeck.hand.remove(c);
-							this.game.gameDeck.drawCard();
-						}
+						this.game.gameDeck.hand.remove(c);
+						this.player.playerDeck.addNewCardToDiscard(c);
+						this.game.gameDeck.drawCard();
 					}
 					else if (c.getType() == Card.Type.Construct
 							&& c.getFaction() == Card.Faction.Mechana
