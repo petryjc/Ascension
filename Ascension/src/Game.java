@@ -29,7 +29,8 @@ public class Game extends JComponent {
 	Image rune_symbol;
 	Image power_symbol;
 	public boolean playing;
-	public int turnNumber;
+	public Player firstPlayer;
+	boolean firstTurn;
 
 	String country;
 	String language;
@@ -62,7 +63,8 @@ public class Game extends JComponent {
 				"HonorSymbol.jpg")).getImage();
 
 		this.playing = true;
-		this.turnNumber = 0;
+		this.firstTurn = true;
+		
 	}
 
 	@Override
@@ -104,7 +106,11 @@ public class Game extends JComponent {
 			g2.drawString(players.get(i).honorTotal + "", 170,
 					(i + 1) * 30 + 28);
 		}
-		this.players.add(currentTurn.player);
+		this.players.add(this.players.size(), currentTurn.player);
+		if(this.firstTurn){
+			this.firstTurn = false;
+			this.firstPlayer = this.players.get(this.players.size() - 1);
+		}
 		// Draw the additional game state info
 		g2.setFont(new Font("TimesNewRoman", 30, 50));
 		g2.drawString(this.gameHonor + "", 370, 100);
@@ -253,44 +259,15 @@ public class Game extends JComponent {
 		this.gameHonor -= n;
 	}
 
-	/*
-	 * public void nextTurn() { if (currentTurn == null) { this.currentTurn =
-	 * new Turn(this.players.get(0), this); } else { int i = -91; int n = (i +
-	 * 1) % players.size(); n = 1; System.out.println(i); System.out.println("f"
-	 * + n); if(i == 0){ if(this.gameHonor <= 0){ endGame(); this.playing =
-	 * false; } }else{
-	 * 
-	 * } this.currentTurn = new Turn(players.get(n), this); }
-	 * 
-	 * this.currentTurn.player.startingHand();
-	 * this.theListener.setTurn(this.currentTurn); }
-	 */
 
 	public void nextTurn() {
-		if (this.currentTurn == null) {
-			this.currentTurn = new Turn(this.players.get(this.turnNumber), this);
-			this.currentTurn.player.startingHand();
-			this.theListener.setTurn(this.currentTurn);
-			this.turnNumber++;
-		} else {
-			if (this.turnNumber == this.players.size()) {
-				if (this.gameHonor <= 0) {
-					endGame();
-					this.playing = false;
-				}
-				this.currentTurn = new Turn(this.players.get(0), this);
-				this.currentTurn.player.startingHand();
-				this.theListener.setTurn(this.currentTurn);
-				//this.turnNumber = 1;
-			} else {
-				this.currentTurn = new Turn(this.players.get(this.turnNumber),
-						this);
-				this.currentTurn.player.startingHand();
-				this.theListener.setTurn(this.currentTurn);
-				this.turnNumber++;
-			}
+		if(this.players.get(0).equals(this.firstPlayer) && this.gameHonor <= 0){
+			this.playing = false;
+			endGame();
 		}
-
+		this.currentTurn = new Turn(this.players.get(0), this);
+		this.currentTurn.player.startingHand();
+		this.theListener.setTurn(this.currentTurn);
 	}
 
 	public String endGame() {
@@ -299,7 +276,7 @@ public class Game extends JComponent {
 		ArrayList<String> winners = new ArrayList<String>();
 
 		for (Player p : this.players) {
-			 System.out.println(p.name);
+			System.out.println(p.name);
 
 			p.playerDeck.discard.addAll(p.playerDeck.notPlayed);
 			p.playerDeck.notPlayed.clear();
@@ -316,7 +293,7 @@ public class Game extends JComponent {
 			}
 
 			System.out.println("Total Honor for " + p.name + ": "
-				+ p.honorTotal);
+					+ p.honorTotal);
 
 		}
 		int numOfPlayers = this.players.size();
