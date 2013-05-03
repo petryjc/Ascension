@@ -32,13 +32,13 @@ public class Player {
 		ArrayList<Action> action1 = new ArrayList<Action>();
 		action1.add(new Action(1, Action.ActionType.RuneBoost));
 		for(int i = 0; i < 8; i++) {
-			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action1, "Apprentice"));
+			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Common,0,action1, "Apprentice"));
 		}
 		
 		ArrayList<Action> action2 = new ArrayList<Action>();
 		action2.add(new Action(1, Action.ActionType.PowerBoost));
 		for(int i = 0; i < 2; i++) {
-			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Enlightened,0,action2, "Militia"));
+			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Common,0,action2, "Militia"));
 		}
 		
 		ArrayList<Card> hand2 =  new ArrayList<Card>();

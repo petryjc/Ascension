@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -25,6 +26,7 @@ public class TurnTest {
 		g.gameDeck= new Deck();
 		t = new Turn(g.players.get(0), g);	
 		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
+		t.player.playerDeck.generator = new Random(11142);
 	}
 
 	@Test
@@ -116,7 +118,7 @@ public class TurnTest {
 		
 	}
 	
-	@Test
+/*	@Test
 	public void testExecuteActionDiscard() {
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		actionList.add(new Action(3, Action.ActionType.Discard));
@@ -128,6 +130,7 @@ public class TurnTest {
 		assertEquals(t.turnStateMagnitude, 3);
 		
 	}
+*/
 	
 	@Test
 	public void testForcedDeckDiscard() {
@@ -443,6 +446,70 @@ public class TurnTest {
 		t.playAll();
 		assertEquals(0, pList.get(0).playerDeck.hand.size());
 		assertEquals(4, t.rune + t.power);
+	}
+	
+	@Test
+	public void testNookHound() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.NookHound));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		int handStartingSize = t.player.playerDeck.hand.size();
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.size(), handStartingSize + 1);
+	}
+	
+	@Test
+	public void testVoidMesmer() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.EnterVoidMesmer));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertFalse(t.VoidMesmerState);
+		t.executeCard(testCard);
+		assertTrue(t.VoidMesmerState);
+	}
+	
+	@Test
+	public void testAskaraOfFate() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.AskaraOfFate));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		int startingHandSize = t.player.playerDeck.hand.size();
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.size(), startingHandSize + 2);
+	}
+	
+	@Test
+	public void testHeavyOrMystic() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.HeavyOrMystic));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.get(0).getName(), Main.getMystic().getName());
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.player.playerDeck.hand.get(1).getName(), Main.getHeavyInfantry().getName());
+	}
+	
+	@Test
+	public void testLunarStag() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.LunarStag));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Lifebound, 1, actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.rune, 2);
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.player.honorTotal, 2);
+	}
+	
+	@Test
+	public void testFreeCard() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.FreeCard));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Common, 1, actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.turnState, Turn.TurnState.FreeCard);
+		assertEquals(t.turnStateMagnitude, 1);
 	}
 	
 	@Test

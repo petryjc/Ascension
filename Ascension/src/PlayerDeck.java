@@ -74,17 +74,18 @@ public class PlayerDeck extends Deck {
 		//setCardListWithinLocation(played, playedLocation);
 	}
 	
-	public boolean attemptDiscard(Point p) {
+	public Card attemptDiscard(Point p) {
 		for(Card c : hand) {
 			if(c.onCard(p)) {
 				hand.remove(c);
 				discard.add(c);
 				resetHandLocation();
-				return true;
+				return c;
 			}
 		}
-		return false;
+		return null;
 	}
+	
 	
 	public Card attemptDeckBanish(Point p) {
 		for(Card c : hand) {

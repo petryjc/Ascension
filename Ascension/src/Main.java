@@ -90,6 +90,10 @@ public class Main {
 						actionType = Action.ActionType.AskaraOfFate;
 					} else if (tokens[6 + (4 * i - 3)].equals("AskaraCenterBanish")){
 						actionType = Action.ActionType.AskaraCenterBanish;
+					} else if (tokens[6 + (4 * i - 3)].equals("NookHound")){
+						actionType = Action.ActionType.NookHound;
+					} else if (tokens[6 + (4 * i - 3)].equals("AskaraDiscard")){
+						actionType = Action.ActionType.AskaraDiscard;
 					} else {
 						throw new UnsupportedOperationException("Unrecognized token name: " + tokens[6 + (4 * i - 3)]);
 					}
@@ -124,14 +128,14 @@ public class Main {
 		ArrayList<Action> action1 = new ArrayList<Action>();
 		action1.add(new Action(2, Action.ActionType.RuneBoost));
 		return new Card(new Rectangle(1118, 27, 128, 166), Card.Type.Hero,
-				Card.Faction.Enlightened, 3, action1, "Mystic", 1);
+				Card.Faction.Common, 3, action1, "Mystic", 1);
 	}
 	
 	public static Card getHeavyInfantry() {
 		ArrayList<Action> action2 = new ArrayList<Action>();
 		action2.add(new Action(2, Action.ActionType.PowerBoost));
 		return new Card(new Rectangle(1277, 27, 128, 166), Card.Type.Hero,
-				Card.Faction.Enlightened, 2, action2, "Heavy_Infantry", 1);
+				Card.Faction.Common, 2, action2, "Heavy_Infantry", 1);
 	}
 	
 	public static ArrayList<Card> getTopCards() {
@@ -145,7 +149,7 @@ public class Main {
 		ArrayList<Action> action3 = new ArrayList<Action>();
 		action3.add(new Action(1, Action.ActionType.HonorBoost));
 		cards.add(new Card(new Rectangle(1426, 27, 128, 166),
-				Card.Type.Monster, Card.Faction.Enlightened, 2, action3,
+				Card.Type.Monster, Card.Faction.Common, 2, action3,
 				"Cultist", 1));
 
 		return cards;

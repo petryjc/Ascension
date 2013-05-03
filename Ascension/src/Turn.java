@@ -97,8 +97,17 @@ public class Turn{
 			}
 			break;
 		case Discard:
-			if (this.player.playerDeck.attemptDiscard(loc)) {
+			if (this.player.playerDeck.attemptDiscard(loc) != null) {
 				decrementTurnStateMagnitude();
+			}
+			break;
+		case AskaraDiscard:
+			Card askaraDiscardCard = this.player.playerDeck.attemptDiscard(loc);
+			if (askaraDiscardCard != null) {
+				decrementTurnStateMagnitude();
+				if (askaraDiscardCard.getFaction() == Card.Faction.Enlightened && this.turnStateMagnitude > 0) {
+					decrementTurnStateMagnitude();
+				}
 			}
 			break;
 		case DeckBanish:
@@ -198,6 +207,12 @@ public class Turn{
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.Discard;
 			this.turnStateMagnitude = a.magnitude;
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
 		case ForcedDeckBanish:
 			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to banish them","",
@@ -309,6 +324,7 @@ public class Turn{
 				this.player.incrementHonor(2);
 				this.game.decrementHonor(2);
 			}
+			return true;
 		case AskaraOfFate:
 			this.player.playerDeck.drawCard();
 			for (Player p : this.game.players) {
@@ -330,6 +346,29 @@ public class Turn{
 				return true;
 			}
 			return false;
+		case NookHound:
+			this.player.playerDeck.drawCard();
+			Card nookHoundCard = this.player.playerDeck.hand.get(this.player.playerDeck.hand.size() - 1);
+			int nookHoundNumber = optionPane.showConfirmDialog(game, "Would you like to discard the " + nookHoundCard.getName() +" that you just drew?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (nookHoundNumber == JOptionPane.YES_OPTION) {
+				this.player.playerDeck.hand.remove(this.player.playerDeck.hand.size() - 1);
+				this.player.playerDeck.discard.add(nookHoundCard);
+				this.player.playerDeck.drawCard();
+			}
+			return true;
+		case AskaraDiscard:
+			optionPane.showMessageDialog(game,"Discard 2 card or 1 Enlightened card.","",
+					JOptionPane.PLAIN_MESSAGE);
+			this.turnState = TurnState.AskaraDiscard;
+			this.turnStateMagnitude = 2;
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return true;
 		}
 		return false;
 	}
@@ -443,7 +482,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard
 	}
 
 }
