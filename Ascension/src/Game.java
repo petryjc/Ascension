@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -12,7 +14,11 @@ import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventTarget;
 
 @SuppressWarnings("serial")
 public class Game extends JComponent {
@@ -31,6 +37,7 @@ public class Game extends JComponent {
 	public boolean playing;
 	public Player firstPlayer;
 	boolean firstTurn;
+	JFrame discardFrame;
 
 	String country;
 	String language;
@@ -65,6 +72,30 @@ public class Game extends JComponent {
 		this.playing = true;
 		this.firstTurn = true;
 		
+		this.discardFrame = new JFrame();
+		this.discardFrame.setLocation(100, 300);
+		this.discardFrame.setSize(1420, 300);
+		this.discardFrame.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				discardFrame.setVisible(false);
+				DeckRender.nullOutCardLocation(currentTurn.player.playerDeck.discard);
+			}			
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+		JComponent comp = new JComponent() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				Graphics2D g2 = (Graphics2D) g;
+				DeckRender.setCardListWithinLocation(currentTurn.player.playerDeck.discard, new Rectangle(100,50,1220,200));
+				for (Card c : currentTurn.player.playerDeck.discard) {
+					paintCard(c, g2);
+				}
+			}};
+			comp.addMouseListener(this.theListener);
+		this.discardFrame.add(comp);
 	}
 
 	@Override
@@ -73,8 +104,6 @@ public class Game extends JComponent {
 		Graphics2D g2 = (Graphics2D) g;
 
 		g2.drawImage(image_back, 0, 0, 1600, 900, null);
-
-		this.removeAll(); // Remove previous test areas
 
 		// draw the four visible card sets
 		if (this.gameDeck.hand == null || this.currentTurn == null
@@ -116,6 +145,11 @@ public class Game extends JComponent {
 		g2.drawString(this.gameHonor + "", 370, 100);
 		g2.drawString(currentTurn.rune + "", 585, 100);
 		g2.drawString(currentTurn.power + "", 790, 100);
+		
+		
+		if(this.discardFrame.isVisible()) {
+			this.discardFrame.getContentPane().repaint();
+		} 
 	}
 
 	protected void paintCard(Card c, Graphics2D g2) {
@@ -258,7 +292,6 @@ public class Game extends JComponent {
 	public void decrementHonor(int n) {
 		this.gameHonor -= n;
 	}
-
 
 	public void nextTurn() {
 		if(this.players.get(0).equals(this.firstPlayer) && this.gameHonor <= 0){

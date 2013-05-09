@@ -57,9 +57,10 @@ public class PlayerDeck extends Deck {
 	
 	public void resetHandLocation() {
 		super.deckRend.resetHandLocation();
-		deckRend.setCardListWithinLocation(played, playedLocation);
-		deckRend.setCardListWithinLocation(constructs, constructLocation);
+		DeckRender.setCardListWithinLocation(played, playedLocation);
+		DeckRender.setCardListWithinLocation(constructs, constructLocation);
 	}
+	
 	public void endTurn(){
 		for(Card c:this.hand){
 			this.discard.add(c);
@@ -70,8 +71,6 @@ public class PlayerDeck extends Deck {
 		this.hand = new ArrayList<Card>();
 		this.played = new ArrayList<Card>();
 		resetHandLocation();
-		//nullOutCardLocation(played);
-		//setCardListWithinLocation(played, playedLocation);
 	}
 	
 	public Card attemptDiscard(Point p) {
@@ -87,10 +86,22 @@ public class PlayerDeck extends Deck {
 	}
 	
 	
-	public Card attemptDeckBanish(Point p) {
+	public Card attemptDeckHandBanish(Point p) {
 		for(Card c : hand) {
 			if(c.onCard(p)) {
 				hand.remove(c);
+				resetHandLocation();
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public Card attemptDeckDiscardBanish(Point p) {
+		for(Card c : discard) {
+			if(c.onCard(p)) {
+				discard.remove(c);
+				resetHandLocation();
 				return c;
 			}
 		}

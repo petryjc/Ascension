@@ -199,7 +199,7 @@ public class PlayerDeckTest extends DeckTest{
 	
 	@Test
 	public void testAttemptDeckBanish() {
-		assertTrue(d.attemptDeckBanish(new Point(handLocation.x + handLocation.width
+		assertTrue(d.attemptDeckHandBanish(new Point(handLocation.x + handLocation.width
 						/ d.hand.size() / 2 - 10, handLocation.y
 						+ d.handLocation.height / 4)) != null);
 		// Check that it banished something.
@@ -213,7 +213,7 @@ public class PlayerDeckTest extends DeckTest{
 	
 	@Test
 	public void testAttemptDeckBanishLast() {
-		assertTrue(d.attemptDeckBanish(new Point(handLocation.x + handLocation.width
+		assertTrue(d.attemptDeckHandBanish(new Point(handLocation.x + handLocation.width
 				- handLocation.width / d.hand.size() / 2 + 10,
 				handLocation.y + d.handLocation.height / 4)) != null);
 		// Check that it banished something.
@@ -227,7 +227,7 @@ public class PlayerDeckTest extends DeckTest{
 	
 	@Test
 	public void testAttemptDeckBanishOnNothing() {
-		assertTrue(d.attemptDeckBanish(new Point(handLocation.x, handLocation.y)) == null);
+		assertTrue(d.attemptDeckHandBanish(new Point(handLocation.x, handLocation.y)) == null);
 		// Check that it discarded nothing.
 		assertEquals(handOrigional.size(), d.hand.size());
 		assertEquals(discardOrigional.size(), d.discard.size());

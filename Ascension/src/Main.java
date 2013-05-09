@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -168,7 +169,7 @@ public class Main {
 		ArrayList<Action> action3 = new ArrayList<Action>();
 		action3.add(new Action(1, Action.ActionType.HonorBoost));
 		cards.add(new Card(new Rectangle(1426, 27, 128, 166),
-				Card.Type.Monster, Card.Faction.Common, 2, action3,
+				Card.Type.Monster, Card.Faction.Common,2, action3,
 				"Cultist", 1));
 
 		return cards;
@@ -211,12 +212,13 @@ public class Main {
 			g.language = "en";
 		}
 		
-		String amount = JOptionPane.showInputDialog(g, "Enter the amount of honor you want?");
+		String amount;
 	
+		while((amount = JOptionPane.showInputDialog(g, "Enter the amount of honor you want?")) == null || !amount.matches("^-?[0-9]+(\\.[0-9]+)?$")) 
+			;
 		g.gameHonor = Integer.parseInt(amount);
 		
 		JFrame frame = new JFrame();
-
 
 		frame.setSize(1620, 940);
 		frame.setVisible(true);

@@ -70,16 +70,39 @@ public class Turn{
 		}
 	}
 	
+	public void handleDiscard(Point loc) {
+		switch (turnState) {
+		case DeckBanish:
+			Card banished = this.player.playerDeck.attemptDeckDiscardBanish(loc);
+			if (banished != null) {
+				decrementTurnStateMagnitude();
+				this.game.gameDeck.discard.add(banished);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
 	public synchronized void leftButtonClick(Point loc) {
+		if(this.game.discardFrame.isVisible()) {
+			handleDiscard(loc);
+			return;
+		}
+		Rectangle end = new Rectangle(1460, 492, 91, 91);
+		if (end.contains(loc)) {
+			this.player.playerDeck.endTurn();
+			this.game.nextTurn();
+			return;
+		}
+		Rectangle discard = new Rectangle(1431, 692, 142, 108);
+		if(discard.contains(loc)) {
+			this.game.discardFrame.setVisible(true);
+			return;
+		}
 		switch (turnState) {
 		case Default:
-			Rectangle end = new Rectangle(1460, 492, 91, 91);
 			Rectangle playAllCardsInHand = new Rectangle(47, 493, 83, 100);
-			if (end.contains(loc)) {
-				this.player.playerDeck.endTurn();
-				this.game.nextTurn();
-				return;
-			}
 			if (playAllCardsInHand.contains(loc)) {
 				playAll();
 			}
@@ -111,7 +134,7 @@ public class Turn{
 			}
 			break;
 		case DeckBanish:
-			Card banished = this.player.playerDeck.attemptDeckBanish(loc);
+			Card banished = this.player.playerDeck.attemptDeckHandBanish(loc);
 			if (banished != null) {
 				decrementTurnStateMagnitude();
 				this.game.gameDeck.discard.add(banished);
@@ -153,7 +176,7 @@ public class Turn{
 			}
 			break;
 		case HandBanish:
-			Card b = this.player.playerDeck.attemptDeckBanish(loc);
+			Card b = this.player.playerDeck.attemptDeckHandBanish(loc);
 			if (b != null) {
 				decrementTurnStateMagnitude();
 				this.game.gameDeck.discard.add(b);
@@ -183,6 +206,14 @@ public class Turn{
 		}
 	}
 	
+	public void chill() {
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public synchronized boolean executeAction(Action a) {
 		if (a.onUnite && !this.united) {
 			this.actionOnUnite = a;
@@ -207,18 +238,14 @@ public class Turn{
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.Discard;
 			this.turnStateMagnitude = a.magnitude;
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			chill();
 			return true;
 		case ForcedDeckBanish:
 			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to banish them","",
 					JOptionPane.PLAIN_MESSAGE); 
 			this.turnState = TurnState.DeckBanish;
 			this.turnStateMagnitude = a.magnitude;
+			chill();
 			return true;
 		case CenterBanish:
 			int m = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the center deck?", 
@@ -226,10 +253,7 @@ public class Turn{
 			if(m == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.CenterBanish;
 				this.turnStateMagnitude = a.magnitude;
-				try {
-					wait();
-				} catch (InterruptedException e) {
-				}
+				chill();
 				return true;
 			}
 			return false;
@@ -239,12 +263,7 @@ public class Turn{
 			if(z == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.HandBanish;
 				this.turnStateMagnitude = a.magnitude;
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				chill();
 				return true;
 			}
 			return false;
@@ -256,12 +275,7 @@ public class Turn{
 			if(n == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.DeckBanish;
 				this.turnStateMagnitude = a.magnitude;
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				chill();
 				return true;
 			}
 			return false;
@@ -335,12 +349,7 @@ public class Turn{
 			if(num1 == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.AskaraCenterBanish;
 				this.turnStateMagnitude = 1;
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				chill();
 				return true;
 			}
 			return false;
@@ -360,12 +369,7 @@ public class Turn{
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.AskaraDiscard;
 			this.turnStateMagnitude = 2;
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			chill();
 			return true;
 		}
 		return false;

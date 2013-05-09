@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class DeckRender {
 	
 	public static final double cardDimensionRatio = 1.5; //height divided by width
-	int yBorder = 2;  // Space between cards and top/bottom
-	int xBorder = 2;  // Space between cards and edges
+	static final int yBorder = 2;  // Space between cards and top/bottom
+	static final int xBorder = 2;  // Space between cards and edges
 		
 	private Deck deck;
 	
@@ -20,7 +20,7 @@ public class DeckRender {
 		setCardListWithinLocation(this.deck.hand, this.deck.handLocation);
 	}
 	
-	public void setCardListWithinLocation(ArrayList<Card> cardList, Rectangle location) {
+	public static void setCardListWithinLocation(ArrayList<Card> cardList, Rectangle location) {
 		if(location == null)
 			return;
 		
@@ -38,7 +38,7 @@ public class DeckRender {
 		}
 	}
 	
-	public void nullOutCardLocation(ArrayList<Card> cardList) {
+	public static void nullOutCardLocation(ArrayList<Card> cardList) {
 		for(Card c : cardList) {
 			c.setLocation(null);
 		}
