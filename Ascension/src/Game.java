@@ -35,6 +35,7 @@ public class Game extends JComponent {
 	Image rune_symbol;
 	Image power_symbol;
 	public boolean playing;
+	public boolean extraTurn;
 	public Player firstPlayer;
 	boolean firstTurn;
 	JFrame discardFrame;
@@ -54,7 +55,8 @@ public class Game extends JComponent {
 		this.gameHonor = honor;
 		this.players = players;
 		this.gameDeck = gameDeck;
-
+		this.extraTurn = false;
+		
 		this.theListener = new MouseListen(null);
 		this.addMouseListener(this.theListener);
 
@@ -294,6 +296,15 @@ public class Game extends JComponent {
 	}
 
 	public void nextTurn() {
+		if(this.extraTurn) {
+			ArrayList<Player> tempPlayerArray = new ArrayList<Player>();
+			tempPlayerArray.add(this.players.get(this.players.size()-1));
+			for (int i = 0; i < this.players.size()-1; i++) {
+				tempPlayerArray.add(this.players.get(i));
+			}
+			this.players = tempPlayerArray;
+			this.extraTurn = false;
+		}
 		if(this.players.get(0).equals(this.firstPlayer) && this.gameHonor <= 0){
 			this.playing = false;
 			endGame();

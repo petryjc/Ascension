@@ -1,6 +1,7 @@
 import java.awt.Point; 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class PlayerDeck extends Deck {
@@ -131,5 +132,25 @@ public class PlayerDeck extends Deck {
 		
 		return false;
 
+	}
+	
+	public Card activateConstruct(Point loc) {
+		for (Card c : this.constructs) {
+			if (c.onCard(loc)) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public Card stealCard() {
+		if (this.hand.size() == 0) {
+			return null;
+		}
+		Random rd = new Random();
+		int indexOfCardToSteal = rd.nextInt(this.hand.size()-1) + 1;
+		Card cardToSteal = this.hand.get(indexOfCardToSteal);
+		this.hand.remove(cardToSteal);
+		return cardToSteal;
 	}
 }
