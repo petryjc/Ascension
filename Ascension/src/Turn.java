@@ -228,6 +228,7 @@ public class Turn{
 
 		case RajTurnState:
 			Card cardForRajTurnState = this.player.playerDeck.attemptDeckHandBanish(loc);
+			System.out.println(cardForRajTurnState);
 			if (cardForRajTurnState != null) {
 				this.turnStateMagnitude = cardForRajTurnState.getHonorWorth() + 2;
 				this.turnState = Turn.TurnState.RajTurnState2;		
@@ -238,8 +239,7 @@ public class Turn{
 			if (cardForRajTurnState2ToAcquire != null) {
 				this.player.playerDeck.hand.add(cardForRajTurnState2ToAcquire);
 				this.player.playerDeck.resetHandLocation();
-				this.turnStateMagnitude = 0;
-				this.turnState = Turn.TurnState.Default;
+				exitActiveWaitingState();
 			}
 			break;
 		case SeaTyrantTurnBegin:

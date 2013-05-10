@@ -157,14 +157,12 @@ public class Deck {
 
 	public Card attemptRajEffect(Point p, int worth) {
 
-		if (handLocation.contains(p)) {
-			for (Card c : hand) {
-				if (c.onCard(p) && c.getType() == Card.Type.Hero
-						&& c.getHonorWorth() <= worth) {
-					hand.remove(c);
-					drawCard();
-					return c;
-				}
+		for (Card c : hand) {
+			if (c.onCard(p) && c.getType() == Card.Type.Hero
+					&& c.getHonorWorth() <= worth) {
+				hand.remove(c);
+				drawCard();
+				return c;
 			}
 		}
 		return null;
@@ -182,12 +180,10 @@ public class Deck {
 
 	public Card getHeroFromCenter(Point p) {
 
-		if (this.handLocation.contains(p)) {
-			for (Card c : this.hand) {
-				if (c.getLocation().contains(p)
-						&& c.getType() == Card.Type.Hero) {
-					return c;
-				}
+		for (Card c : this.hand) {
+			if (c.getLocation().contains(p)
+					&& c.getType() == Card.Type.Hero) {
+				return c;
 			}
 		}
 		
