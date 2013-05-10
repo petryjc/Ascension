@@ -182,6 +182,14 @@ public class Turn{
 				this.game.gameDeck.discard.add(b);
 			}
 			break;
+		case TwofoldAskara:
+			Card d = this.player.playerDeck.getCardFromPlayed(loc);
+			if(d != null){	
+				this.executeCard(d);
+				this.turnState = Turn.TurnState.Default;
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -371,6 +379,20 @@ public class Turn{
 			this.turnStateMagnitude = 2;
 			chill();
 			return true;
+		case TwofoldAskaraPlayed:
+			if(this.player.playerDeck.checkForHeroInPlayed()){
+				optionPane.showMessageDialog(game,"Pick a Hero from the previously played cards if one is available","",
+					JOptionPane.PLAIN_MESSAGE);
+				this.turnState = TurnState.TwofoldAskara;
+				chill();
+				
+				
+			}else{
+				optionPane.showMessageDialog(game,"No Hero available to copy","",
+						JOptionPane.PLAIN_MESSAGE);
+			}
+			
+			return true;
 		}
 		return false;
 	}
@@ -482,7 +504,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, TwofoldAskara
 	}
 
 }
