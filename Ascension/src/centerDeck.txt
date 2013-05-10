@@ -61,4 +61,5 @@ Oziah_the_Peerless 1 Hero Enlightened 6 3 1 DefeatMonster 6 -1 0
 Aiyanas_Messenger 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HeroRuneBoost 1 -1 0
 Void_Militia 3 Hero Void 1 1 2 PowerBoost 1 -1 0 MonsterPowerBoost 1 -1 0
 Void_Mesemer 3 Hero Void 6 3 2 PowerBoost 2 -1 0 EnterVoidMesmer 0 -1 0
-Twofold_Askara 1000 Hero Enlightened 4 1 1 TwofoldAskaraPlayed 1 -1 0  
+Twofold_Askara 1 Hero Enlightened 4 1 1 TwofoldAskaraPlayed 1 -1 0  
+Cetra,_Weaver_of_Stars 1000 Hero Lifebound 7 4 1 CetraAction 1 -1 0 

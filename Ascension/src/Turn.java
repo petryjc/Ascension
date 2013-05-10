@@ -175,6 +175,16 @@ public class Turn{
 				decrementTurnStateMagnitude();
 			}
 			break;
+		case FreeCardHero:
+			Card e  = this.game.gameDeck.getHeroFromCenter(loc);
+			
+			if(e != null){
+				this.game.gameDeck.hand.remove(e);
+				this.game.gameDeck.drawCard();
+				this.player.playerDeck.addNewCardToDiscard(e);
+				this.turnState = Turn.TurnState.Default;
+			}
+			break;
 		case HandBanish:
 			Card b = this.player.playerDeck.attemptDeckHandBanish(loc);
 			if (b != null) {
@@ -198,6 +208,7 @@ public class Turn{
 				this.turnStateMagnitude = cardForRajTurnState.getHonorWorth() + 2;
 				this.turnState = Turn.TurnState.RajTurnState2;		
 			}
+			break;
 		case RajTurnState2:
 			Card cardForRajTurnState2ToAcquire = this.game.gameDeck.attemptRajEffect(loc, this.turnStateMagnitude);
 			if (cardForRajTurnState2ToAcquire != null) {
@@ -206,7 +217,16 @@ public class Turn{
 				this.turnStateMagnitude = 0;
 				this.turnState = Turn.TurnState.Default;
 			}
-
+			break;
+		case SeaTyrantState:
+			this.player.incrementHonor(5);
+			this.game.decrementHonor(5);
+			for(Player p:this.game.players){
+				if(!(p.equals(this.player))){
+					p.flipTyrantConstructsBool();
+				}
+			}
+			break;
 		default:
 			break;
 		}
@@ -398,8 +418,8 @@ public class Turn{
 			return true;
 
 		case TwofoldAskaraPlayed:
-			if(this.player.playerDeck.checkForHeroInPlayed()){
-				optionPane.showMessageDialog(game,"Pick a Hero from the previously played cards if one is available","",
+			if(this.player.playerDeck.checkForHeroInPlayedforTwoFold()){
+				optionPane.showMessageDialog(game,"Pick a Hero to copy from the previously played cards","",
 					JOptionPane.PLAIN_MESSAGE);
 				this.turnState = TurnState.TwofoldAskara;
 				chill();
@@ -417,6 +437,18 @@ public class Turn{
 			this.turnStateMagnitude = 1;
 			chill();
 
+			return true;
+			
+		case CetraAction:
+			if(this.game.gameDeck.checkForHeroInCenter()){
+				optionPane.showMessageDialog(game,"Pick a Hero from the Center Row","",
+						JOptionPane.PLAIN_MESSAGE);
+				this.turnState = TurnState.FreeCardHero;
+				chill();
+			}else{
+				optionPane.showMessageDialog(game,"No Hero available to purchase","",
+						JOptionPane.PLAIN_MESSAGE);
+			}
 			return true;
 		}
 		return false;
@@ -530,7 +562,7 @@ public class Turn{
 
 	public enum TurnState {
 
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2,TwofoldAskara
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2,TwofoldAskara, FreeCardHero, SeaTyrantState
 
 	}
 

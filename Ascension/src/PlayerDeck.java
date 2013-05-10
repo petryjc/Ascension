@@ -121,7 +121,7 @@ public class PlayerDeck extends Deck {
 		return null;
 	}
 	
-	public boolean checkForHeroInPlayed(){
+	public boolean checkForHeroInPlayedforTwoFold(){
 		
 		for(Card c:this.played){
 			if(c.getType() == Card.Type.Hero && !(c.getName().equals("Twofold_Askara"))){

@@ -111,10 +111,12 @@ public class Main {
 						actionType = Action.ActionType.NookHound;
 					} else if (tokens[6 + (4 * i - 3)].equals("AskaraDiscard")){
 						actionType = Action.ActionType.AskaraDiscard;
-					}else if(tokens[6 + (4 * i - 3)].equals("TwofoldAskaraPlayed")){
+					} else if(tokens[6 + (4 * i - 3)].equals("TwofoldAskaraPlayed")){
 						actionType = Action.ActionType.TwofoldAskaraPlayed;
 					} else if (tokens[6 + (4 * i - 3)].equals("RajAction")){
 						actionType = Action.ActionType.RajAction;
+					} else if(tokens[6 + (4 * i - 3)].equals("CetraAction")){
+						actionType = Action.ActionType.CetraAction;
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "

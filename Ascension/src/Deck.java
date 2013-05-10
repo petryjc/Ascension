@@ -109,7 +109,7 @@ public class Deck {
 		}
 		return false;
 	}
-	
+
 	public Card attemptAskaraCenterBanish(Point p) {
 		for (Card c : hand) {
 			if (c.onCard(p)) {
@@ -138,11 +138,12 @@ public class Deck {
 		return null;
 	}
 
-	public Card attemptGetHero(Point p, int cost){
-		
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p) && c.getType() == Card.Type.Hero && c.getCost() <= cost) {
+	public Card attemptGetHero(Point p, int cost) {
+
+		if (handLocation.contains(p)) {
+			for (Card c : hand) {
+				if (c.onCard(p) && c.getType() == Card.Type.Hero
+						&& c.getCost() <= cost) {
 					hand.remove(c);
 					discard.add(c);
 					drawCard();
@@ -151,14 +152,15 @@ public class Deck {
 			}
 		}
 		return null;
-				
+
 	}
-	
-	public Card attemptRajEffect(Point p, int worth){
-		
-		if(handLocation.contains(p)) {
-			for(Card c : hand) {
-				if(c.onCard(p) && c.getType() == Card.Type.Hero && c.getHonorWorth() <= worth) {
+
+	public Card attemptRajEffect(Point p, int worth) {
+
+		if (handLocation.contains(p)) {
+			for (Card c : hand) {
+				if (c.onCard(p) && c.getType() == Card.Type.Hero
+						&& c.getHonorWorth() <= worth) {
 					hand.remove(c);
 					drawCard();
 					return c;
@@ -166,7 +168,7 @@ public class Deck {
 			}
 		}
 		return null;
-				
+
 	}
 
 	public Boolean canAMonsterBeDefeated(int power) {
@@ -177,5 +179,30 @@ public class Deck {
 		}
 		return false;
 	}
-	
+
+	public Card getHeroFromCenter(Point p) {
+
+		if (this.handLocation.contains(p)) {
+			for (Card c : this.hand) {
+				if (c.getLocation().contains(p)
+						&& c.getType() == Card.Type.Hero) {
+					return c;
+				}
+			}
+		}
+		
+		return null;
+
+	}
+
+	public boolean checkForHeroInCenter() {
+		for (Card c : this.hand) {
+			if (c.getType() == Card.Type.Hero) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
 }
