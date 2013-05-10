@@ -107,4 +107,29 @@ public class PlayerDeck extends Deck {
 		}
 		return null;
 	}
+	
+	public Card getCardFromPlayed(Point loc){
+		
+		if(this.playedLocation.contains(loc)){
+			for(Card c:this.played){
+				if(c.getLocation().contains(loc) && c.getType() == Card.Type.Hero){
+					return c;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean checkForHeroInPlayed(){
+		
+		for(Card c:this.played){
+			if(c.getType() == Card.Type.Hero && !(c.getName().equals("Twofold_Askara"))){
+				return true;
+			}
+		}
+		
+		return false;
+
+	}
 }
