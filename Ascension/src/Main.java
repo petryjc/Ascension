@@ -131,6 +131,10 @@ public class Main {
 						actionType = Action.ActionType.Voidthirster;
 					} else if (tokens[6 + (4 * i - 3)].equals("XeronAction")){
 						actionType = Action.ActionType.XeronAction;
+					} else if (tokens[6 + (4 * i - 3)].equals("RocketCourier")){
+						actionType = Action.ActionType.RocketCourier;
+					} else if (tokens[6 + (4 * i - 3)].equals("HedronLinkDevice")){
+						actionType = Action.ActionType.HedronLinkDevice;
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "

@@ -27,6 +27,8 @@ public class Turn{
 	Boolean VoidMesmerState;
 	IOptionPane optionPane;
 	Boolean VoidthirsterState;
+	Boolean HedronLinkDeviceState;
+	int RocketCourierState;
 
 	public Turn(Player player, Game g) {
 		this.player = player;
@@ -43,6 +45,8 @@ public class Turn{
 		this.united = false;
 		this.AiyanaState = false;
 		this.VoidMesmerState = false;
+		this.VoidthirsterState = false;
+		this.RocketCourierState = 0;
 		optionPane = new DefaultOptionPane();
 		for (Card c : this.player.playerDeck.constructs) {
 			executeCard(c);
@@ -458,7 +462,7 @@ public class Turn{
 			boolean voidConstructHonor = false;
 			boolean enlightenedConstructHonor = false;
 			for (Card c : this.player.playerDeck.constructs) {
-				if (c.getFaction() == Card.Faction.Mechana && !mechanaConstructHonor) {
+				if (this.testForMechana(c) && !mechanaConstructHonor) {
 					this.player.incrementHonor(1);
 					this.game.decrementHonor(1);
 					mechanaConstructHonor = true;
@@ -491,7 +495,7 @@ public class Turn{
 			}
 		case HedronCannon:
 			for (Card c : this.player.playerDeck.constructs) {
-				if (c.getFaction() == Card.Faction.Mechana) {
+				if (this.testForMechana(c)) {
 					this.power += 1;
 				}
 			}
@@ -504,11 +508,35 @@ public class Turn{
 			this.game.decrementHonor(3);
 			for (int i = 0; i < this.game.players.size(); i++) {
 				if (!this.game.players.get(i).equals(this.player)) {
-					this.player.playerDeck.hand.add(this.game.players.get(i).playerDeck.stealCard());
+					Card xeronTemp = this.game.players.get(i).playerDeck.stealCard();
+					if (xeronTemp != null) {
+						this.player.playerDeck.hand.add(xeronTemp);
+						this.player.playerDeck.resetHandLocation();
+					}
 				}
 			}
+		case RocketCourier:
+			this.RocketCourierState++;
+		case HedronLinkDevice:
+			this.HedronLinkDeviceState = true;
 		}
 		return false;
+	}
+	
+	public boolean testForMechana(Card c) {
+		return this.HedronLinkDeviceState || c.getFaction() == Card.Faction.Mechana;
+	}
+	
+	public void handleRocketCourier(Card consToBuy) {
+		int handleRocketCourierChoice = optionPane.showConfirmDialog(game, "Would you like to add that " + consToBuy.getName() + " to your hand?", 
+				"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (handleRocketCourierChoice == JOptionPane.YES_OPTION) {
+			this.player.playerDeck.hand.add(new Card(consToBuy));
+			this.RocketCourierState--;
+		} else {
+			this.player.playerDeck.addNewCardToDiscard(new Card(consToBuy));
+		}
+		this.player.playerDeck.resetHandLocation();
 	}
 	
 	public boolean attemptCardPurchaseWithinCardList(ArrayList<Card> s, Point p) {
@@ -558,11 +586,15 @@ public class Turn{
 				} else {
 					if(this.turnState == TurnState.FreeCard) {
 						this.game.gameDeck.hand.remove(c);
-						this.player.playerDeck.addNewCardToDiscard(c);
+						if (this.testForMechana(c) && c.getType() == Card.Type.Construct && this.RocketCourierState > 0) {
+							this.handleRocketCourier(c);
+						} else {
+							this.player.playerDeck.addNewCardToDiscard(c);
+						}
 						this.game.gameDeck.drawCard();
 					}
 					else if (c.getType() == Card.Type.Construct
-							&& c.getFaction() == Card.Faction.Mechana
+							&& this.testForMechana(c)
 							&& c.getCost() <= (this.rune + this.constructRune + this.mechanaConstructRune)) {
 						for (int i = 0; i < c.getCost(); i++) {
 							if (this.mechanaConstructRune > 0) {
@@ -573,7 +605,11 @@ public class Turn{
 								this.rune--;
 							}
 						}
-						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						if (this.RocketCourierState > 0) {
+							this.handleRocketCourier(c);
+						} else {
+							this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						}
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
 							this.game.gameDeck.drawCard();
@@ -587,7 +623,11 @@ public class Turn{
 								this.rune--;
 							}
 						}
-						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						if (this.testForMechana(c) && this.RocketCourierState > 0) {
+							this.handleRocketCourier(c);
+						} else {
+							this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						}
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
 							this.game.gameDeck.drawCard();
@@ -614,7 +654,11 @@ public class Turn{
 						}
 					} else if (c.getCost() <= this.rune) {
 						this.rune -= c.getCost();
-						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						if (this.testForMechana(c) && c.getType() == Card.Type.Construct && this.RocketCourierState > 0) {
+							this.handleRocketCourier(c);
+						} else {
+							this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						}
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
 							this.game.gameDeck.drawCard();

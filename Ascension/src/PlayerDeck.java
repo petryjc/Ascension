@@ -71,6 +71,7 @@ public class PlayerDeck extends Deck {
 		}
 		this.hand = new ArrayList<Card>();
 		this.played = new ArrayList<Card>();
+		this.drawNCards(5);
 		resetHandLocation();
 	}
 	

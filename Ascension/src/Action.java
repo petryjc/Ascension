@@ -14,7 +14,7 @@ public class Action {
 		DefeatMonster, EnterVoidMesmer, FreeCard, HeavyOrMystic, HandBanish, LunarStag,
 		AskaraOfFate, AskaraCenterBanish, NookHound, AskaraDiscard, TwofoldAskaraPlayed, RajAction,
 		TabletOfTimesDawn, YggdrasilStaff, AvatarGolem, KorAction, MechanaInitiate, HedronCannon,
-		Voidthirster, XeronAction
+		Voidthirster, XeronAction, RocketCourier, HedronLinkDevice
 
 	}
 	

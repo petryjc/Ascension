@@ -272,7 +272,9 @@ public class Game extends JComponent {
 	}
 
 	public void play() {
-
+		for (Player player : this.players) {
+			player.startingHand();
+		}
 		nextTurn();
 
 		while (this.playing) {
@@ -310,7 +312,6 @@ public class Game extends JComponent {
 			endGame();
 		}
 		this.currentTurn = new Turn(this.players.get(0), this);
-		this.currentTurn.player.startingHand();
 		this.theListener.setTurn(this.currentTurn);
 	}
 
