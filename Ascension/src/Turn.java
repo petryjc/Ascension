@@ -182,6 +182,20 @@ public class Turn{
 				this.game.gameDeck.discard.add(b);
 			}
 			break;
+		case RajTurnState:
+			Card cardForRajTurnState = this.player.playerDeck.attemptDeckHandBanish(loc);
+			if (cardForRajTurnState != null) {
+				this.turnStateMagnitude = cardForRajTurnState.getHonorWorth() + 2;
+				this.turnState = Turn.TurnState.RajTurnState2;		
+			}
+		case RajTurnState2:
+			Card cardForRajTurnState2ToAcquire = this.game.gameDeck.attemptRajEffect(loc, this.turnStateMagnitude);
+			if (cardForRajTurnState2ToAcquire != null) {
+				this.player.playerDeck.hand.add(cardForRajTurnState2ToAcquire);
+				this.player.playerDeck.resetHandLocation();
+				this.turnStateMagnitude = 0;
+				this.turnState = Turn.TurnState.Default;
+			}
 		default:
 			break;
 		}
@@ -371,6 +385,12 @@ public class Turn{
 			this.turnStateMagnitude = 2;
 			chill();
 			return true;
+		case RajAction:
+			optionPane.showMessageDialog(game, "Banish a hero in your hand. Then acquire a hero in the center with an honor value of up to two more than the banished hero.", "", JOptionPane.PLAIN_MESSAGE);
+			this.turnState = TurnState.RajTurnState;
+			this.turnStateMagnitude = 1;
+			chill();
+			return true;
 		}
 		return false;
 	}
@@ -482,7 +502,7 @@ public class Turn{
 	}
 
 	public enum TurnState {
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2
 	}
 
 }
