@@ -560,7 +560,7 @@ public class Turn{
 					this.player.incrementHonor(1);
 					this.game.decrementHonor(1);
 					voidConstructHonor = true;
-				} else if (c.getFaction() == Card.Faction.Mechana && !enlightenedConstructHonor) {
+				} else if (c.getFaction() == Card.Faction.Enlightened && !enlightenedConstructHonor) {
 					this.player.incrementHonor(1);
 					this.game.decrementHonor(1);
 					enlightenedConstructHonor = true;

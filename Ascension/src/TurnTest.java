@@ -703,6 +703,176 @@ public class TurnTest {
 	}
 
 	@Test
+	public void testTestForMechana() {
+		Card c = new Card();
+		t.HedronLinkDeviceState = false;
+		c.setFaction(Card.Faction.Lifebound);
+		assertFalse(t.testForMechana(c));
+		t.HedronLinkDeviceState = true;
+		assertTrue(t.testForMechana(c));
+		c.setFaction(Card.Faction.Mechana);
+		assertTrue(t.testForMechana(c));
+		t.HedronLinkDeviceState = false;
+		assertTrue(t.testForMechana(c));
+	}
+	
+	@Test
+	public void testHandleRocketCourier() {
+		t.RocketCourierState = 4;
+		Card c = new Card();
+		c.setName("THIS IS A TEST");
+		t.handleRocketCourier(c);
+		assertTrue(t.player.playerDeck.hand.get(0).getName().equals("THIS IS A TEST"));
+		assertEquals(t.RocketCourierState, 3);
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.handleRocketCourier(c);
+		assertTrue(t.player.playerDeck.discard.get(0).getName().equals("THIS IS A TEST"));
+		assertEquals(t.RocketCourierState, 3);
+		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
+		t.handleRocketCourier(c);
+		assertEquals(t.RocketCourierState, 2);
+		t.handleRocketCourier(c);
+		assertEquals(t.RocketCourierState, 1);
+		t.handleRocketCourier(c);
+		assertEquals(t.RocketCourierState, 0);
+		t.handleRocketCourier(c);
+		assertEquals(t.RocketCourierState, -1);
+	}
+	
+	@Test
+	public void testRocketCourier() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.RocketCourier));
+		Card testCard = new Card(Card.Type.Construct, Card.Faction.Mechana, 1,
+				actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.RocketCourierState, 1);
+		t.executeCard(testCard);
+		assertEquals(t.RocketCourierState, 2);
+	}
+	
+	@Test
+	public void testTablet() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.TabletOfTimesDawn));
+		Card testCard = new Card(Card.Type.Construct, Card.Faction.Enlightened, 1,
+				actionList, "Test");
+		t.executeCard(testCard);
+		assertTrue(t.game.extraTurn);
+		assertFalse(t.player.playerDeck.constructs.contains(testCard));
+		Card notTablet = new Card();
+		notTablet.setName("Not_the_Tablet_of_Times_Dawn");
+		t.player.playerDeck.constructs.add(notTablet);
+		t.executeCard(testCard);
+		assertTrue(t.game.extraTurn);
+		assertFalse(t.player.playerDeck.constructs.contains(testCard));
+		Card tablet = new Card();
+		tablet.setName("Tablet_of_Times_Dawn");
+		t.player.playerDeck.constructs.add(tablet);
+		t.executeCard(testCard);
+		assertTrue(t.game.extraTurn);
+		assertFalse(t.player.playerDeck.constructs.contains(testCard));
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+	}
+	
+	@Test
+	public void testAvatarGolem() {
+		t.power = 0;
+		t.player.honorTotal = 0;
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.AvatarGolem));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1,
+				actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.power, 2);
+		assertEquals(t.player.honorTotal, 0);
+		Card c1 = new Card();
+		Card c2 = new Card();
+		Card c3 = new Card();
+		Card c4 = new Card();
+		c1.setFaction(Card.Faction.Enlightened);
+		c2.setFaction(Card.Faction.Lifebound);
+		c3.setFaction(Card.Faction.Mechana);
+		c4.setFaction(Card.Faction.Void);
+		t.player.playerDeck.constructs.add(c1);
+		t.player.playerDeck.constructs.add(c2);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c4);
+		t.executeCard(testCard);
+		assertEquals(t.power, 4);
+		assertEquals(t.player.honorTotal, 4);
+		t.player.playerDeck.constructs.add(c1);
+		t.player.playerDeck.constructs.add(c1);
+		t.player.playerDeck.constructs.add(c1);
+		t.player.playerDeck.constructs.add(c1);
+		t.player.playerDeck.constructs.add(c2);
+		t.player.playerDeck.constructs.add(c2);
+		t.player.playerDeck.constructs.add(c2);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c3);
+		t.player.playerDeck.constructs.add(c4);
+		t.player.playerDeck.constructs.add(c4);
+		t.player.playerDeck.constructs.add(c4);
+		t.player.playerDeck.constructs.add(c4);
+		t.player.playerDeck.constructs.add(c4);
+		t.executeCard(testCard);
+		assertEquals(t.power, 6);
+		assertEquals(t.player.honorTotal, 8);
+
+	}
+	
+	@Test
+	public void testYggdrasilStaff() {
+		t.power = 0;
+		t.player.honorTotal = 0;
+		t.rune = 10;
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.YggdrasilStaff));
+		Card testCard = new Card(Card.Type.Construct, Card.Faction.Lifebound, 1,
+				actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.power, 1);
+		assertEquals(t.player.honorTotal, 3);
+		assertEquals(t.rune, 6);
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.power, 2);
+		assertEquals(t.player.honorTotal, 3);
+		assertEquals(t.rune, 6);
+		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.power, 3);
+		assertEquals(t.player.honorTotal, 6);
+		assertEquals(t.rune, 2);
+		t.executeCard(testCard);
+		assertEquals(t.power, 4);
+		assertEquals(t.player.honorTotal, 6);
+		assertEquals(t.rune, 2);
+	}
+	
+	@Test
+	public void testMechanaInitiate() {
+		t.power = 0;
+		t.rune = 0;
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(4, Action.ActionType.MechanaInitiate));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Mechana, 1,
+				actionList, "Test");
+		t.executeCard(testCard);
+		assertEquals(t.power, 0);
+		assertEquals(t.rune, 1);
+		t.optionPane = new TestOptionPane(JOptionPane.NO_OPTION);
+		t.executeCard(testCard);
+		assertEquals(t.power, 1);
+		assertEquals(t.rune, 1);
+	}
+	
+	@Test
 	public void testAttemptCardPurchase(){
 		
 	}

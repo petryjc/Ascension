@@ -160,9 +160,10 @@ public class PlayerDeckTest extends DeckTest{
 		assertEquals(pd.played.size(),6);
 		assertEquals(pd.discard.size(), 0);
 		pd.endTurn();
-		assertEquals(pd.hand.size(), 0);
+		assertEquals(pd.hand.size(), 5);
 		assertEquals(pd.played.size(),0);
-		assertEquals(pd.discard.size(), 12);
+		assertEquals(pd.discard.size(), 0);
+		assertEquals(pd.notPlayed.size(), 7);
 		
 	}
 	
