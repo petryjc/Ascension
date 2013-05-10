@@ -153,6 +153,21 @@ public class Deck {
 		return null;
 				
 	}
+	
+	public Card attemptRajEffect(Point p, int worth){
+		
+		if(handLocation.contains(p)) {
+			for(Card c : hand) {
+				if(c.onCard(p) && c.getType() == Card.Type.Hero && c.getHonorWorth() <= worth) {
+					hand.remove(c);
+					drawCard();
+					return c;
+				}
+			}
+		}
+		return null;
+				
+	}
 
 	public Boolean canAMonsterBeDefeated(int power) {
 		for (Card c : hand) {

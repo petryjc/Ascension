@@ -12,7 +12,8 @@ public class Action {
 		ForcedDeckBanish, OptionalDeckBanish, CenterBanish, ConstructRuneBoost, 
 		MechanaConstructRuneBoost, EnterAiyanaState, HeroRuneBoost, MonsterPowerBoost, 
 		DefeatMonster, EnterVoidMesmer, FreeCard, HeavyOrMystic, HandBanish, LunarStag,
-		AskaraOfFate, AskaraCenterBanish, NookHound, AskaraDiscard, TwofoldAskaraPlayed
+		AskaraOfFate, AskaraCenterBanish, NookHound, AskaraDiscard, TwofoldAskaraPlayed, RajAction
+
 	}
 	
 	public Action(int magnitude, ActionType at) {
