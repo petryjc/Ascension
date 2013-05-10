@@ -26,7 +26,9 @@ public class Player {
 	}
 	
 	public void startingHand(){
-		this.playerDeck.drawNCards(5);
+		if (this.playerDeck.hand.size() == 0) {
+			this.playerDeck.drawNCards(5);
+		}
 	}
 	
 	public static Player getNewPlayer(String name) {
