@@ -47,6 +47,7 @@ public class Turn{
 		this.VoidMesmerState = false;
 		this.VoidthirsterState = false;
 		this.RocketCourierState = 0;
+		this.HedronLinkDeviceState = false;
 		optionPane = new DefaultOptionPane();
 		for (Card c : this.player.playerDeck.constructs) {
 			executeCard(c);
@@ -455,6 +456,8 @@ public class Turn{
 					return true;
 				}
 			}
+			return true;
+			
 		case AvatarGolem:
 			this.power += 2;
 			boolean mechanaConstructHonor = false;
@@ -474,17 +477,21 @@ public class Turn{
 					this.player.incrementHonor(1);
 					this.game.decrementHonor(1);
 					voidConstructHonor = true;
-				} else if (c.getFaction() == Card.Faction.Mechana && !enlightenedConstructHonor) {
+				} else if (c.getFaction() == Card.Faction.Enlightened && !enlightenedConstructHonor) {
 					this.player.incrementHonor(1);
 					this.game.decrementHonor(1);
 					enlightenedConstructHonor = true;
 				}
 			}
+			return true;
+			
 		case KorAction:
 			this.power += 2;
 			if (this.player.playerDeck.constructs.size() >= 2) {
 				player.playerDeck.drawNCards(1);
 			}
+			return true;
+			
 		case MechanaInitiate:
 			Object mechanaInitiateOptions[] = {"1 Rune", "1 Power"};
 			int mechanaInitiateChoice = optionPane.showOptionDialog(game, "Gain 1 Rune or 1 Power", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, mechanaInitiateOptions);
@@ -493,15 +500,20 @@ public class Turn{
 			} else {
 				this.power += 1;
 			}
+			return true;
+			
 		case HedronCannon:
 			for (Card c : this.player.playerDeck.constructs) {
 				if (this.testForMechana(c)) {
 					this.power += 1;
 				}
 			}
+			return true;
+			
 		case Voidthirster:
 			this.power += 1;
 			this.VoidthirsterState = true;
+			return true;
 			
 		case XeronAction:
 			this.player.incrementHonor(3);
@@ -515,10 +527,16 @@ public class Turn{
 					}
 				}
 			}
+			return true;
+			
 		case RocketCourier:
 			this.RocketCourierState++;
+			return true;
+			
 		case HedronLinkDevice:
 			this.HedronLinkDeviceState = true;
+			return true;
+			
 		}
 		return false;
 	}
