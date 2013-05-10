@@ -1,5 +1,14 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
-Raj,_Psionic_Master 200 Hero Enlightened 1 3 1 RajAction 1 -1 0
+Sea_Tyrant 1000 Monster Void 5 0 1 SeaTyrantAction 1 1 -1 
+Xeron,_Duke_of_Lies 1 Monster Void 1 0 1 XeronAction 1 -1 0
+Voidthirster 2 Construct Void 1 3 1 Voidthirster 1 -1 0
+Hedron_Cannon 1 Construct Mechana 1 8 1 HedronCannon 1 -1 0
+Mechana_Initiate 3 Hero Mechana 1 1 1 MechanaInitiate 1 -1 0
+Kor,_the_Ferromancer 1 Hero Mechana 3 2 1 KorAction 1 -1 0
+Avatar_Golem 3 Hero Mechana 1 2 1 AvatarGolem 1 -1 0
+Yggdrasil_Staff 2 Construct Lifebound 1 2 1 YggdrasilStaff 1 -1 0
+Tablet_of_Times_Dawn 1 Construct Enlightened 1 2 1 TabletOfTimesDawn 1 -1 0
+Raj,_Psionic_Master 1 Hero Enlightened 5 3 1 RajAction 1 -1 0
 Tower_Askara 2 Hero Enlightened 1 2 2 DrawCard 3 -1 0 AskaraDiscard 2 -1 0
 Temple_Librarian 3 Hero Enlightened 2 1 2 Discard 1 -1 0 DrawCard 2 0 0
 Nook_Hound 3 Hero Enlightened 2 1 1 NookHound 1 -1 0
@@ -38,7 +47,7 @@ Wind_Tyrant 3 Monster Void 5 0 2 HonorBoost 3 -1 0 RuneBoost 3 -1 0
 Elder_Skeptic 3 Hero Enlightened 3 1 2 DrawCard 2 -1 0 Discard 1 -1 0
 Hectic_Scribe 3 Hero Enlightened 1 1 2 DrawCard 2 -1 0 Discard 2 -1 0
 Seer_of_the_Forked_Path 3 Hero Enlightened 2 1 2 DrawCard 1 -1 0 CenterBanish 1 -1 0
-Arbiter_of_the_Precipice 100 Hero Void 4 1 2 DrawCard 2 -1 0 ForcedDeckBanish 1 -1 0
+Arbiter_of_the_Precipice 2 Hero Void 4 1 2 DrawCard 2 -1 0 ForcedDeckBanish 1 -1 0
 Black_Watch_Elite 2 Hero Void 5 2 2 PowerBoost 3 -1 0 OptionalDeckBanish 1 -1 0
 Shade_of_the_Black_Watch 3 Hero Void 3 1 2 PowerBoost 2 -1 0 OptionalDeckBanish 1 -1 0
 Void_Initiate 3 Hero Void 1 1 2 RuneBoost 1 -1 0 OptionalDeckBanish 1 -1 0

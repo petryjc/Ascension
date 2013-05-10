@@ -117,6 +117,24 @@ public class Main {
 						actionType = Action.ActionType.RajAction;
 					} else if(tokens[6 + (4 * i - 3)].equals("CetraAction")){
 						actionType = Action.ActionType.CetraAction;
+					} else if (tokens[6 + (4 * i - 3)].equals("TabletOfTimesDawn")){
+						actionType = Action.ActionType.TabletOfTimesDawn;
+					} else if (tokens[6 + (4 * i - 3)].equals("YggdrasilStaff")){
+						actionType = Action.ActionType.YggdrasilStaff;
+					} else if (tokens[6 + (4 * i - 3)].equals("AvatarGolem")){
+						actionType = Action.ActionType.AvatarGolem;
+					} else if (tokens[6 + (4 * i - 3)].equals("KorAction")){
+						actionType = Action.ActionType.KorAction;
+					} else if (tokens[6 + (4 * i - 3)].equals("MechanaInitiate")){
+						actionType = Action.ActionType.MechanaInitiate;
+					} else if (tokens[6 + (4 * i - 3)].equals("HedronCannon")){
+						actionType = Action.ActionType.HedronCannon;
+					} else if (tokens[6 + (4 * i - 3)].equals("Voidthirster")){
+						actionType = Action.ActionType.Voidthirster;
+					} else if (tokens[6 + (4 * i - 3)].equals("XeronAction")){
+						actionType = Action.ActionType.XeronAction;
+					} else if (tokens[6 + (4 * i - 3)].equals("SeaTyrantAction")){
+						actionType = Action.ActionType.SeaTyrantState;
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "

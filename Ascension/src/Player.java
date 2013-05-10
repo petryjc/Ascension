@@ -35,7 +35,7 @@ public class Player {
 		
 		ArrayList<Action> action1 = new ArrayList<Action>();
 		action1.add(new Action(1, Action.ActionType.RuneBoost));
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < 8; i++) {
 			notPlayed2.add(new Card(Card.Type.Hero, Card.Faction.Common,0,action1, "Apprentice"));
 		}
 		

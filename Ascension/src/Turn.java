@@ -26,6 +26,7 @@ public class Turn{
 	Boolean AiyanaState;
 	Boolean VoidMesmerState;
 	IOptionPane optionPane;
+	Boolean VoidthirsterState;
 
 	public Turn(Player player, Game g) {
 		this.player = player;
@@ -43,9 +44,22 @@ public class Turn{
 		this.AiyanaState = false;
 		this.VoidMesmerState = false;
 		optionPane = new DefaultOptionPane();
-		for (Card c : this.player.playerDeck.constructs) {
-			executeCard(c);
+		
+		if(this.player.seaTyrant){
+			this.turnState = TurnState.SeaTyrantTurnBegin;
+		} else if(this.player.corrosiveWidow){
+			this.turnState = TurnState.CorrosiveWidowTurnBegin;
 		}
+		
+		
+		
+		if(!this.player.seaTyrant && !this.player.corrosiveWidow){
+			for (Card c : this.player.playerDeck.constructs) {
+				executeCard(c);
+			}	
+		}
+		
+		
 	}
 	
 	public void playAll() {
@@ -116,6 +130,11 @@ public class Turn{
 				return;
 			}
 			if (attemptCardPurchaseWithinCardList(this.game.gameDeck.hand, loc)) {
+				return;
+			}
+			c = this.player.playerDeck.activateConstruct(loc);
+			if (c != null) {
+				executeCard(c);
 				return;
 			}
 			break;
@@ -218,15 +237,33 @@ public class Turn{
 				this.turnState = Turn.TurnState.Default;
 			}
 			break;
-		case SeaTyrantState:
-			this.player.incrementHonor(5);
-			this.game.decrementHonor(5);
-			for(Player p:this.game.players){
-				if(!(p.equals(this.player))){
-					p.flipTyrantConstructsBool();
+		case SeaTyrantTurnBegin:
+			if(this.player.playerDeck.constructs.size() <= 1){
+				this.turnState = Turn.TurnState.Default;
+				for (Card h : this.player.playerDeck.constructs) {
+					executeCard(h);
+				}	
+				break;
+			}
+			this.optionPane.showMessageDialog(this.game, "Please choose a construct ", "", JOptionPane.PLAIN_MESSAGE);
+			Card t = this.player.playerDeck.activateConstruct(loc);
+			for(Card x: this.player.playerDeck.constructs){
+				if(!(x.equals(t))){
+					this.player.playerDeck.discard.add(x);
+					this.player.playerDeck.constructs.remove(x);
+					this.player.playerDeck.resetHandLocation();
 				}
 			}
 			break;
+			
+		case CorrosiveWidowTurnBegin:
+			if(this.player.playerDeck.constructs.size() < 1){
+				this.turnState = Turn.TurnState.Default;
+				
+				}	
+			
+			break;
+			
 		default:
 			break;
 		}
@@ -430,7 +467,7 @@ public class Turn{
 						JOptionPane.PLAIN_MESSAGE);
 			}
 			
-
+			return true;
 		case RajAction:
 			optionPane.showMessageDialog(game, "Banish a hero in your hand. Then acquire a hero in the center with an honor value of up to two more than the banished hero.", "", JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.RajTurnState;
@@ -438,7 +475,15 @@ public class Turn{
 			chill();
 
 			return true;
-			
+		case SeaTyrantState:
+			this.player.incrementHonor(5);
+			this.game.decrementHonor(5);
+			for(Player p:this.game.players){
+				if(!(p.equals(this.player))){
+					p.flipTyrantConstructsBool();
+				}
+			}
+			return true;
 		case CetraAction:
 			if(this.game.gameDeck.checkForHeroInCenter()){
 				optionPane.showMessageDialog(game,"Pick a Hero from the Center Row","",
@@ -450,6 +495,90 @@ public class Turn{
 						JOptionPane.PLAIN_MESSAGE);
 			}
 			return true;
+
+		
+		case TabletOfTimesDawn:
+			int tabletOptionChoice = optionPane.showConfirmDialog(game, "Would you like to banish the Table of Times Dawn to receive an extra turn?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(tabletOptionChoice == JOptionPane.YES_OPTION) {
+				this.game.extraTurn = true;
+				for (int i = 0; i < this.player.playerDeck.constructs.size(); i++) {
+					if (this.player.playerDeck.constructs.get(i).getName().equals("Tablet_of_Times_Dawn")) {
+						this.player.playerDeck.constructs.remove(i);
+					}
+				}
+				return true;
+			}
+			return false;
+		
+		case YggdrasilStaff:
+			this.power += 1;
+			if (this.rune >= 4) {
+				int yggdrasilStaffChoice = optionPane.showConfirmDialog(game, "Would you like to exchange 4 Rune for 3 Honor?", 
+						"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (yggdrasilStaffChoice == JOptionPane.YES_OPTION) {
+					this.rune -= 4;
+					this.player.incrementHonor(3);
+					this.game.decrementHonor(3);
+					return true;
+				}
+			}
+		case AvatarGolem:
+			this.power += 2;
+			boolean mechanaConstructHonor = false;
+			boolean lifeboundConstructHonor = false;
+			boolean voidConstructHonor = false;
+			boolean enlightenedConstructHonor = false;
+			for (Card c : this.player.playerDeck.constructs) {
+				if (c.getFaction() == Card.Faction.Mechana && !mechanaConstructHonor) {
+					this.player.incrementHonor(1);
+					this.game.decrementHonor(1);
+					mechanaConstructHonor = true;
+				} else if (c.getFaction() == Card.Faction.Lifebound && !lifeboundConstructHonor) {
+					this.player.incrementHonor(1);
+					this.game.decrementHonor(1);
+					lifeboundConstructHonor = true;
+				} else if (c.getFaction() == Card.Faction.Void && !voidConstructHonor) {
+					this.player.incrementHonor(1);
+					this.game.decrementHonor(1);
+					voidConstructHonor = true;
+				} else if (c.getFaction() == Card.Faction.Mechana && !enlightenedConstructHonor) {
+					this.player.incrementHonor(1);
+					this.game.decrementHonor(1);
+					enlightenedConstructHonor = true;
+				}
+			}
+		case KorAction:
+			this.power += 2;
+			if (this.player.playerDeck.constructs.size() >= 2) {
+				player.playerDeck.drawNCards(1);
+			}
+		case MechanaInitiate:
+			Object mechanaInitiateOptions[] = {"1 Rune", "1 Power"};
+			int mechanaInitiateChoice = optionPane.showOptionDialog(game, "Gain 1 Rune or 1 Power", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, mechanaInitiateOptions);
+			if (mechanaInitiateChoice == JOptionPane.YES_OPTION) {
+				this.rune += 1;
+			} else {
+				this.power += 1;
+			}
+		case HedronCannon:
+			for (Card c : this.player.playerDeck.constructs) {
+				if (c.getFaction() == Card.Faction.Mechana) {
+					this.power += 1;
+				}
+			}
+		case Voidthirster:
+			this.power += 1;
+			this.VoidthirsterState = true;
+			
+		case XeronAction:
+			this.player.incrementHonor(3);
+			this.game.decrementHonor(3);
+			for (int i = 0; i < this.game.players.size(); i++) {
+				if (!this.game.players.get(i).equals(this.player)) {
+					this.player.playerDeck.hand.add(this.game.players.get(i).playerDeck.stealCard());
+				}
+			}
 		}
 		return false;
 	}
@@ -465,6 +594,11 @@ public class Turn{
 						if (!c.getName().equals("Cultist")) {
 							this.game.gameDeck.discard.add(c);
 							this.game.gameDeck.drawCard();
+							if(this.VoidthirsterState) {
+								this.player.incrementHonor(1);
+								this.game.decrementHonor(1);
+								this.VoidthirsterState = false;
+							}
 						}
 					}
 					else if (this.monsterPower > 0 && c.getCost() < this.power + this.monsterPower) {
@@ -482,6 +616,11 @@ public class Turn{
 						if (!c.getName().equals("Cultist")) {
 							this.game.gameDeck.discard.add(c);
 							this.game.gameDeck.drawCard();
+							if(this.VoidthirsterState) {
+								this.player.incrementHonor(1);
+								this.game.decrementHonor(1);
+								this.VoidthirsterState = false;
+							}
 						}
 						if(this.VoidMesmerState){
 							this.turnState = TurnState.VoidMesmerState;
@@ -559,10 +698,11 @@ public class Turn{
 		}
 		return false;
 	}
-
+	
+	
 	public enum TurnState {
 
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2,TwofoldAskara, FreeCardHero, SeaTyrantState
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2,TwofoldAskara, FreeCardHero, SeaTyrantTurnBegin, CorrosiveWidowTurnBegin
 
 	}
 

@@ -17,6 +17,7 @@ public class Card {
 	private ArrayList<Action> actions;
 	private Image i;
 	private int honorWorth;
+	public boolean hasActivated;
 	
 	public Card() {
 		this(null,null,null, 0, new ArrayList<Action>(),"");
