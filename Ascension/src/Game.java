@@ -15,10 +15,6 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventTarget;
 
 @SuppressWarnings("serial")
 public class Game extends JComponent {

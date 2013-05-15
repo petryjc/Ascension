@@ -1,16 +1,11 @@
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class Main {
 	
@@ -25,8 +20,9 @@ public class Main {
 		ArrayList<Card> cards = new ArrayList<Card>();
 
 		File file = new File(filename);
+		Scanner scanner = null;
 		try {
-			Scanner scanner = new Scanner(file);
+			scanner = new Scanner(file);
 			// Clean out the first line, used as comments to explain process
 			scanner.nextLine();
 			while (scanner.hasNextLine()) {
@@ -159,9 +155,11 @@ public class Main {
 					cards.add(card);
 				}
 			}
-			scanner.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+			if(scanner != null)
+				scanner.close();
 		}
 
 		return cards;
