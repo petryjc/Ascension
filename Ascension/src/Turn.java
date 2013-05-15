@@ -48,9 +48,22 @@ public class Turn{
 		this.RocketCourierState = 0;
 		this.HedronLinkDeviceState = false;
 		optionPane = new DefaultOptionPane();
-		for (Card c : this.player.playerDeck.constructs) {
-			executeCard(c);
+		
+		if(this.player.seaTyrant){
+			this.turnState = TurnState.SeaTyrantTurnBegin;
+		} else if(this.player.corrosiveWidow){
+			this.turnState = TurnState.CorrosiveWidowTurnBegin;
 		}
+		
+		
+		
+		if(!this.player.seaTyrant && !this.player.corrosiveWidow){
+			for (Card c : this.player.playerDeck.constructs) {
+				executeCard(c);
+			}	
+		}
+		
+		
 	}
 	
 	public void playAll() {
@@ -185,6 +198,16 @@ public class Turn{
 				decrementTurnStateMagnitude();
 			}
 			break;
+		case FreeCardHero:
+			Card e  = this.game.gameDeck.getHeroFromCenter(loc);
+			
+			if(e != null){
+				this.game.gameDeck.hand.remove(e);
+				this.game.gameDeck.drawCard();
+				this.player.playerDeck.addNewCardToDiscard(e);
+				this.turnState = Turn.TurnState.Default;
+			}
+			break;
 		case HandBanish:
 			Card b = this.player.playerDeck.attemptDeckHandBanish(loc);
 			if (b != null) {
@@ -204,19 +227,58 @@ public class Turn{
 
 		case RajTurnState:
 			Card cardForRajTurnState = this.player.playerDeck.attemptDeckHandBanish(loc);
+			System.out.println(cardForRajTurnState);
 			if (cardForRajTurnState != null) {
 				this.turnStateMagnitude = cardForRajTurnState.getHonorWorth() + 2;
 				this.turnState = Turn.TurnState.RajTurnState2;		
 			}
+			break;
 		case RajTurnState2:
 			Card cardForRajTurnState2ToAcquire = this.game.gameDeck.attemptRajEffect(loc, this.turnStateMagnitude);
 			if (cardForRajTurnState2ToAcquire != null) {
 				this.player.playerDeck.hand.add(cardForRajTurnState2ToAcquire);
 				this.player.playerDeck.resetHandLocation();
-				this.turnStateMagnitude = 0;
-				this.turnState = Turn.TurnState.Default;
+				exitActiveWaitingState();
 			}
-
+			break;
+		case SeaTyrantTurnBegin:
+			
+			if(this.player.playerDeck.constructs.size() <= 1){
+				this.player.seaTyrant = false;
+			}
+			
+			if(!this.player.seaTyrant){
+				for(Card r:this.player.playerDeck.constructs){
+					executeCard(r);
+					this.turnState = Turn.TurnState.Default;
+				}
+				break;
+			}
+			
+			this.optionPane.showMessageDialog(this.game, "Please choose a construct to save the rest will be placed in your discard", "", JOptionPane.PLAIN_MESSAGE);
+			Card t = this.player.playerDeck.activateConstruct(loc);
+			if (t != null) {
+				for(Card x: this.player.playerDeck.constructs){
+					if(!(x.equals(t))){
+						this.player.playerDeck.discard.add(x);
+						this.player.playerDeck.constructs.remove(x);
+						this.player.playerDeck.resetHandLocation();
+					}
+				}
+				this.turnState = Turn.TurnState.Default;
+				this.turnStateMagnitude = 0;
+			}
+			
+			break;
+			
+		case CorrosiveWidowTurnBegin:
+			if(this.player.playerDeck.constructs.size() < 1){
+				this.turnState = Turn.TurnState.Default;
+				
+				}	
+			
+			break;
+			
 		default:
 			break;
 		}
@@ -408,8 +470,8 @@ public class Turn{
 			return true;
 
 		case TwofoldAskaraPlayed:
-			if(this.player.playerDeck.checkForHeroInPlayed()){
-				optionPane.showMessageDialog(game,"Pick a Hero from the previously played cards if one is available","",
+			if(this.player.playerDeck.checkForHeroInPlayedforTwoFold()){
+				optionPane.showMessageDialog(game,"Pick a Hero to copy from the previously played cards","",
 					JOptionPane.PLAIN_MESSAGE);
 				this.turnState = TurnState.TwofoldAskara;
 				chill();
@@ -420,7 +482,7 @@ public class Turn{
 						JOptionPane.PLAIN_MESSAGE);
 			}
 			
-
+			return true;
 		case RajAction:
 			optionPane.showMessageDialog(game, "Banish a hero in your hand. Then acquire a hero in the center with an honor value of up to two more than the banished hero.", "", JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.RajTurnState;
@@ -428,6 +490,27 @@ public class Turn{
 			chill();
 
 			return true;
+		case SeaTyrantAction:
+			this.player.incrementHonor(5);
+			this.game.decrementHonor(5);
+			for(Player p:this.game.players){
+				if(!(p.equals(this.player))){
+					p.flipTyrantConstructsBool();
+				}
+			}
+			return true;
+		case CetraAction:
+			if(this.game.gameDeck.checkForHeroInCenter()){
+				optionPane.showMessageDialog(game,"Pick a Hero from the Center Row","",
+						JOptionPane.PLAIN_MESSAGE);
+				this.turnState = TurnState.FreeCardHero;
+				chill();
+			}else{
+				optionPane.showMessageDialog(game,"No Hero available to purchase","",
+						JOptionPane.PLAIN_MESSAGE);
+			}
+			return true;
+
 		
 		case TabletOfTimesDawn:
 			int tabletOptionChoice = optionPane.showConfirmDialog(game, "Would you like to banish the Table of Times Dawn to receive an extra turn?", 
@@ -535,11 +618,9 @@ public class Turn{
 		case HedronLinkDevice:
 			this.HedronLinkDeviceState = true;
 			return true;
-			
 		}
 		return false;
 	}
-	
 	public boolean testForMechana(Card c) {
 		return this.HedronLinkDeviceState || c.getFaction() == Card.Faction.Mechana;
 	}
@@ -687,10 +768,11 @@ public class Turn{
 		}
 		return false;
 	}
-
+	
+	
 	public enum TurnState {
 
-		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2,TwofoldAskara
+		Default, Discard, DeckBanish, CenterBanish, DefeatMonster,VoidMesmerState, FreeCard, HandBanish, AskaraCenterBanish, AskaraDiscard, RajTurnState, RajTurnState2,TwofoldAskara, FreeCardHero, SeaTyrantTurnBegin, CorrosiveWidowTurnBegin
 
 	}
 

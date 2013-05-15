@@ -1,4 +1,8 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
+Sea_Tyrant 1000 Monster Void 5 0 1 SeaTyrantAction 1 -1 -1 
+Xeron,_Duke_of_Lies 1 Monster Void 1 0 1 XeronAction 1 -1 0
+Voidthirster 2 Construct Void 1 3 1 Voidthirster 1 -1 0
+Hedron_Cannon 1000 Construct Mechana 1 8 1 HedronCannon 1 -1 0
 Hedron_Link_Device 1 Construct Mechana 7 7 1 HedronLinkDevice 1 -1 0
 Rocket_Courier_X-99 2 Construct Mechana 4 4 1 RocketCourier 1 -1 0 
 Xeron,_Duke_of_Lies 1 Monster Void 6 0 1 XeronAction 1 -1 0
@@ -36,7 +40,7 @@ Flytrap_Witch 2 Hero Lifebound 5 2 2 HonorBoost 2 -1 0 DrawCard 1 -1 0
 Landtalker 1 Hero Lifebound 6 3 1 RuneBoost 3 -1 0
 Nairi,_Henge_Queen 1 Hero Lifebound 6 3 1 HonorBoost 5 -1 0
 Wolf_Shaman 3 Hero Lifebound 3 1 2 RuneBoost 1 -1 0 DrawCard 1 -1 0
-Everbloom 2 Construct Lifebound 3 2 1 HonorBoost 1 -1 0
+Everbloom 1000 Construct Lifebound 1 2 1 HonorBoost 1 -1 0
 Demon_Slayer 2 Hero Void 4 2 1 PowerBoost 3 -1 0
 Emri,_One_with_the_Void 1 Hero Void 6 3 1 PowerBoost 4 -1 0
 Spike_Vixen 2 Hero Void 2 1 2 PowerBoost 1 -1 0 DrawCard 1 -1 0
@@ -72,3 +76,5 @@ Aiyanas_Messenger 3 Hero Lifebound 1 1 2 RuneBoost 1 -1 0 HeroRuneBoost 1 -1 0
 Void_Militia 3 Hero Void 1 1 2 PowerBoost 1 -1 0 MonsterPowerBoost 1 -1 0
 Void_Mesemer 3 Hero Void 6 3 2 PowerBoost 2 -1 0 EnterVoidMesmer 0 -1 0
 Twofold_Askara 1 Hero Enlightened 4 1 1 TwofoldAskaraPlayed 1 -1 0  
+Cetra,_Weaver_of_Stars 1000 Hero Lifebound 7 4 1 CetraAction 1 -1 0 
+Twofold_Askara 1 Hero Enlightened 4 1 1 TwofoldAskaraPlayed 1 -1 0

@@ -6,6 +6,8 @@ public class Player {
 	public PlayerDeck playerDeck;
 	public int honorTotal;
 	public String name;
+	public boolean corrosiveWidow;
+	public boolean seaTyrant;
 	
 	public Player(){
 		
@@ -15,6 +17,8 @@ public class Player {
 		this.playerDeck = deck;
 		this.honorTotal = 0;
 		this.name = name;
+		this.seaTyrant = false;
+		this.corrosiveWidow = false;
 	}
 	
 	public void incrementHonor(int incre){
@@ -50,6 +54,14 @@ public class Player {
 		pD.shuffle();
 		
 		return new Player(pD, name);
+	}
+
+	public void flipTyrantConstructsBool() {
+		this.seaTyrant=!this.seaTyrant;
+		
+	}
+	public void flipWidowConstructsBool(){
+		this.corrosiveWidow = !this.corrosiveWidow;
 	}
 
 }

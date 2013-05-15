@@ -8,11 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Main {
-	
+
 	public static boolean waiting;
 	public static String s1;
 	public static String s2;
-	
 
 	private static Rectangle centerRow = new Rectangle(204, 253, 1168, 167);
 
@@ -101,36 +100,49 @@ public class Main {
 						actionType = Action.ActionType.LunarStag;
 					} else if (tokens[6 + (4 * i - 3)].equals("AskaraOfFate")) {
 						actionType = Action.ActionType.AskaraOfFate;
-					} else if (tokens[6 + (4 * i - 3)].equals("AskaraCenterBanish")){
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("AskaraCenterBanish")) {
 						actionType = Action.ActionType.AskaraCenterBanish;
-					} else if (tokens[6 + (4 * i - 3)].equals("NookHound")){
+					} else if (tokens[6 + (4 * i - 3)].equals("NookHound")) {
 						actionType = Action.ActionType.NookHound;
-					} else if (tokens[6 + (4 * i - 3)].equals("AskaraDiscard")){
+					} else if (tokens[6 + (4 * i - 3)].equals("AskaraDiscard")) {
 						actionType = Action.ActionType.AskaraDiscard;
-					} else if(tokens[6 + (4 * i - 3)].equals("TwofoldAskaraPlayed")){
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("TwofoldAskaraPlayed")) {
 						actionType = Action.ActionType.TwofoldAskaraPlayed;
-					} else if (tokens[6 + (4 * i - 3)].equals("RajAction")){
+					} else if (tokens[6 + (4 * i - 3)].equals("RajAction")) {
 						actionType = Action.ActionType.RajAction;
-					} else if (tokens[6 + (4 * i - 3)].equals("TabletOfTimesDawn")){
+					} else if (tokens[6 + (4 * i - 3)].equals("CetraAction")) {
+						actionType = Action.ActionType.CetraAction;
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("TabletOfTimesDawn")) {
 						actionType = Action.ActionType.TabletOfTimesDawn;
-					} else if (tokens[6 + (4 * i - 3)].equals("YggdrasilStaff")){
+					} else if (tokens[6 + (4 * i - 3)].equals("YggdrasilStaff")) {
 						actionType = Action.ActionType.YggdrasilStaff;
-					} else if (tokens[6 + (4 * i - 3)].equals("AvatarGolem")){
+					} else if (tokens[6 + (4 * i - 3)].equals("AvatarGolem")) {
 						actionType = Action.ActionType.AvatarGolem;
-					} else if (tokens[6 + (4 * i - 3)].equals("KorAction")){
+					} else if (tokens[6 + (4 * i - 3)].equals("KorAction")) {
 						actionType = Action.ActionType.KorAction;
-					} else if (tokens[6 + (4 * i - 3)].equals("MechanaInitiate")){
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("MechanaInitiate")) {
 						actionType = Action.ActionType.MechanaInitiate;
-					} else if (tokens[6 + (4 * i - 3)].equals("HedronCannon")){
+					} else if (tokens[6 + (4 * i - 3)].equals("HedronCannon")) {
 						actionType = Action.ActionType.HedronCannon;
-					} else if (tokens[6 + (4 * i - 3)].equals("Voidthirster")){
+					} else if (tokens[6 + (4 * i - 3)].equals("Voidthirster")) {
 						actionType = Action.ActionType.Voidthirster;
-					} else if (tokens[6 + (4 * i - 3)].equals("XeronAction")){
+					} else if (tokens[6 + (4 * i - 3)].equals("XeronAction")) {
 						actionType = Action.ActionType.XeronAction;
-					} else if (tokens[6 + (4 * i - 3)].equals("RocketCourier")){
+
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("SeaTyrantAction")) {
+						actionType = Action.ActionType.SeaTyrantAction;
+
+					} else if (tokens[6 + (4 * i - 3)].equals("RocketCourier")) {
 						actionType = Action.ActionType.RocketCourier;
-					} else if (tokens[6 + (4 * i - 3)].equals("HedronLinkDevice")){
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("HedronLinkDevice")) {
 						actionType = Action.ActionType.HedronLinkDevice;
+
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "
@@ -191,8 +203,8 @@ public class Main {
 		ArrayList<Action> action3 = new ArrayList<Action>();
 		action3.add(new Action(1, Action.ActionType.HonorBoost));
 		cards.add(new Card(new Rectangle(1426, 27, 128, 166),
-				Card.Type.Monster, Card.Faction.Common,2, action3,
-				"Cultist", 1));
+				Card.Type.Monster, Card.Faction.Common, 2, action3, "Cultist",
+				1));
 
 		return cards;
 	}
@@ -201,45 +213,48 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		IOptionPane opt = new DefaultOptionPane();
-		
+
 		ArrayList<Card> hand = new ArrayList<Card>();
 		ArrayList<Card> discard = new ArrayList<Card>();
 
 		ArrayList<Card> centerDeck = getCenterDeck("src/centerDeck.txt");
 
-		Deck d = new Deck(centerDeck, hand, discard, getTopCards(),
-				centerRow);
-		
+		Deck d = new Deck(centerDeck, hand, discard, getTopCards(), centerRow);
+
 		d.shuffle();
 		d.drawNCards(6);
 
 		ArrayList<Player> plays = new ArrayList<Player>();
 
 		Game g = new Game(100, plays, d);
-		
-		Object[] objects = {"English", "Espanol", "Korean"};
-		
-		int choice = opt.showOptionDialog(g, "Pick a Language", "", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,objects);
-		
-		if(choice == JOptionPane.NO_OPTION){
+
+		Object[] objects = { "English", "Espanol", "Korean" };
+
+		int choice = opt.showOptionDialog(g, "Pick a Language", "",
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+				objects);
+
+		if (choice == JOptionPane.NO_OPTION) {
 			g.country = "SP";
 			g.language = "sp";
-		}else if(choice == JOptionPane.CANCEL_OPTION){
+		} else if (choice == JOptionPane.CANCEL_OPTION) {
 			g.country = "KR";
 			g.language = "kr";
-		}else{
+		} else {
 			g.country = "US";
 			g.language = "en";
 		}
-		
+
 		String amount;
-	
-		while((amount = JOptionPane.showInputDialog(g, "Enter the amount of honor you want?")) == null || !amount.matches("^-?[0-9]+(\\.[0-9]+)?$")) 
+
+		while ((amount = JOptionPane.showInputDialog(g,
+				"Enter the amount of honor you want?")) == null
+				|| !amount.matches("^-?[0-9]+(\\.[0-9]+)?$"))
 			;
 		g.gameHonor = Integer.parseInt(amount);
-		
+
 		JFrame frame = new JFrame();
 
 		frame.setSize(1620, 940);
@@ -257,8 +272,6 @@ public class Main {
 		g.play();
 
 		frame.dispose();
-		
-		
 
 	}
 

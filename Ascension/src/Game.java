@@ -35,6 +35,7 @@ public class Game extends JComponent {
 	public Player firstPlayer;
 	boolean firstTurn;
 	JFrame discardFrame;
+	IOptionPane optionpane;
 
 	String country;
 	String language;
@@ -52,7 +53,8 @@ public class Game extends JComponent {
 		this.players = players;
 		this.gameDeck = gameDeck;
 		this.extraTurn = false;
-		
+		this.optionpane = new DefaultOptionPane();
+
 		this.theListener = new MouseListen(null);
 		this.addMouseListener(this.theListener);
 
@@ -69,7 +71,7 @@ public class Game extends JComponent {
 
 		this.playing = true;
 		this.firstTurn = true;
-		
+
 		this.discardFrame = new JFrame();
 		this.discardFrame.setLocation(100, 300);
 		this.discardFrame.setSize(1420, 300);
@@ -77,8 +79,10 @@ public class Game extends JComponent {
 			@Override
 			public void focusLost(FocusEvent e) {
 				discardFrame.setVisible(false);
-				DeckRender.nullOutCardLocation(currentTurn.player.playerDeck.discard);
-			}			
+				DeckRender
+						.nullOutCardLocation(currentTurn.player.playerDeck.discard);
+			}
+
 			@Override
 			public void focusGained(FocusEvent e) {
 			}
@@ -87,12 +91,15 @@ public class Game extends JComponent {
 			@Override
 			protected void paintComponent(Graphics g) {
 				Graphics2D g2 = (Graphics2D) g;
-				DeckRender.setCardListWithinLocation(currentTurn.player.playerDeck.discard, new Rectangle(100,50,1220,200));
+				DeckRender.setCardListWithinLocation(
+						currentTurn.player.playerDeck.discard, new Rectangle(
+								100, 50, 1220, 200));
 				for (Card c : currentTurn.player.playerDeck.discard) {
 					paintCard(c, g2);
 				}
-			}};
-			comp.addMouseListener(this.theListener);
+			}
+		};
+		comp.addMouseListener(this.theListener);
 		this.discardFrame.add(comp);
 	}
 
@@ -134,7 +141,7 @@ public class Game extends JComponent {
 					(i + 1) * 30 + 28);
 		}
 		this.players.add(this.players.size(), currentTurn.player);
-		if(this.firstTurn){
+		if (this.firstTurn) {
 			this.firstTurn = false;
 			this.firstPlayer = this.players.get(this.players.size() - 1);
 		}
@@ -143,11 +150,10 @@ public class Game extends JComponent {
 		g2.drawString(this.gameHonor + "", 370, 100);
 		g2.drawString(currentTurn.rune + "", 585, 100);
 		g2.drawString(currentTurn.power + "", 790, 100);
-		
-		
-		if(this.discardFrame.isVisible()) {
+
+		if (this.discardFrame.isVisible()) {
 			this.discardFrame.getContentPane().repaint();
-		} 
+		}
 	}
 
 	protected void paintCard(Card c, Graphics2D g2) {
@@ -294,16 +300,16 @@ public class Game extends JComponent {
 	}
 
 	public void nextTurn() {
-		if(this.extraTurn) {
+		if (this.extraTurn) {
 			ArrayList<Player> tempPlayerArray = new ArrayList<Player>();
-			tempPlayerArray.add(this.players.get(this.players.size()-1));
-			for (int i = 0; i < this.players.size()-1; i++) {
+			tempPlayerArray.add(this.players.get(this.players.size() - 1));
+			for (int i = 0; i < this.players.size() - 1; i++) {
 				tempPlayerArray.add(this.players.get(i));
 			}
 			this.players = tempPlayerArray;
 			this.extraTurn = false;
 		}
-		if(this.players.get(0).equals(this.firstPlayer) && this.gameHonor <= 0){
+		if (this.players.get(0).equals(this.firstPlayer) && this.gameHonor <= 0) {
 			this.playing = false;
 			endGame();
 		}

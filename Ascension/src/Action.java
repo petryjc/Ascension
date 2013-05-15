@@ -12,9 +12,9 @@ public class Action {
 		ForcedDeckBanish, OptionalDeckBanish, CenterBanish, ConstructRuneBoost, 
 		MechanaConstructRuneBoost, EnterAiyanaState, HeroRuneBoost, MonsterPowerBoost, 
 		DefeatMonster, EnterVoidMesmer, FreeCard, HeavyOrMystic, HandBanish, LunarStag,
-		AskaraOfFate, AskaraCenterBanish, NookHound, AskaraDiscard, TwofoldAskaraPlayed, RajAction,
+		CetraAction, AskaraOfFate, AskaraCenterBanish, NookHound, AskaraDiscard, TwofoldAskaraPlayed, RajAction,
 		TabletOfTimesDawn, YggdrasilStaff, AvatarGolem, KorAction, MechanaInitiate, HedronCannon,
-		Voidthirster, XeronAction, RocketCourier, HedronLinkDevice
+		Voidthirster, XeronAction, RocketCourier, HedronLinkDevice, SeaTyrantAction;
 
 	}
 	
