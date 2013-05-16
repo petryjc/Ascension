@@ -28,6 +28,7 @@ public class Turn{
 	Boolean VoidthirsterState;
 	Boolean HedronLinkDeviceState;
 	int RocketCourierState;
+	Boolean HeroTopOfDeckState;
 
 	public Turn(Player player, Game g) {
 		this.player = player;
@@ -47,6 +48,7 @@ public class Turn{
 		this.VoidthirsterState = false;
 		this.RocketCourierState = 0;
 		this.HedronLinkDeviceState = false;
+		HeroTopOfDeckState = false;
 		optionPane = new DefaultOptionPane();
 		
 		if(this.player.seaTyrant){
@@ -204,7 +206,7 @@ public class Turn{
 			if(e != null){
 				this.game.gameDeck.hand.remove(e);
 				this.game.gameDeck.drawCard();
-				this.player.playerDeck.addNewCardToDiscard(e);
+				HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(e, HeroTopOfDeckState);
 				this.turnState = Turn.TurnState.Default;
 			}
 			break;
@@ -337,6 +339,16 @@ public class Turn{
 			this.turnStateMagnitude = a.magnitude;
 			chill();
 			return true;
+		case OptionalDiscard:
+			int za = optionPane.showConfirmDialog(game, "Would you like to discard " + a.magnitude + " card(s) from your hand?", 
+					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(za == JOptionPane.YES_OPTION) {
+				this.turnState = TurnState.Discard;
+				this.turnStateMagnitude = a.magnitude;
+				chill();
+				return true;
+			}
+			return false;
 		case ForcedDeckBanish:
 			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to banish them","",
 					JOptionPane.PLAIN_MESSAGE); 
@@ -618,9 +630,13 @@ public class Turn{
 		case HedronLinkDevice:
 			this.HedronLinkDeviceState = true;
 			return true;
+		case HeroTopOfDeck:
+			this.HeroTopOfDeckState = true;
+			return true;
 		}
 		return false;
 	}
+	
 	public boolean testForMechana(Card c) {
 		return this.HedronLinkDeviceState || c.getFaction() == Card.Faction.Mechana;
 	}
@@ -632,7 +648,7 @@ public class Turn{
 			this.player.playerDeck.hand.add(new Card(consToBuy));
 			this.RocketCourierState--;
 		} else {
-			this.player.playerDeck.addNewCardToDiscard(new Card(consToBuy));
+			HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(new Card(consToBuy), HeroTopOfDeckState);
 		}
 		this.player.playerDeck.resetHandLocation();
 	}
@@ -687,7 +703,7 @@ public class Turn{
 						if (this.testForMechana(c) && c.getType() == Card.Type.Construct && this.RocketCourierState > 0) {
 							this.handleRocketCourier(c);
 						} else {
-							this.player.playerDeck.addNewCardToDiscard(c);
+							HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(c, HeroTopOfDeckState);
 						}
 						this.game.gameDeck.drawCard();
 					}
@@ -706,7 +722,7 @@ public class Turn{
 						if (this.RocketCourierState > 0) {
 							this.handleRocketCourier(c);
 						} else {
-							this.player.playerDeck.addNewCardToDiscard(new Card(c));
+							HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(new Card(c), HeroTopOfDeckState);
 						}
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
@@ -724,7 +740,7 @@ public class Turn{
 						if (this.testForMechana(c) && this.RocketCourierState > 0) {
 							this.handleRocketCourier(c);
 						} else {
-							this.player.playerDeck.addNewCardToDiscard(new Card(c));
+							HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(new Card(c), HeroTopOfDeckState);
 						}
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
@@ -732,7 +748,7 @@ public class Turn{
 						}
 					} else if (this.AiyanaState && c.getType() == Card.Type.Hero && c.getHonorWorth() <= this.rune) {
 						this.rune -= c.getHonorWorth();
-						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(new Card(c), HeroTopOfDeckState);
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
 							this.game.gameDeck.drawCard();
@@ -745,7 +761,7 @@ public class Turn{
 								this.rune--;
 							}
 						}
-						this.player.playerDeck.addNewCardToDiscard(new Card(c));
+						HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(new Card(c), HeroTopOfDeckState);
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);
 							this.game.gameDeck.drawCard();
@@ -755,7 +771,7 @@ public class Turn{
 						if (this.testForMechana(c) && c.getType() == Card.Type.Construct && this.RocketCourierState > 0) {
 							this.handleRocketCourier(c);
 						} else {
-							this.player.playerDeck.addNewCardToDiscard(new Card(c));
+							HeroTopOfDeckState = this.player.playerDeck.addNewCardToDiscard(new Card(c), HeroTopOfDeckState);
 						}
 						if (this.game.gameDeck.hand.contains(c)) {
 							this.game.gameDeck.hand.remove(c);

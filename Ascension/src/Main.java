@@ -142,7 +142,12 @@ public class Main {
 					} else if (tokens[6 + (4 * i - 3)]
 							.equals("HedronLinkDevice")) {
 						actionType = Action.ActionType.HedronLinkDevice;
-
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("HeroTopOfDeck")) {
+						actionType = Action.ActionType.HeroTopOfDeck;
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("OptionalDiscard")) {
+						actionType = Action.ActionType.OptionalDiscard;
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "
