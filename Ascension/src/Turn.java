@@ -51,14 +51,27 @@ public class Turn{
 		optionPane = new DefaultOptionPane();
 		
 		if(this.player.seaTyrant){
-			this.turnState = TurnState.SeaTyrantTurnBegin;
-		} else if(this.player.corrosiveWidow){
+			if(this.player.playerDeck.constructs.size() > 1) {
+				this.turnState = TurnState.SeaTyrantTurnBegin;
+				this.player.playerDeck.resetHandLocation();
+				this.optionPane.showMessageDialog(this.game, "Please choose a construct to save. The rest will be placed in your discard", "", JOptionPane.PLAIN_MESSAGE);
+			} else {
+				this.turnState = TurnState.Default;
+				this.player.seaTyrant = false;
+			}
+		} else if(this.player.corrosiveWidow > 0){
+			if(this.player.playerDeck.constructs.size() <= 0) {
+				this.turnState = TurnState.Default;
+				this.player.corrosiveWidow = 0;
+			} else {
+			this.optionPane.showMessageDialog(this.game, "Please choose a construct to discard.", "", JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.CorrosiveWidowTurnBegin;
+			}
 		}
 		
 		
 		
-		if(!this.player.seaTyrant && !this.player.corrosiveWidow){
+		if(!this.player.seaTyrant && (this.player.corrosiveWidow <= 0)){
 			for (Card c : this.player.playerDeck.constructs) {
 				executeCard(c);
 			}	
@@ -244,10 +257,6 @@ public class Turn{
 			break;
 		case SeaTyrantTurnBegin:
 			
-			if(this.player.playerDeck.constructs.size() <= 1){
-				this.player.seaTyrant = false;
-			}
-			
 			if(!this.player.seaTyrant){
 				for(Card r:this.player.playerDeck.constructs){
 					executeCard(r);
@@ -256,27 +265,59 @@ public class Turn{
 				break;
 			}
 			
-			this.optionPane.showMessageDialog(this.game, "Please choose a construct to save the rest will be placed in your discard", "", JOptionPane.PLAIN_MESSAGE);
 			Card t = this.player.playerDeck.activateConstruct(loc);
 			if (t != null) {
-				for(Card x: this.player.playerDeck.constructs){
-					if(!(x.equals(t))){
+//				for(Card x: this.player.playerDeck.constructs){
+//					if(!(x.equals(t))){
+//						this.player.playerDeck.discard.add(x);
+//						this.player.playerDeck.constructs.remove(x);
+//						this.player.playerDeck.resetHandLocation();
+//					}
+//				}
+				for (Card x : this.player.playerDeck.constructs) {
+					if (!x.equals(t)) {
 						this.player.playerDeck.discard.add(x);
-						this.player.playerDeck.constructs.remove(x);
-						this.player.playerDeck.resetHandLocation();
 					}
 				}
+				ArrayList<Card> newConstructs = new ArrayList<Card>();
+				newConstructs.add(t);
+				this.player.seaTyrant = false;
+				this.player.playerDeck.constructs = newConstructs;
 				this.turnState = Turn.TurnState.Default;
 				this.turnStateMagnitude = 0;
+				this.player.playerDeck.resetHandLocation();
+			} else {
+				this.optionPane.showMessageDialog(this.game, "Please choose a construct to save. The rest will be placed in your discard", "", JOptionPane.PLAIN_MESSAGE);
 			}
 			
 			break;
 			
 		case CorrosiveWidowTurnBegin:
-			if(this.player.playerDeck.constructs.size() < 1){
-				this.turnState = Turn.TurnState.Default;
-				
-				}	
+			if (this.player.playerDeck.constructs.size() <= 0) {
+				this.turnState = TurnState.Default;
+				this.player.corrosiveWidow = 0;
+				this.leftButtonClick(loc);
+				break;
+			}
+			Card cWTBcard = this.player.playerDeck.activateConstruct(loc);
+			if (cWTBcard != null) {
+				for(int cWTBcounter = 0; cWTBcounter < this.player.playerDeck.constructs.size(); cWTBcounter++) {
+					if (cWTBcard.equals(this.player.playerDeck.constructs.get(cWTBcounter))) {
+						this.player.playerDeck.constructs.remove(cWTBcounter);
+						this.player.corrosiveWidow--;
+						if (this.player.corrosiveWidow <= 0) {
+							this.turnState = TurnState.Default;
+						} else {
+							if (this.player.playerDeck.constructs.size() > 0) {
+								this.optionPane.showMessageDialog(this.game, "Please choose another construct to discard.", "", JOptionPane.PLAIN_MESSAGE);
+							}
+						}
+						this.player.playerDeck.resetHandLocation();
+					}
+				}
+			} else {
+				this.optionPane.showMessageDialog(this.game, "Please choose a construct to discard.", "", JOptionPane.PLAIN_MESSAGE);
+			}
 			
 			break;
 			
@@ -512,6 +553,15 @@ public class Turn{
 			}
 			return true;
 
+		case CorrosiveWidowAction:
+			this.player.incrementHonor(3);
+			this.game.decrementHonor(3);
+			for(Player p : this.game.players) {
+				if (!p.equals(this.player)) {
+					p.flipWidowConstructsBool();
+				}
+			}
+			return true;
 		
 		case TabletOfTimesDawn:
 			int tabletOptionChoice = optionPane.showConfirmDialog(game, "Would you like to banish the Table of Times Dawn to receive an extra turn?", 

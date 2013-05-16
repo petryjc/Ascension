@@ -147,6 +147,10 @@ public class Main {
 							.equals("HedronLinkDevice")) {
 						actionType = Action.ActionType.HedronLinkDevice;
 
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("CorrosiveWidowAction")) {
+						actionType = Action.ActionType.CorrosiveWidowAction;
+
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "

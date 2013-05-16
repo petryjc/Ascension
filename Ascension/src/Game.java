@@ -165,7 +165,27 @@ public class Game extends JComponent {
 		if (loc == null)
 			return;
 		// draw background
-		g2.drawImage(card_back, loc.x, loc.y, loc.width, loc.height, null);
+		Image cardBackground;
+		if (c.getType().equals(Card.Type.Monster)) {
+			cardBackground = new ImageIcon(this.getClass().getResource(
+					"CardBackgroundMonster.jpg")).getImage();
+		} else if (c.getFaction().equals(Card.Faction.Enlightened)) {
+			cardBackground = new ImageIcon(this.getClass().getResource(
+					"CardBackgroundEnlightened.jpg")).getImage();			
+		} else if (c.getFaction().equals(Card.Faction.Void)) {
+			cardBackground = new ImageIcon(this.getClass().getResource(
+					"CardBackgroundVoid.jpg")).getImage();			
+		} else if (c.getFaction().equals(Card.Faction.Lifebound)) {
+			cardBackground = new ImageIcon(this.getClass().getResource(
+					"CardBackgroundLifebound.jpg")).getImage();			
+		} else if (c.getFaction().equals(Card.Faction.Mechana)) {
+			cardBackground = new ImageIcon(this.getClass().getResource(
+					"CardBackgroundMechana.jpg")).getImage();			
+		} else {
+			cardBackground = new ImageIcon(this.getClass().getResource(
+					"CardBackgroundCommon.jpg")).getImage();			
+		}
+		g2.drawImage(cardBackground, loc.x, loc.y, loc.width, loc.height, null);
 
 		// draw cost
 		g2.setFont(new Font("TimesNewRoman", 10, 10));
