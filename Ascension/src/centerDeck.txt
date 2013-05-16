@@ -2,6 +2,8 @@
 Corrosive_Widow 4 Monster Void 4 0 1 CorrosiveWidowAction 1 -1 0
 Sea_Tyrant 3 Monster Void 5 0 1 SeaTyrantAction 1 -1 0
 Hedron_Cannon 1 Construct Mechana 8 8 1 HedronCannon 1 -1 0
+Honey_Siren 2 Hero Lifebound 4 2 2 RuneBoost 2 -1 -1 HeroTopOfDeck 1 -1 -1
+Treasures_of_the_Study 1 Construct Enlightened 5 3 2 OptionalDiscard 2 -1 -1 HonorBoost 3 0 -1
 Hedron_Link_Device 1 Construct Mechana 7 7 1 HedronLinkDevice 1 -1 0
 Rocket_Courier_X-99 2 Construct Mechana 4 4 1 RocketCourier 1 -1 0 
 Xeron,_Duke_of_Lies 1 Monster Void 6 0 1 XeronAction 1 -1 0

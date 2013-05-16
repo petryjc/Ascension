@@ -1,16 +1,13 @@
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class Main {
 
@@ -24,8 +21,9 @@ public class Main {
 		ArrayList<Card> cards = new ArrayList<Card>();
 
 		File file = new File(filename);
+		Scanner scanner = null;
 		try {
-			Scanner scanner = new Scanner(file);
+			scanner = new Scanner(file);
 			// Clean out the first line, used as comments to explain process
 			scanner.nextLine();
 			while (scanner.hasNextLine()) {
@@ -146,11 +144,15 @@ public class Main {
 					} else if (tokens[6 + (4 * i - 3)]
 							.equals("HedronLinkDevice")) {
 						actionType = Action.ActionType.HedronLinkDevice;
-
 					} else if (tokens[6 + (4 * i - 3)]
 							.equals("CorrosiveWidowAction")) {
 						actionType = Action.ActionType.CorrosiveWidowAction;
-
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("HeroTopOfDeck")) {
+						actionType = Action.ActionType.HeroTopOfDeck;
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("OptionalDiscard")) {
+						actionType = Action.ActionType.OptionalDiscard;
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "
@@ -175,9 +177,11 @@ public class Main {
 					cards.add(card);
 				}
 			}
-			scanner.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+			if(scanner != null)
+				scanner.close();
 		}
 
 		return cards;
@@ -234,24 +238,27 @@ public class Main {
 
 		ArrayList<Player> plays = new ArrayList<Player>();
 
-		Game g = new Game(100, plays, d);
-
 		Object[] objects = { "English", "Espanol", "Korean" };
 
-		int choice = opt.showOptionDialog(g, "Pick a Language", "",
+		int choice = opt.showOptionDialog(null, "Pick a Language", "",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				objects);
 
+		Locale currentLocale;
 		if (choice == JOptionPane.NO_OPTION) {
-			g.country = "SP";
-			g.language = "sp";
+			currentLocale = new Locale("sp", "SP");
 		} else if (choice == JOptionPane.CANCEL_OPTION) {
-			g.country = "KR";
-			g.language = "kr";
+			currentLocale = new Locale("kr", "KR");
 		} else {
-			g.country = "US";
-			g.language = "en";
+			currentLocale = new Locale("en", "US");
 		}
+
+		
+		ResourceBundle descriptions = ResourceBundle.getBundle(
+				"CardDescription", currentLocale);
+		
+		Game g = new Game(100, plays, d);
+		g.descriptions = descriptions;
 
 		String amount;
 
