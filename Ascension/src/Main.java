@@ -1,3 +1,6 @@
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,17 +9,18 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.BoxLayout;
+import javax.swing.JApplet;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
 
 public class Main {
-
-	public static boolean waiting;
-	public static String s1;
-	public static String s2;
 
 	private static Rectangle centerRow = new Rectangle(204, 253, 1168, 167);
 
@@ -211,11 +215,85 @@ public class Main {
 		return cards;
 	}
 
+	
+	public static JComponent menuComp(){
+		
+		JPanel pan = new JPanel();
+		pan.setLayout(new GridLayout(4,2));
+		
+		JPanel p1 = new JPanel();
+		JTextField name1 = new JTextField("Player 1 Name", 20);
+		
+		p1.add(name1);
+		
+		JPanel p2 = new JPanel();
+		JCheckBox b2 = new JCheckBox();
+		JTextField name2 = new JTextField("Player 2 Name", 20);
+		
+		p2.add(b2);
+		p2.add(name2);
+		
+		JPanel p3 = new JPanel();
+		JCheckBox b3 = new JCheckBox();
+		JTextField name3 = new JTextField("Player 3 Name", 20);
+		
+		p3.add(b3);
+		p3.add(name3);
+		
+		JPanel p4 = new JPanel();
+		JCheckBox b4 = new JCheckBox();
+		JTextField name4 = new JTextField("Player 4 Name", 20);
+		
+		p4.add(b4);
+		p4.add(name4);
+		
+		JPanel p5 = new JPanel();
+		JButton but1 = new JButton("English");
+		JButton but2 = new JButton("Korean");
+		but2.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent _ev)
+	        {
+	        	korean = true;
+	        	spanish = false;
+	        }
+	    });
+		
+		JButton but3 = new JButton("Spanish");
+		but3.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent _ev)
+	        {
+	        	korean = false;
+	        	spanish = true; 
+	        }
+	    });
+		p5.add(but1);
+		p5.add(but2);
+		p5.add(but3);
+
+		JPanel p6 = new JPanel();
+		JTextField honor = new JTextField("Honor Total", 15);
+		JButton start = new JButton("Start");
+		
+		p6.add(honor);
+		p6.add(start);
+		
+		pan.add(p1);
+		pan.add(p2);
+		pan.add(p3);
+		pan.add(p4);
+		pan.add(p5, BorderLayout.CENTER);
+		pan.add(p6, BorderLayout.CENTER);
+		
+		return pan;
+		
+	}
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		
 		IOptionPane opt = new DefaultOptionPane();
 
 		ArrayList<Card> hand = new ArrayList<Card>();
@@ -232,44 +310,23 @@ public class Main {
 
 		Game g = new Game(100, plays, d);
 
-		Object[] objects = { "English", "Espanol", "Korean" };
-
-		int choice = opt.showOptionDialog(g, "Pick a Language", "",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				objects);
-
-		if (choice == JOptionPane.NO_OPTION) {
-			g.country = "SP";
-			g.language = "sp";
-		} else if (choice == JOptionPane.CANCEL_OPTION) {
-			g.country = "KR";
-			g.language = "kr";
-		} else {
-			g.country = "US";
-			g.language = "en";
-		}
-
-		String amount;
-
-		while ((amount = JOptionPane.showInputDialog(g,
-				"Enter the amount of honor you want?")) == null
-				|| !amount.matches("^-?[0-9]+(\\.[0-9]+)?$"))
-			;
-		g.gameHonor = Integer.parseInt(amount);
+		//g.country = "US";
+		//g.language = "en";
+		
+		
 
 		JFrame frame = new JFrame();
 
 		frame.setSize(1620, 940);
 		frame.setVisible(true);
-
-		g.players.add(Player.getNewPlayer("Jack"));
-		g.players.add(Player.getNewPlayer("Gabe"));
-		g.players.add(Player.getNewPlayer("Kenny"));
-
-		frame.add(g);
+		
+		frame.add(menuComp());
+		JComponent menu = menuComp();
+		menu.setSize(200, 200);
+		//frame.add(g);
 
 		frame.setVisible(true);
-		frame.setSize(1621, 941);
+		frame.setSize(550, 250);
 
 		g.play();
 
