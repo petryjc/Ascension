@@ -70,12 +70,8 @@ public class Turn{
 			}
 		}
 		
-		
-		
-		if(!this.player.seaTyrant && (this.player.corrosiveWidow <= 0)){
-			for (Card c : this.player.playerDeck.constructs) {
-				executeCard(c);
-			}	
+		for (Card c : this.player.playerDeck.constructs) {
+			c.constructPlayed = false;
 		}
 		
 		
@@ -153,7 +149,11 @@ public class Turn{
 			}
 			c = this.player.playerDeck.activateConstruct(loc);
 			if (c != null) {
-				executeCard(c);
+				if (!c.constructPlayed) {
+					executeCard(c);
+					c.constructPlayed = true;
+					return;
+				}
 				return;
 			}
 			break;
@@ -256,16 +256,7 @@ public class Turn{
 				exitActiveWaitingState();
 			}
 			break;
-		case SeaTyrantTurnBegin:
-			
-			if(!this.player.seaTyrant){
-				for(Card r:this.player.playerDeck.constructs){
-					executeCard(r);
-					this.turnState = Turn.TurnState.Default;
-				}
-				break;
-			}
-			
+		case SeaTyrantTurnBegin:			
 			Card t = this.player.playerDeck.activateConstruct(loc);
 			if (t != null) {
 //				for(Card x: this.player.playerDeck.constructs){

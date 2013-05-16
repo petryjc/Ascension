@@ -1,7 +1,7 @@
 //Name NumberOfCard Type Faction Cost HonorWorth NumberOfActions (Action, Magnitude, Dependency, OnUnite)
 Corrosive_Widow 4 Monster Void 4 0 1 CorrosiveWidowAction 1 -1 0
 Sea_Tyrant 3 Monster Void 5 0 1 SeaTyrantAction 1 -1 0
-Hedron_Cannon 1 Construct Mechana 8 8 1 HedronCannon 1 -1 0
+Hedron_Cannon 10000 Construct Mechana 1 8 1 HedronCannon 1 -1 0
 Honey_Siren 2 Hero Lifebound 4 2 2 RuneBoost 2 -1 -1 HeroTopOfDeck 1 -1 -1
 Treasures_of_the_Study 1 Construct Enlightened 5 3 2 OptionalDiscard 2 -1 -1 HonorBoost 3 0 -1
 Hedron_Link_Device 1 Construct Mechana 7 7 1 HedronLinkDevice 1 -1 0

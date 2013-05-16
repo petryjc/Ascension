@@ -42,6 +42,7 @@ public class PlayerDeck extends Deck {
 		}
 		if(c.getType() == Card.Type.Construct) {
 			constructs.add(c);
+			c.constructPlayed = true;
 		} else if(c.getType() == Card.Type.Hero) {
 			played.add(c);
 		} else {
