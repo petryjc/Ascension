@@ -275,6 +275,7 @@ public class Main {
 	    				"CardDescription", new Locale("en", "EN"));
 	        	start.setText(game.descriptions.getString("Start"));
 	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
+	        	honorLab.setText(game.descriptions.getString("Enter"));
 	        }
 	    });
 		
@@ -286,6 +287,7 @@ public class Main {
 	    				"CardDescription", new Locale("kr", "KR"));
 	        	start.setText(game.descriptions.getString("Start"));
 	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
+	        	honorLab.setText(game.descriptions.getString("Enter"));
 	        }
 	    });
 		
@@ -297,6 +299,7 @@ public class Main {
 	    				"CardDescription", new Locale("sp", "SP"));
 	        	start.setText(game.descriptions.getString("Start"));
 	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
+	        	honorLab.setText(game.descriptions.getString("Enter"));
 	        }
 	    });
 		p5.add(but1);
