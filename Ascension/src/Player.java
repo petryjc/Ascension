@@ -6,7 +6,7 @@ public class Player {
 	public PlayerDeck playerDeck;
 	public int honorTotal;
 	public String name;
-	public boolean corrosiveWidow;
+	public int corrosiveWidow;
 	public boolean seaTyrant;
 	
 	public Player(){
@@ -18,7 +18,7 @@ public class Player {
 		this.honorTotal = 0;
 		this.name = name;
 		this.seaTyrant = false;
-		this.corrosiveWidow = false;
+		this.corrosiveWidow = 0;
 	}
 	
 	public void incrementHonor(int incre){
@@ -57,11 +57,11 @@ public class Player {
 	}
 
 	public void flipTyrantConstructsBool() {
-		this.seaTyrant=!this.seaTyrant;
+		this.seaTyrant= true;
 		
 	}
 	public void flipWidowConstructsBool(){
-		this.corrosiveWidow = !this.corrosiveWidow;
+		this.corrosiveWidow++;
 	}
 
 }

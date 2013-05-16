@@ -18,6 +18,7 @@ public class Card {
 	private Image i;
 	private int honorWorth;
 	public boolean hasActivated;
+	public boolean constructPlayed;
 	
 	public Card() {
 		this(null,null,null, 0, new ArrayList<Action>(),"");
@@ -52,6 +53,7 @@ public class Card {
 		this.cost = cost;
 		this.actions = actions;
 		this.name = name;
+		this.constructPlayed = false;
 		URL url = this.getClass().getResource(this.name + ".jpg");
 		if(url != null) {
 			i = new ImageIcon(url).getImage();

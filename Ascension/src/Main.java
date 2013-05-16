@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import javax.swing.BoxLayout;
@@ -15,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -28,8 +31,9 @@ public class Main {
 		ArrayList<Card> cards = new ArrayList<Card>();
 
 		File file = new File(filename);
+		Scanner scanner = null;
 		try {
-			Scanner scanner = new Scanner(file);
+			scanner = new Scanner(file);
 			// Clean out the first line, used as comments to explain process
 			scanner.nextLine();
 			while (scanner.hasNextLine()) {
@@ -150,7 +154,15 @@ public class Main {
 					} else if (tokens[6 + (4 * i - 3)]
 							.equals("HedronLinkDevice")) {
 						actionType = Action.ActionType.HedronLinkDevice;
-
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("CorrosiveWidowAction")) {
+						actionType = Action.ActionType.CorrosiveWidowAction;
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("HeroTopOfDeck")) {
+						actionType = Action.ActionType.HeroTopOfDeck;
+					} else if (tokens[6 + (4 * i - 3)]
+							.equals("OptionalDiscard")) {
+						actionType = Action.ActionType.OptionalDiscard;
 					} else {
 						throw new UnsupportedOperationException(
 								"Unrecognized token name: "
@@ -175,9 +187,11 @@ public class Main {
 					cards.add(card);
 				}
 			}
-			scanner.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+			if(scanner != null)
+				scanner.close();
 		}
 
 		return cards;
@@ -215,57 +229,74 @@ public class Main {
 		return cards;
 	}
 
+
+	static Game game;
+	static boolean inMenu;
+	static IOptionPane optionPane = new DefaultOptionPane();
 	
 	public static JComponent menuComp(){
 		
-		JPanel pan = new JPanel();
-		pan.setLayout(new GridLayout(4,2));
+		final JLabel playerNames = new JLabel("Enter Player Names: ");
+		final JLabel honorLab = new JLabel("Enter Total Honor");
+		final JPanel pan = new JPanel();
+		pan.setLayout(new GridLayout(5,2));
+		final JButton start = new JButton("Start");
 		
 		JPanel p1 = new JPanel();
-		JTextField name1 = new JTextField("Player 1 Name", 20);
-		
+		final JTextField name1 = new JTextField("", 20);
+		p1.setSize(100,150);
 		p1.add(name1);
 		
 		JPanel p2 = new JPanel();
-		JCheckBox b2 = new JCheckBox();
-		JTextField name2 = new JTextField("Player 2 Name", 20);
-		
-		p2.add(b2);
+		final JTextField name2 = new JTextField("", 20);
+		p2.setSize(100,150);
 		p2.add(name2);
 		
 		JPanel p3 = new JPanel();
-		JCheckBox b3 = new JCheckBox();
-		JTextField name3 = new JTextField("Player 3 Name", 20);
-		
-		p3.add(b3);
+		final JTextField name3 = new JTextField("", 20);
+		p3.setSize(100,150);
 		p3.add(name3);
 		
 		JPanel p4 = new JPanel();
-		JCheckBox b4 = new JCheckBox();
-		JTextField name4 = new JTextField("Player 4 Name", 20);
-		
-		p4.add(b4);
+		final JTextField name4 = new JTextField("", 20);
+		p4.setSize(100,150);
 		p4.add(name4);
 		
 		JPanel p5 = new JPanel();
 		JButton but1 = new JButton("English");
-		JButton but2 = new JButton("Korean");
+		JButton but2 = new JButton("\uD55C\uAD6D\uC758");
+		JButton but3 = new JButton("Español");
+		p5.setSize(100,150);
+		but1.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent _ev)
+	        {
+	        	game.descriptions = ResourceBundle.getBundle(
+	    				"CardDescription", new Locale("en", "EN"));
+	        	start.setText(game.descriptions.getString("Start"));
+	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
+	        }
+	    });
+		
 		but2.addActionListener(new ActionListener()
 	    {
 	        public void actionPerformed(ActionEvent _ev)
 	        {
-	        	korean = true;
-	        	spanish = false;
+	        	game.descriptions = ResourceBundle.getBundle(
+	    				"CardDescription", new Locale("kr", "KR"));
+	        	start.setText(game.descriptions.getString("Start"));
+	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
 	        }
 	    });
 		
-		JButton but3 = new JButton("Spanish");
 		but3.addActionListener(new ActionListener()
 	    {
 	        public void actionPerformed(ActionEvent _ev)
 	        {
-	        	korean = false;
-	        	spanish = true; 
+	        	game.descriptions = ResourceBundle.getBundle(
+	    				"CardDescription", new Locale("sp", "SP"));
+	        	start.setText(game.descriptions.getString("Start"));
+	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
 	        }
 	    });
 		p5.add(but1);
@@ -273,18 +304,62 @@ public class Main {
 		p5.add(but3);
 
 		JPanel p6 = new JPanel();
-		JTextField honor = new JTextField("Honor Total", 15);
-		JButton start = new JButton("Start");
+		final JTextField honor = new JTextField("", 10);
+		p6.setSize(100,150);
+		start.addActionListener(new ActionListener()
+	    {
+	        public void actionPerformed(ActionEvent _ev)
+	        {
+	        	if(name1.getText().equals("") || name2.getText().equals("")){
+	        		optionPane.showMessageDialog(pan, game.descriptions.getString("PlayerWarn"), "", JOptionPane.PLAIN_MESSAGE);
+        		} else {
+        			ArrayList<Player> pList = new ArrayList<Player>();
+        			pList.add(Player.getNewPlayer(name1.getText()));
+        			pList.add(Player.getNewPlayer(name2.getText()));
+        			if(!name3.getText().equals("")){
+        				pList.add(Player.getNewPlayer(name3.getText()));
+        			}
+        			if(!name4.getText().equals("")){
+        				pList.add(Player.getNewPlayer(name4.getText()));
+        			}
+        			game.players = pList;
+        			try{
+        				game.gameHonor =Integer.parseInt(honor.getText());
+        				if(game.gameHonor > 0 ){
+        					inMenu = false;
+        				}else{
+        					optionPane.showMessageDialog(pan, game.descriptions.getString("HonorWarning"), "", JOptionPane.PLAIN_MESSAGE);
+        				}
+        			}catch (NumberFormatException e){
+        				optionPane.showMessageDialog(pan, game.descriptions.getString("HonorWarning"), "", JOptionPane.PLAIN_MESSAGE);
+        			}
+        				
+        		}
+	        }
+	    });
 		
+		p6.add(honorLab, BorderLayout.WEST);
 		p6.add(honor);
-		p6.add(start);
+		JPanel p7 = new JPanel();
+		p7.setSize(100,150);
+		p7.add(start);
 		
+		
+		JPanel blank1 = new JPanel();
+		blank1.setSize(100,150);
+		JPanel blank2 = new JPanel();
+		blank2.setSize(100,150);
+		
+		pan.add(p5);
+		pan.add(blank1);
+		pan.add(playerNames);
+		pan.add(blank2);
 		pan.add(p1);
 		pan.add(p2);
 		pan.add(p3);
 		pan.add(p4);
-		pan.add(p5, BorderLayout.CENTER);
-		pan.add(p6, BorderLayout.CENTER);
+		pan.add(p6);
+		pan.add(p7);
 		
 		return pan;
 		
@@ -293,44 +368,44 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		JFrame frame = new JFrame("Main Menu");
+		frame.setVisible(true);
+		frame.setSize(510, 300);
 		
-		IOptionPane opt = new DefaultOptionPane();
-
+		
+		JComponent menu = menuComp();
+		frame.add(menu);
+		
+		frame.pack();
+		
 		ArrayList<Card> hand = new ArrayList<Card>();
 		ArrayList<Card> discard = new ArrayList<Card>();
-
 		ArrayList<Card> centerDeck = getCenterDeck("src/centerDeck.txt");
 
 		Deck d = new Deck(centerDeck, hand, discard, getTopCards(), centerRow);
-
 		d.shuffle();
 		d.drawNCards(6);
+		game = new Game(10, new ArrayList<Player>(), d);
+		game.descriptions = ResourceBundle.getBundle(
+				"CardDescription", new Locale("en", "EN"));
 
-		ArrayList<Player> plays = new ArrayList<Player>();
-
-		Game g = new Game(100, plays, d);
-
-		//g.country = "US";
-		//g.language = "en";
+		inMenu = true;
+		while(inMenu){
+			menu.repaint();			
+		}
 		
-		
-
-		JFrame frame = new JFrame();
-
-		frame.setSize(1620, 940);
-		frame.setVisible(true);
-		
-		frame.add(menuComp());
-		JComponent menu = menuComp();
-		menu.setSize(200, 200);
-		//frame.add(g);
-
-		frame.setVisible(true);
-		frame.setSize(550, 250);
-
-		g.play();
-
 		frame.dispose();
+		
+		
+		JFrame gameframe = new JFrame("Ascension");
+		
+		gameframe.setSize(1620, 940);
+		gameframe.setVisible(true);
+		gameframe.add(game);
+
+		game.play();
+
+		gameframe.dispose();
 
 	}
 

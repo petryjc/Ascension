@@ -148,7 +148,7 @@ public class DeckTest {
 	public void testAddNewCardToDiscard() {
 
 		Card c = new Card();
-		d.addNewCardToDiscard(c);
+		d.addNewCardToDiscard(c, false);
 		assertTrue(d.discard.containsAll(discardOrigional));
 		assertFalse(discardOrigional.containsAll(d.discard));
 		d.discard.removeAll(discardOrigional);

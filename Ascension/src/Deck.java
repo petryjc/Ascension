@@ -2,7 +2,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.Callable;
 
 public class Deck {
 	ArrayList<Card> notPlayed;
@@ -68,8 +67,14 @@ public class Deck {
 		notPlayed.addAll(temp);
 	}
 
-	public void addNewCardToDiscard(Card c) {
-		discard.add(c);
+	public Boolean addNewCardToDiscard(Card c, boolean HeroTopOfDeck) {
+		if(HeroTopOfDeck && c.getType() == Card.Type.Hero) {
+			notPlayed.add(0, c);
+			return false;
+		} else {
+			discard.add(c);
+			return HeroTopOfDeck;
+		}
 	}
 
 	public boolean drawNCards(int n) {

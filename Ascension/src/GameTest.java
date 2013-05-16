@@ -3,8 +3,6 @@ import static org.junit.Assert.*;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 import junit.framework.Assert;
 
 
