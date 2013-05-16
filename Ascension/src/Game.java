@@ -36,9 +36,8 @@ public class Game extends JComponent {
 	boolean firstTurn;
 	JFrame discardFrame;
 	IOptionPane optionpane;
-
-	String country;
-	String language;
+	
+	ResourceBundle descriptions;
 
 	public static Rectangle handLoc = new Rectangle(184, 670, 1224, 160);
 	public static Rectangle playedLoc = new Rectangle(184, 460, 1224, 161);
@@ -154,7 +153,23 @@ public class Game extends JComponent {
 		if (this.discardFrame.isVisible()) {
 			this.discardFrame.getContentPane().repaint();
 		}
+		
+		//Draw the text over the buttons and stuff that was a part of the background
+		g2.setFont(new Font("TimesNewRoman", 20, 20));
+		printSimpleString(descriptions.getString("Portal"), 160, 25, 330,g2);
+		printSimpleString(descriptions.getString("Void"), 160, 1400, 330, g2);
+		printSimpleString(descriptions.getString("Play_All"), 95, 45, 565, g2);
+		printSimpleString(descriptions.getString("End_Turn"), 95, 1462, 565, g2);
+		printSimpleString(descriptions.getString("Deck"), 140, 32, 765, g2);
+		printSimpleString(descriptions.getString("Discard"), 140, 1430, 765, g2);
 	}
+	
+	private void printSimpleString(String s, int width, int XPos, int YPos, Graphics2D g2d){  
+        int stringLen = (int)  
+            g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();  
+        int start = width/2 - stringLen/2;  
+        g2d.drawString(s, start + XPos, YPos);  
+	} 
 
 	protected void paintCard(Card c, Graphics2D g2) {
 		Rectangle loc = c.getLocation();
@@ -217,10 +232,6 @@ public class Game extends JComponent {
 		g2.setColor(Color.black);
 
 		// draw card description
-		Locale currentLocale = new Locale(this.language, this.country);
-		ResourceBundle descriptions = ResourceBundle.getBundle(
-				"CardDescription", currentLocale);
-
 		try {
 			g2.setColor(Color.black);
 			g2.setFont(new Font("TimesNewRoman", 10, 10));

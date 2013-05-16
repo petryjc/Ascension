@@ -2,6 +2,8 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -233,24 +235,27 @@ public class Main {
 
 		ArrayList<Player> plays = new ArrayList<Player>();
 
-		Game g = new Game(100, plays, d);
-
 		Object[] objects = { "English", "Espanol", "Korean" };
 
-		int choice = opt.showOptionDialog(g, "Pick a Language", "",
+		int choice = opt.showOptionDialog(null, "Pick a Language", "",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				objects);
 
+		Locale currentLocale;
 		if (choice == JOptionPane.NO_OPTION) {
-			g.country = "SP";
-			g.language = "sp";
+			currentLocale = new Locale("sp", "SP");
 		} else if (choice == JOptionPane.CANCEL_OPTION) {
-			g.country = "KR";
-			g.language = "kr";
+			currentLocale = new Locale("kr", "KR");
 		} else {
-			g.country = "US";
-			g.language = "en";
+			currentLocale = new Locale("en", "US");
 		}
+
+		
+		ResourceBundle descriptions = ResourceBundle.getBundle(
+				"CardDescription", currentLocale);
+		
+		Game g = new Game(100, plays, d);
+		g.descriptions = descriptions;
 
 		String amount;
 
