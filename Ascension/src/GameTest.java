@@ -2,6 +2,10 @@ import static org.junit.Assert.*;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.swing.JFrame;
 
 import junit.framework.Assert;
 
@@ -28,40 +32,39 @@ public class GameTest {
 
 	@Test
 	public void testPaintComponentDoesNotErrorOut() {
-//		ArrayList<Card> centerDeck = Main.getCenterDeck("src/centerDeck.txt");
-//		Deck d = new Deck(centerDeck, new ArrayList<Card>(), new ArrayList<Card>(), Main.getTopCards(), null);
-//		d.shuffle();
-//		d.drawNCards(6);
-//		
-//		ArrayList<Player> pList = new ArrayList<Player>();
-//		Player jack = Player.getNewPlayer("Jack");
-//		
-//		ArrayList<Card> generatedHand = new ArrayList<Card>();
-//		
-//		PlayerDeck pDeck = new PlayerDeck();
-//		ArrayList<Action> a = new ArrayList<Action>();
-//		a.add(new Action(1,Action.ActionType.DrawCard));
-//		generatedHand.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, a, "TestCard",1));
-//		
-//		pDeck.hand = generatedHand;
-//		pList.add(jack);
-//		
-//		Game g = new Game(1, pList, d);
-//		
-//		g.gameDeck = new Deck();
-//		g.gameDeck.notPlayed = Main.getCenterDeck("src/testDeck.txt");
-//		g.gameDeck.drawNCards(6);
-//		g.isTest = true;
-//		
-//		JFrame frame = new JFrame();
-//		frame.setVisible(true);
-//		frame.setSize(1620, 940);
-//		frame.add(g);
-//		
-//		g.play();
-//		g.repaint();
-//		
-//		frame.dispose();
+		ArrayList<Card> centerDeck = Main.getCenterDeck("src/centerDeck.txt");
+		Deck d = new Deck(centerDeck, new ArrayList<Card>(), new ArrayList<Card>(), Main.getTopCards(), null);
+		d.shuffle();
+		d.drawNCards(6);
+		
+		ArrayList<Player> pList = new ArrayList<Player>();
+		Player jack = Player.getNewPlayer("Jack");
+		
+		ArrayList<Card> generatedHand = new ArrayList<Card>();
+		
+		PlayerDeck pDeck = new PlayerDeck();
+		ArrayList<Action> a = new ArrayList<Action>();
+		a.add(new Action(1,Action.ActionType.DrawCard));
+		generatedHand.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, a, "TestCard",1));
+		
+		pDeck.hand = generatedHand;
+		pList.add(jack);
+		
+		Game g = new Game(1, pList, d);
+		g.descriptions = ResourceBundle.getBundle("CardDescription", new Locale("en", "EN"));
+		g.gameDeck = new Deck();
+		g.gameDeck.notPlayed = Main.getCenterDeck("src/testDeck.txt");
+		g.gameDeck.drawNCards(6);
+		g.isTest = true;
+		
+		JFrame frame = new JFrame();
+		frame.setVisible(true);
+		frame.setSize(1620, 940);
+		frame.add(g);
+		
+		g.repaint();
+		
+		frame.dispose();
 	}
 
 	@Test
