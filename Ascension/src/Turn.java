@@ -712,7 +712,7 @@ public class Turn{
 							}
 						}
 					}
-					else if (this.monsterPower > 0 && c.getCost() < this.power + this.monsterPower) {
+					else if (this.monsterPower > 0 && c.getCost() <= this.power + this.monsterPower) {
 						for (int i = 0; i < c.getCost(); i++) {
 							if (this.monsterPower > 0) {
 								this.monsterPower--;

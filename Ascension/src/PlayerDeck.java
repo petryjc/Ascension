@@ -149,6 +149,9 @@ public class PlayerDeck extends Deck {
 		if (this.hand.size() == 0) {
 			return null;
 		}
+		if (this.hand.size() == 1) {
+			return this.hand.remove(0);
+		}
 		Random rd = new Random();
 		int indexOfCardToSteal = rd.nextInt(this.hand.size()-1) + 1;
 		Card cardToSteal = this.hand.get(indexOfCardToSteal);

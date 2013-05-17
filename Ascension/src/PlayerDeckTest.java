@@ -237,4 +237,66 @@ public class PlayerDeckTest extends DeckTest{
 		assertEquals(playedOrigional.size(), d.played.size());
 
 	}
+	
+	@Test
+	public void testAttemptDeckDiscardBanishOnNothing() {
+		assertTrue(d.attemptDeckDiscardBanish(new Point(handLocation.x, handLocation.y)) == null);
+		// Check that it discarded nothing.
+		assertEquals(handOrigional.size(), d.hand.size());
+		assertEquals(discardOrigional.size(), d.discard.size());
+		assertEquals(notPlayedOrigional.size(), d.notPlayed.size());
+		assertEquals(constructOrigional.size(), d.constructs.size());
+		assertEquals(playedOrigional.size(), d.played.size());
+
+	}
+	
+	@Test
+	public void testAttemptGetCardFromPlayedOnNothing() {
+		assertTrue(d.getCardFromPlayed(new Point(handLocation.x, handLocation.y)) == null);
+		// Check that it discarded nothing.
+		assertEquals(handOrigional.size(), d.hand.size());
+		assertEquals(discardOrigional.size(), d.discard.size());
+		assertEquals(notPlayedOrigional.size(), d.notPlayed.size());
+		assertEquals(constructOrigional.size(), d.constructs.size());
+		assertEquals(playedOrigional.size(), d.played.size());
+
+	}
+	
+	@Test
+	public void testActivateConstructOnNothing() {
+		assertTrue(d.activateConstruct(new Point(handLocation.x, handLocation.y)) == null);
+		// Check that it discarded nothing.
+		assertEquals(handOrigional.size(), d.hand.size());
+		assertEquals(discardOrigional.size(), d.discard.size());
+		assertEquals(notPlayedOrigional.size(), d.notPlayed.size());
+		assertEquals(constructOrigional.size(), d.constructs.size());
+		assertEquals(playedOrigional.size(), d.played.size());
+
+	}
+	
+	@Test
+	public void testStealCard() {
+		assertNotNull(d.stealCard());
+		ArrayList<Card> newHand;
+		newHand = new ArrayList<Card>();
+		d.hand = newHand;
+		assertNull(d.stealCard());
+		d.hand.add(new Card());
+		assertNotNull(d.stealCard());
+	}
+	
+	@Test
+	public void testCheckForTwofoldAskara() {
+		assertTrue(d.checkForHeroInPlayedforTwoFold());
+		ArrayList<Card> newPlayed;
+		newPlayed = new ArrayList<Card>();
+		d.played = newPlayed;
+		assertFalse(d.checkForHeroInPlayedforTwoFold());
+		d.played.add(new Card());
+		d.played.get(0).setType(Card.Type.Hero);
+		assertTrue(d.checkForHeroInPlayedforTwoFold());
+		d.played.get(0).setName("Twofold_Askara");
+		assertFalse(d.checkForHeroInPlayedforTwoFold());
+	}
+	
 }
