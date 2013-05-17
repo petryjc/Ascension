@@ -113,11 +113,9 @@ public class PlayerDeck extends Deck {
 	
 	public Card getCardFromPlayed(Point loc){
 		
-		if(this.playedLocation.contains(loc)){
-			for(Card c:this.played){
-				if(c.getLocation().contains(loc) && c.getType() == Card.Type.Hero){
-					return c;
-				}
+		for(Card c:this.played){
+			if(c.getLocation().contains(loc) && c.getType() == Card.Type.Hero){
+				return c;
 			}
 		}
 		

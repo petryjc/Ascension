@@ -235,7 +235,7 @@ public class Turn{
 			Card d = this.player.playerDeck.getCardFromPlayed(loc);
 			if(d != null){	
 				this.executeCard(d);
-				this.turnState = Turn.TurnState.Default;
+				exitActiveWaitingState();
 			}
 			break;
 			
