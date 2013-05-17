@@ -1,5 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -11,17 +10,14 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import javax.swing.BoxLayout;
-import javax.swing.JApplet;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
+import javax.swing.UIManager;
 
 public class Main {
 
@@ -234,6 +230,18 @@ public class Main {
 	static boolean inMenu;
 	static IOptionPane optionPane = new DefaultOptionPane();
 	
+	private static void setupAfterLanguageClick(Locale l, JButton start, JLabel playerNames, JLabel honorLab) {
+		game.descriptions = ResourceBundle.getBundle(
+				"CardDescription", l);
+    	start.setText(game.descriptions.getString("Start"));
+    	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
+    	honorLab.setText(game.descriptions.getString("Enter"));
+    	UIManager.put("OptionPane.okButtonText", game.descriptions.getString("Ok"));
+    	UIManager.put("OptionPane.yesButtonText", game.descriptions.getString("Yes"));
+		UIManager.put("OptionPane.noButtonText", game.descriptions.getString("No"));
+		UIManager.put("OptionPane.cancelButtonText", game.descriptions.getString("Cancel"));
+	}
+	
 	public static JComponent menuComp(){
 		
 		final JLabel playerNames = new JLabel("Enter Player Names: ");
@@ -271,11 +279,7 @@ public class Main {
 	    {
 	        public void actionPerformed(ActionEvent _ev)
 	        {
-	        	game.descriptions = ResourceBundle.getBundle(
-	    				"CardDescription", new Locale("en", "EN"));
-	        	start.setText(game.descriptions.getString("Start"));
-	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
-	        	honorLab.setText(game.descriptions.getString("Enter"));
+	        	setupAfterLanguageClick(new Locale("en", "EN"), start, playerNames, honorLab);
 	        }
 	    });
 		
@@ -283,11 +287,7 @@ public class Main {
 	    {
 	        public void actionPerformed(ActionEvent _ev)
 	        {
-	        	game.descriptions = ResourceBundle.getBundle(
-	    				"CardDescription", new Locale("kr", "KR"));
-	        	start.setText(game.descriptions.getString("Start"));
-	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
-	        	honorLab.setText(game.descriptions.getString("Enter"));
+	        	setupAfterLanguageClick(new Locale("kr", "KR"), start, playerNames, honorLab);
 	        }
 	    });
 		
@@ -295,11 +295,7 @@ public class Main {
 	    {
 	        public void actionPerformed(ActionEvent _ev)
 	        {
-	        	game.descriptions = ResourceBundle.getBundle(
-	    				"CardDescription", new Locale("sp", "SP"));
-	        	start.setText(game.descriptions.getString("Start"));
-	        	playerNames.setText(game.descriptions.getString("MenuPlayHeader") + ":");
-	        	honorLab.setText(game.descriptions.getString("Enter"));
+	        	setupAfterLanguageClick(new Locale("sp", "SP"), start, playerNames, honorLab);
 	        }
 	    });
 		p5.add(but1);

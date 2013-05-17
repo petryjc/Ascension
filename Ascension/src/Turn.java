@@ -55,7 +55,7 @@ public class Turn{
 			if(this.player.playerDeck.constructs.size() > 1) {
 				this.turnState = TurnState.SeaTyrantTurnBegin;
 				this.player.playerDeck.resetHandLocation();
-				this.optionPane.showMessageDialog(this.game, "Please choose a construct to save. The rest will be placed in your discard", "", JOptionPane.PLAIN_MESSAGE);
+				this.optionPane.showMessageDialog(this.game, "ConstructToSave", "", JOptionPane.PLAIN_MESSAGE);
 			} else {
 				this.turnState = TurnState.Default;
 				this.player.seaTyrant = false;
@@ -65,7 +65,7 @@ public class Turn{
 				this.turnState = TurnState.Default;
 				this.player.corrosiveWidow = 0;
 			} else {
-			this.optionPane.showMessageDialog(this.game, "Please choose a construct to discard.", "", JOptionPane.PLAIN_MESSAGE);
+			this.optionPane.showMessageDialog(this.game, "ConstructToDiscard", "", JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.CorrosiveWidowTurnBegin;
 			}
 		}
@@ -235,7 +235,7 @@ public class Turn{
 			Card d = this.player.playerDeck.getCardFromPlayed(loc);
 			if(d != null){	
 				this.executeCard(d);
-				this.turnState = Turn.TurnState.Default;
+				exitActiveWaitingState();
 			}
 			break;
 			
@@ -279,7 +279,7 @@ public class Turn{
 				this.turnStateMagnitude = 0;
 				this.player.playerDeck.resetHandLocation();
 			} else {
-				this.optionPane.showMessageDialog(this.game, "Please choose a construct to save. The rest will be placed in your discard", "", JOptionPane.PLAIN_MESSAGE);
+				this.optionPane.showMessageDialog(this.game, game.descriptions.getString("ConstructToSave"), "", JOptionPane.PLAIN_MESSAGE);
 			}
 			
 			break;
@@ -301,14 +301,14 @@ public class Turn{
 							this.turnState = TurnState.Default;
 						} else {
 							if (this.player.playerDeck.constructs.size() > 0) {
-								this.optionPane.showMessageDialog(this.game, "Please choose another construct to discard.", "", JOptionPane.PLAIN_MESSAGE);
+								this.optionPane.showMessageDialog(this.game, game.descriptions.getString("ConstructToDiscard"), "", JOptionPane.PLAIN_MESSAGE);
 							}
 						}
 						this.player.playerDeck.resetHandLocation();
 					}
 				}
 			} else {
-				this.optionPane.showMessageDialog(this.game, "Please choose a construct to discard.", "", JOptionPane.PLAIN_MESSAGE);
+				this.optionPane.showMessageDialog(this.game, game.descriptions.getString("ConstructToDiscard"), "", JOptionPane.PLAIN_MESSAGE);
 			}
 			
 			break;
@@ -365,14 +365,14 @@ public class Turn{
 			player.playerDeck.drawNCards(a.magnitude);
 			return true;
 		case Discard:
-			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to discard","",
+			optionPane.showMessageDialog(game,String.format(game.descriptions.getString("SelectDeckDiscard"),a.magnitude),"",
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.Discard;
 			this.turnStateMagnitude = a.magnitude;
 			chill();
 			return true;
 		case OptionalDiscard:
-			int za = optionPane.showConfirmDialog(game, "Would you like to discard " + a.magnitude + " card(s) from your hand?", 
+			int za = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("OptionalHandDiscard"),a.magnitude), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(za == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.Discard;
@@ -382,14 +382,14 @@ public class Turn{
 			}
 			return false;
 		case ForcedDeckBanish:
-			optionPane.showMessageDialog(game,"Select " + a.magnitude + " card(s) from your deck to banish them","",
+			optionPane.showMessageDialog(game,String.format(game.descriptions.getString("ForcedBanish"),a.magnitude),"",
 					JOptionPane.PLAIN_MESSAGE); 
 			this.turnState = TurnState.DeckBanish;
 			this.turnStateMagnitude = a.magnitude;
 			chill();
 			return true;
 		case CenterBanish:
-			int m = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from the center deck?", 
+			int m = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("OptionalCenterBanish"), a.magnitude), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(m == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.CenterBanish;
@@ -399,7 +399,7 @@ public class Turn{
 			}
 			return false;
 		case HandBanish:
-			int z = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from your hand?", 
+			int z = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("OptionalHandBanish"), a.magnitude), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(z == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.HandBanish;
@@ -411,7 +411,7 @@ public class Turn{
 		case OptionalDeckBanish:
 			if(player.playerDeck.hand.size() == 0)
 				return false;
-			int n = optionPane.showConfirmDialog(game, "Would you like to banish " + a.magnitude + " card(s) from your deck?", 
+			int n = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("OptionalDeckBanish"), a.magnitude), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(n == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.DeckBanish;
@@ -453,13 +453,13 @@ public class Turn{
 			this.VoidMesmerState = true;
 			return true;
 		case FreeCard:
-			optionPane.showMessageDialog(game,"Select a free center card","",
+			optionPane.showMessageDialog(game,game.descriptions.getString("FreeCard"),"",
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.FreeCard;
 			this.turnStateMagnitude = a.magnitude;
 		case HeavyOrMystic:
 			Object objects[] = {"Mystic", "Heavy Infantry"};
-			int heavyOrMysticChoice = optionPane.showOptionDialog(game, "Aquire a Mystic or Heavy Infantry?", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, objects);
+			int heavyOrMysticChoice = optionPane.showOptionDialog(game, game.descriptions.getString("HeavyOrMystic"), "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, objects);
 			if(heavyOrMysticChoice == JOptionPane.YES_OPTION) {
 				this.player.playerDeck.hand.add(new Card(Main.getMystic()));
 				this.player.playerDeck.deckRend.resetHandLocation();
@@ -469,8 +469,8 @@ public class Turn{
 			}
 			return true;
 		case LunarStag:
-			Object objects2[] = {"2 Rune", "2 Honor"};
-			int lunarStagChoice = optionPane.showOptionDialog(game, "Gain 2 Rune or 2 Honor", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, objects2);
+			Object objects2[] = {game.descriptions.getString("2Rune"), game.descriptions.getString("2Honor")};
+			int lunarStagChoice = optionPane.showOptionDialog(game, game.descriptions.getString("LunarStag"), "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, objects2);
 			if (lunarStagChoice == JOptionPane.YES_OPTION) {
 				this.rune += 2;
 			} else {
@@ -485,7 +485,7 @@ public class Turn{
 			}
 			return true;
 		case AskaraCenterBanish:
-			int num1 = optionPane.showConfirmDialog(game, "Would you like to banish a card from the center deck?", 
+			int num1 = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("OptionalCenterBanish"), 1), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(num1 == JOptionPane.YES_OPTION) {
 				this.turnState = TurnState.AskaraCenterBanish;
@@ -497,7 +497,7 @@ public class Turn{
 		case NookHound:
 			this.player.playerDeck.drawCard();
 			Card nookHoundCard = this.player.playerDeck.hand.get(this.player.playerDeck.hand.size() - 1);
-			int nookHoundNumber = optionPane.showConfirmDialog(game, "Would you like to discard the " + nookHoundCard.getName() +" that you just drew?", 
+			int nookHoundNumber = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("OptionalDiscardDeShiz"),nookHoundCard.getName()), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (nookHoundNumber == JOptionPane.YES_OPTION) {
 				this.player.playerDeck.hand.remove(this.player.playerDeck.hand.size() - 1);
@@ -506,7 +506,7 @@ public class Turn{
 			}
 			return true;
 		case AskaraDiscard:
-			optionPane.showMessageDialog(game,"Discard 2 card or 1 Enlightened card.","",
+			optionPane.showMessageDialog(game,game.descriptions.getString("DiscardDerpDeDerp"),"",
 					JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.AskaraDiscard;
 			this.turnStateMagnitude = 2;
@@ -515,20 +515,20 @@ public class Turn{
 
 		case TwofoldAskaraPlayed:
 			if(this.player.playerDeck.checkForHeroInPlayedforTwoFold()){
-				optionPane.showMessageDialog(game,"Pick a Hero to copy from the previously played cards","",
+				optionPane.showMessageDialog(game,game.descriptions.getString("PickAndShit"),"",
 					JOptionPane.PLAIN_MESSAGE);
 				this.turnState = TurnState.TwofoldAskara;
 				chill();
 				
 				
 			}else{
-				optionPane.showMessageDialog(game,"No Hero available to copy","",
+				optionPane.showMessageDialog(game,game.descriptions.getString("NoHero"),"",
 						JOptionPane.PLAIN_MESSAGE);
 			}
 			
 			return true;
 		case RajAction:
-			optionPane.showMessageDialog(game, "Banish a hero in your hand. Then acquire a hero in the center with an honor value of up to two more than the banished hero.", "", JOptionPane.PLAIN_MESSAGE);
+			optionPane.showMessageDialog(game, game.descriptions.getString("FryRy"), "", JOptionPane.PLAIN_MESSAGE);
 			this.turnState = TurnState.RajTurnState;
 			this.turnStateMagnitude = 1;
 			chill();
@@ -545,12 +545,12 @@ public class Turn{
 			return true;
 		case CetraAction:
 			if(this.game.gameDeck.checkForHeroInCenter()){
-				optionPane.showMessageDialog(game,"Pick a Hero from the Center Row","",
+				optionPane.showMessageDialog(game,game.descriptions.getString("CenterRowsShiz"),"",
 						JOptionPane.PLAIN_MESSAGE);
 				this.turnState = TurnState.FreeCardHero;
 				chill();
 			}else{
-				optionPane.showMessageDialog(game,"No Hero available to purchase","",
+				optionPane.showMessageDialog(game,game.descriptions.getString("NoHeroToBuy"),"",
 						JOptionPane.PLAIN_MESSAGE);
 			}
 			return true;
@@ -566,7 +566,7 @@ public class Turn{
 			return true;
 		
 		case TabletOfTimesDawn:
-			int tabletOptionChoice = optionPane.showConfirmDialog(game, "Would you like to banish the Table of Times Dawn to receive an extra turn?", 
+			int tabletOptionChoice = optionPane.showConfirmDialog(game, game.descriptions.getString("ZaBannishtheThings"), 
 					"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(tabletOptionChoice == JOptionPane.YES_OPTION) {
 				this.game.extraTurn = true;
@@ -582,7 +582,7 @@ public class Turn{
 		case YggdrasilStaff:
 			this.power += 1;
 			if (this.rune >= 4) {
-				int yggdrasilStaffChoice = optionPane.showConfirmDialog(game, "Would you like to exchange 4 Rune for 3 Honor?", 
+				int yggdrasilStaffChoice = optionPane.showConfirmDialog(game, game.descriptions.getString("WouldZaThings"), 
 						"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (yggdrasilStaffChoice == JOptionPane.YES_OPTION) {
 					this.rune -= 4;
@@ -629,7 +629,7 @@ public class Turn{
 			
 		case MechanaInitiate:
 			Object mechanaInitiateOptions[] = {"1 Rune", "1 Power"};
-			int mechanaInitiateChoice = optionPane.showOptionDialog(game, "Gain 1 Rune or 1 Power", "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, mechanaInitiateOptions);
+			int mechanaInitiateChoice = optionPane.showOptionDialog(game, game.descriptions.getString("GainAllTheThings"), "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, mechanaInitiateOptions);
 			if (mechanaInitiateChoice == JOptionPane.YES_OPTION) {
 				this.rune += 1;
 			} else {
@@ -683,7 +683,7 @@ public class Turn{
 	}
 	
 	public void handleRocketCourier(Card consToBuy) {
-		int handleRocketCourierChoice = optionPane.showConfirmDialog(game, "Would you like to add that " + consToBuy.getName() + " to your hand?", 
+		int handleRocketCourierChoice = optionPane.showConfirmDialog(game, String.format(game.descriptions.getString("WouldAllThings"), consToBuy.getName()), 
 				"", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (handleRocketCourierChoice == JOptionPane.YES_OPTION) {
 			this.player.playerDeck.hand.add(new Card(consToBuy));
@@ -712,7 +712,7 @@ public class Turn{
 							}
 						}
 					}
-					else if (this.monsterPower > 0 && c.getCost() < this.power + this.monsterPower) {
+					else if (this.monsterPower > 0 && c.getCost() <= this.power + this.monsterPower) {
 						for (int i = 0; i < c.getCost(); i++) {
 							if (this.monsterPower > 0) {
 								this.monsterPower--;

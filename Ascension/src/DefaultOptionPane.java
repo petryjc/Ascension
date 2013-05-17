@@ -2,7 +2,6 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-
 public class DefaultOptionPane implements IOptionPane{
 
 	@Override

@@ -113,11 +113,9 @@ public class PlayerDeck extends Deck {
 	
 	public Card getCardFromPlayed(Point loc){
 		
-		if(this.playedLocation.contains(loc)){
-			for(Card c:this.played){
-				if(c.getLocation().contains(loc) && c.getType() == Card.Type.Hero){
-					return c;
-				}
+		for(Card c:this.played){
+			if(c.getLocation().contains(loc) && c.getType() == Card.Type.Hero){
+				return c;
 			}
 		}
 		
@@ -148,6 +146,9 @@ public class PlayerDeck extends Deck {
 	public Card stealCard() {
 		if (this.hand.size() == 0) {
 			return null;
+		}
+		if (this.hand.size() == 1) {
+			return this.hand.remove(0);
 		}
 		Random rd = new Random();
 		int indexOfCardToSteal = rd.nextInt(this.hand.size()-1) + 1;

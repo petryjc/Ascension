@@ -9,7 +9,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -227,7 +226,7 @@ public class Game extends JComponent {
 				(int) (loc.height * 0.35), null);
 
 		// draw type/faction
-		String factiontype = c.getFaction() + " " + c.getType();
+		String factiontype = descriptions.getString(c.getFaction() + "") + " " + descriptions.getString(c.getType() + "");
 		g2.setFont(scaleFont(factiontype, new Rectangle(
 				(int) (loc.width * 0.9), (int) (loc.height * 0.08)),
 				(Graphics) g2));
@@ -252,20 +251,15 @@ public class Game extends JComponent {
 		g2.setColor(Color.black);
 
 		// draw card description
-		try {
-			g2.setColor(Color.black);
-			g2.setFont(new Font("TimesNewRoman", 10, 10));
-			ArrayList<String> lines = getTextInLines(
-					descriptions.getString(c.getName()),
-					(int) (loc.width * 0.9), g2);
-			for (int i = 0; i < lines.size(); i++) {
-				g2.drawString(lines.get(i), (int) (loc.x + loc.width * 0.06),
-						(int) (loc.y + loc.height * 0.56 + g2.getFont()
-								.getSize() * (i + 1)));
-			}
-		} catch (Exception e) {
-			// System.out.println("Missing card reference of " + c.getName() +
-			// " in CardDescription");
+		g2.setColor(Color.black);
+		g2.setFont(new Font("TimesNewRoman", 10, 10));
+		ArrayList<String> lines = getTextInLines(
+				descriptions.getString(c.getName()),
+				(int) (loc.width * 0.9), g2);
+		for (int i = 0; i < lines.size(); i++) {
+			g2.drawString(lines.get(i), (int) (loc.x + loc.width * 0.06),
+					(int) (loc.y + loc.height * 0.56 + g2.getFont()
+							.getSize() * (i + 1)));
 		}
 
 	}

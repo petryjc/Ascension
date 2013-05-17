@@ -3,7 +3,9 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
@@ -24,6 +26,8 @@ public class TurnTest {
 		pList.add(Player.getNewPlayer("Jack"));
 		g = new Game(100, pList, new Deck());
 		g.gameDeck = new Deck();
+		g.descriptions = ResourceBundle.getBundle(
+				"CardDescription", new Locale("en", "EN"));
 		t = new Turn(g.players.get(0), g);
 		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
 		t.player.playerDeck.generator = new Random(11142);
@@ -1017,6 +1021,7 @@ public class TurnTest {
 	
 	@Test
 	public void testRaj(){
+
 		
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		
@@ -1032,27 +1037,166 @@ public class TurnTest {
 		
 		Thread thread = new Thread(new Runnable() {
 		
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(10);
-				assertEquals(Turn.TurnState.RajTurnState, t.turnState);
-				assertEquals(1, t.turnStateMagnitude);
-				t.leftButtonClick(new Point(50,50));
-				assertEquals(Turn.TurnState.RajTurnState2, t.turnState);
-				t.leftButtonClick(new Point(150,150));
-				assertEquals(Turn.TurnState.Default,t.turnState);
-				System.out.println("Here");
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.RajTurnState, t.turnState);
+					assertEquals(1, t.turnStateMagnitude);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(Turn.TurnState.RajTurnState2, t.turnState);
+					t.leftButtonClick(new Point(150,150));
+					assertEquals(Turn.TurnState.Default,t.turnState);
+					System.out.println("Here");
+					
+				} catch (InterruptedException e) {}
 				
-			} catch (InterruptedException e) {}
-			catch (IllegalMonitorStateException e1) {}
-			
-		}
-	});
-	thread.start();
-	t.executeCard(c1);
+			}
+		});
+		thread.start();
+		t.executeCard(c1);
 
 		
+	}
+	
+	@Test
+	public void testAskaraDiscardEnlightened() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.AskaraDiscard));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		final Card c1 = new Card(new Rectangle(0, 0, 100, 100),
+				Card.Type.Construct, Card.Faction.Enlightened, 3, null, "Test1");
+		pList.get(0).playerDeck.hand.add(c1);
+
+		final Card c2 = new Card(new Rectangle(100, 0, 100, 100),
+				Card.Type.Construct, Card.Faction.Lifebound, 3, null, "Test2");
+		pList.get(0).playerDeck.hand.add(c2);
+		
+		final Card c3 = new Card(new Rectangle(200, 0, 100, 100),
+				Card.Type.Construct, Card.Faction.Lifebound, 3, null, "Test3");
+		pList.get(0).playerDeck.hand.add(c3);
+		
+		
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.AskaraDiscard, t.turnState);
+					assertEquals(2, t.turnStateMagnitude);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(Turn.TurnState.Default,t.turnState);
+					assertEquals(0, t.turnStateMagnitude);
+					assertTrue(pList.get(0).playerDeck.discard.contains(c1));
+					assertTrue(pList.get(0).playerDeck.hand.contains(c2));
+					assertTrue(pList.get(0).playerDeck.hand.contains(c3));
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
+	}
+	
+	@Test
+	public void testAskaraDiscardNotEnlightened() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.AskaraDiscard));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		final Card c1 = new Card(new Rectangle(0, 0, 100, 100),
+				Card.Type.Construct, Card.Faction.Lifebound, 3, null, "Test1");
+		pList.get(0).playerDeck.hand.add(c1);
+
+		final Card c2 = new Card(new Rectangle(100, 0, 100, 100),
+				Card.Type.Construct, Card.Faction.Lifebound, 3, null, "Test2");
+		pList.get(0).playerDeck.hand.add(c2);
+		
+		final Card c3 = new Card(new Rectangle(200, 0, 100, 100),
+				Card.Type.Construct, Card.Faction.Lifebound, 3, null, "Test3");
+		pList.get(0).playerDeck.hand.add(c3);
+		
+		
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.AskaraDiscard, t.turnState);
+					assertEquals(2, t.turnStateMagnitude);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(Turn.TurnState.AskaraDiscard, t.turnState);
+					assertEquals(1, t.turnStateMagnitude);
+					assertTrue(pList.get(0).playerDeck.discard.contains(c1));
+					assertTrue(pList.get(0).playerDeck.hand.contains(c2));
+					assertTrue(pList.get(0).playerDeck.hand.contains(c3));
+					c2.setLocation(new Rectangle(100, 0, 100, 100));
+					t.leftButtonClick(new Point(150,50));
+					assertEquals(Turn.TurnState.Default,t.turnState);
+					assertEquals(0, t.turnStateMagnitude);
+					assertTrue(pList.get(0).playerDeck.discard.contains(c1));
+					assertTrue(pList.get(0).playerDeck.discard.contains(c2));
+					assertTrue(pList.get(0).playerDeck.hand.contains(c3));
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
+	}
+	
+	@Test
+	public void testTwofoldAskaraPlayedNoHero() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.TwofoldAskaraPlayed));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		t.executeCard(testCard);
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+	}
+	
+	@Test
+	public void testTwofoldAskaraPlayedWithHero() {
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add(new Action(1, Action.ActionType.TwofoldAskaraPlayed));
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, actionList, "Test");
+		assertEquals(t.turnState, Turn.TurnState.Default);
+		assertEquals(t.turnStateMagnitude, 0);
+		assertEquals(t.rune, 0);
+		ArrayList<Action> actionList2 = new ArrayList<Action>();
+		actionList2.add(new Action(10, Action.ActionType.RuneBoost));
+		final Card c1 = new Card(new Rectangle(0, 0, 100, 100),
+				Card.Type.Hero, Card.Faction.Lifebound, 3, actionList2, "Test1");
+		pList.get(0).playerDeck.played.add(c1);
+
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10);
+					assertEquals(Turn.TurnState.TwofoldAskara, t.turnState);
+					t.leftButtonClick(new Point(50,50));
+					assertEquals(t.rune, 10);
+					assertEquals(t.turnState, Turn.TurnState.Default);
+					assertEquals(t.turnStateMagnitude, 0);
+					System.out.println("Here");
+				} catch (InterruptedException e) {}
+				catch (IllegalMonitorStateException e1) {}
+				
+			}
+		});
+		thread.start();
+		t.executeCard(testCard);
 	}
 	
 	@Test
