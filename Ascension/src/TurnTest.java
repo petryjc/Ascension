@@ -3,7 +3,9 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
@@ -24,6 +26,8 @@ public class TurnTest {
 		pList.add(Player.getNewPlayer("Jack"));
 		g = new Game(100, pList, new Deck());
 		g.gameDeck = new Deck();
+		g.descriptions = ResourceBundle.getBundle(
+				"CardDescription", new Locale("en", "EN"));
 		t = new Turn(g.players.get(0), g);
 		t.optionPane = new TestOptionPane(JOptionPane.YES_OPTION);
 		t.player.playerDeck.generator = new Random(11142);
