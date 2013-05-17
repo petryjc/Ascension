@@ -1,4 +1,5 @@
 
+import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -26,6 +27,10 @@ public class PlayerTest {
 		Player p1 = new Player(new PlayerDeck(PlayerDeckTest.randomCardList(),null,null,null), "Jack");
 		p1.incrementHonor(25);
 		Assert.assertEquals(25, p1.honorTotal);
+		p1.flipTyrantConstructsBool();
+		assertTrue(p1.seaTyrant);
+		p1.flipWidowConstructsBool();
+		assertEquals(p1.corrosiveWidow, 1);
 	}
 	@Test
 	public void testGetNewPlayer(){

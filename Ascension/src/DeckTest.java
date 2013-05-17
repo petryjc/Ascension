@@ -258,4 +258,16 @@ public class DeckTest {
 			handOrigional.contains(d.hand.get(i));
 		}
 	}
+	@Test(expected=IllegalArgumentException.class)
+	public void testSpecial(){
+		Deck d = new Deck();
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, null, "Test");
+		d.playCard(testCard);
+	}
+	@Test
+	public void testSpecial2(){
+		Deck d = new Deck();
+		Card testCard = new Card(Card.Type.Hero, Card.Faction.Void, 1, null, "Test");
+		assertFalse(d.addNewCardToDiscard(testCard, true));
+	}
 }

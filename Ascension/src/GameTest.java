@@ -25,47 +25,8 @@ public class GameTest {
 		
 		
 	}
-//	@Test
-//	public void testNextTurn(){
-//		
-//	}
 
-	@Test
-	public void testPaintComponentDoesNotErrorOut() {
-		ArrayList<Card> centerDeck = Main.getCenterDeck("src/centerDeck.txt");
-		Deck d = new Deck(centerDeck, new ArrayList<Card>(), new ArrayList<Card>(), Main.getTopCards(), null);
-		d.shuffle();
-		d.drawNCards(6);
-		
-		ArrayList<Player> pList = new ArrayList<Player>();
-		Player jack = Player.getNewPlayer("Jack");
-		
-		ArrayList<Card> generatedHand = new ArrayList<Card>();
-		
-		PlayerDeck pDeck = new PlayerDeck();
-		ArrayList<Action> a = new ArrayList<Action>();
-		a.add(new Action(1,Action.ActionType.DrawCard));
-		generatedHand.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, a, "TestCard",1));
-		
-		pDeck.hand = generatedHand;
-		pList.add(jack);
-		
-		Game g = new Game(1, pList, d);
-		g.descriptions = ResourceBundle.getBundle("CardDescription", new Locale("en", "EN"));
-		g.gameDeck = new Deck();
-		g.gameDeck.notPlayed = Main.getCenterDeck("src/testDeck.txt");
-		g.gameDeck.drawNCards(6);
-		g.isTest = true;
-		
-		JFrame frame = new JFrame();
-		frame.setVisible(true);
-		frame.setSize(1620, 940);
-		frame.add(g);
-		
-		g.repaint();
-		
-		frame.dispose();
-	}
+
 
 	@Test
 	public void testGetCenterDeck() {
@@ -181,24 +142,20 @@ public class GameTest {
 		pList.add(gabe);
 		pList.add(kenny);
 		Game g = new Game(3, pList, d);
-		System.out.println(g.players);
 		
 		Assert.assertNull(g.currentTurn);
 		
 		g.nextTurn();
-		System.out.println(g.players);
 //		Assert.assertNotNull(g.currentTurn);
 //		Assert.assertNotNull(g.currentTurn.player);
 //		Assert.assertEquals(jack, g.currentTurn.player);
 		
 		g.nextTurn();
-		System.out.println(g.players);
 //		Assert.assertNotNull(g.currentTurn);
 //		Assert.assertNotNull(g.currentTurn.player);
 //		Assert.assertEquals(gabe, g.currentTurn.player);
 		
 		g.nextTurn();
-		System.out.println(g.players);
 //		Assert.assertNotNull(g.currentTurn);
 //		Assert.assertNotNull(g.currentTurn.player);
 //		Assert.assertEquals(kenny, g.currentTurn.player);
@@ -212,4 +169,38 @@ public class GameTest {
 		
 	}
 	
+	@Test
+	public void testPaintComponentDoesNotErrorOut() {
+		ArrayList<Card> centerDeck = Main.getCenterDeck("src/centerDeck.txt");
+		Deck d = new Deck(centerDeck, new ArrayList<Card>(), new ArrayList<Card>(), Main.getTopCards(), null);
+		d.shuffle();
+		d.drawNCards(6);
+		
+		ArrayList<Player> pList = new ArrayList<Player>();
+		Player jack = Player.getNewPlayer("Jack");
+		
+		ArrayList<Card> generatedHand = new ArrayList<Card>();
+		
+		PlayerDeck pDeck = new PlayerDeck();
+		ArrayList<Action> a = new ArrayList<Action>();
+		a.add(new Action(1,Action.ActionType.DrawCard));
+		generatedHand.add(new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, a, "TestCard",1));
+		
+		pDeck.hand = generatedHand;
+		pList.add(jack);
+		
+		Game g = new Game(1, pList, d);
+		g.descriptions = ResourceBundle.getBundle("CardDescription", new Locale("en", "EN"));
+		g.gameDeck = new Deck();
+		g.gameDeck.notPlayed = Main.getCenterDeck("src/testDeck.txt");
+		g.gameDeck.drawNCards(6);
+		g.isTest = true;
+		
+		JFrame frame = new JFrame();
+		frame.add(g);
+		
+		g.repaint();
+		
+		frame.dispose();
+	}
 }

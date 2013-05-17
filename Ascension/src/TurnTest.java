@@ -997,6 +997,7 @@ public class TurnTest {
 		assertEquals(t.rune, 2);
 	}
 	
+	
 	@Test
 	public void testMechanaInitiate() {
 		t.power = 0;
@@ -1215,42 +1216,34 @@ public class TurnTest {
 	
 	@Test
 	public void TestDefaultCase(){
+		this.t.turnState = Turn.TurnState.Default;
+		
 		ArrayList<Action> actionList = new ArrayList<Action>();
 		
-		actionList.add(new Action(0, Action.ActionType.RajAction));
-		
 		Card c1 = new Card(Card.Type.Hero, Card.Faction.Enlightened, 1, actionList, "Test0");
-		Card c2 = new Card(new Rectangle(0,0,100,100),Card.Type.Hero, Card.Faction.Void, 3, null, "Test1");
+		final Card c2 = new Card(new Rectangle(0,0,100,100),Card.Type.Hero, Card.Faction.Void, 3, null, "Test1");
 		Card c3 = new Card(new Rectangle(100,100,100,100),Card.Type.Hero, Card.Faction.Mechana, 3, null, "Test2");
 		
 		this.t.player.playerDeck.hand.add(c2);
 		
 		this.t.game.gameDeck.hand.add(c3);
+		t.leftButtonClick(new Point(84,101));
+		//assertTrue(t.player.playerDeck.played.contains(c2));
 		
 		Thread thread = new Thread(new Runnable() {
 		
 		@Override
 		public void run() {
 			try {
-				Thread.sleep(10);
-				assertEquals(Turn.TurnState.RajTurnState, t.turnState);
-				assertEquals(1, t.turnStateMagnitude);
-				t.leftButtonClick(new Point(50,50));
-				assertEquals(Turn.TurnState.RajTurnState2, t.turnState);
-				t.leftButtonClick(new Point(150,150));
-				assertEquals(Turn.TurnState.Default,t.turnState);
-				System.out.println("Here");
-				
-			} catch (InterruptedException e) {}
-			catch (IllegalMonitorStateException e1) {}
+				t.leftButtonClick(new Point(84,101));
+			} catch (IllegalMonitorStateException e1) {}
 			
 		}
 	});
 	thread.start();
-	t.executeCard(c1);
-		
 		
 	}
+	
 }
 
 
